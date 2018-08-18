@@ -14,8 +14,7 @@ MarkDown 文件使用‘.md’结尾 （小写字母)
 12*emphasize*_emphasize_
 使用’~~’给文字添加删除线1~~strikethrough~~
 代码块规范
-行内代码使用’一对</p></article></a><a href="/2018/08/13/pwn-入门1-1/" class="article"><article itemscope itemprop="blogPost" itemtype="https://schema.org/BlogPosting" class="item"><h2 itemprop="headline">pwn 入门1.1</h2><span class="post-meta">Published on<time itemprop="datePublished" datetime="2018-08-13T14:35:13.000Z"> Monday, August 13th 2018 at 22:35</time>, 1 min read</span><p itemprop="text" class="post-excerpt">###各种变量的存储位置
-
+行内代码使用’一对</p></article></a><a href="/2018/08/13/pwn-入门1-1/" class="article"><article itemscope itemprop="blogPost" itemtype="https://schema.org/BlogPosting" class="item"><h2 itemprop="headline">pwn 入门1.1</h2><span class="post-meta">Published on<time itemprop="datePublished" datetime="2018-08-13T14:35:13.000Z"> Monday, August 13th 2018 at 22:35</time>, 1 min read</span><p itemprop="text" class="post-excerpt">各种变量的存储位置
 stack：局部变量
 heap: 动态分配内存的变量（malloc/new）
 bss section: 全局化的未初始化的变量
@@ -25,5 +24,5 @@ rodata: （只读data段）全局化的静态变量（const）
 
 
 例如：
-123456789int a = 0;   //.dataint b;       //.bssconst double PI = 3.1415    </p></article></a><a href="/2018/08/12/hello-world/" class="article"><article itemscope itemprop="blogPost" itemtype="https://schema.org/BlogPosting" class="item"><h2 itemprop="headline">Hello World</h2><span class="post-meta">Published on<time itemprop="datePublished" datetime="2018-08-12T08:30:55.483Z"> Sunday, August 12th 2018 at 16:30</time>, 1 min read</span><p itemprop="text" class="post-excerpt">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
+123456789int a = 0;   //.dataint b;       //.bssconst double PI = 3.1415    //ro</p></article></a><a href="/2018/08/12/hello-world/" class="article"><article itemscope itemprop="blogPost" itemtype="https://schema.org/BlogPosting" class="item"><h2 itemprop="headline">Hello World</h2><span class="post-meta">Published on<time itemprop="datePublished" datetime="2018-08-12T08:30:55.483Z"> Sunday, August 12th 2018 at 16:30</time>, 1 min read</span><p itemprop="text" class="post-excerpt">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
 Quick StartCreate a new p</p></article></a><footer itemscope itemtype="https://schema.org/WPFooter"><section class="pubkey">13DB CAA1 2633 81A7</section><section class="copyright"><a href="http://opensource.org/licenses/MIT">MIT License</a>&middot; Published with<a href="https://hexo.io/">Hexo</a></section></footer></main></body></html>
