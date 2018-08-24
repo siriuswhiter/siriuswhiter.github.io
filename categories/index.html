@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     
     
-    <title>pwn 入门1.1 | Room of Equirement | pwn what you want</title>
+    <title>categories | Room of Equirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="pwn">
+    <meta name="keywords" content="For the pwn is long and full of terrors.">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
     <link rel="stylesheet" href="/css/style.css?v=1.3.2">
@@ -124,7 +124,7 @@
               </a>
             </li>
         
-            <li class="">
+            <li class=" active">
               <a href="/categories"  >
                 <i class="icon icon-lg icon-th-list"></i>
                 CATEGORIES
@@ -178,7 +178,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>pwn 入门1.1</span>
+            <span>categories</span>
             
         </div>
         
@@ -188,17 +188,11 @@
         
     </div>
 </header>
-<header class="content-header post-header">
+<header class="content-header page-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">pwn 入门1.1</h1>
+        <h1 class="title">categories</h1>
         <h5 class="subtitle">
-            
-                <time datetime="2018-08-13T14:35:13.000Z" itemprop="datePublished" class="page-time">
-  2018-08-13
-</time>
-
-
             
         </h5>
         
@@ -222,86 +216,25 @@
 
 
 <div class="container body-wrap">
-    <article id="post-pwn-入门1-1"
-  class="post-article article-type-post" itemprop="blogPost">
-    <div class="post-card">
-        <h1 class="post-card-title">pwn 入门1.1</h1>
-        <div class="post-meta">
-            <time class="post-time" title="2018-08-13 22:35:13" datetime="2018-08-13T14:35:13.000Z"  itemprop="datePublished">2018-08-13</time>
-
+    <article class="page-article fade" itemprop="blogPage">
+        <div class="post-content page-content" id="page-content" itemprop="pageContent">
             
-
-
-            
-
-            
-
-
             
         </div>
-        <div class="post-content" id="post-content" itemprop="postContent">
-            
-            <h3 id="各种变量的存储位置"><a href="#各种变量的存储位置" class="headerlink" title="各种变量的存储位置"></a>各种变量的存储位置</h3><ol>
-<li>stack：局部变量</li>
-<li>heap: 动态分配内存的变量（malloc/new）</li>
-<li>bss section: 全局化的未初始化的变量</li>
-<li>data section: 全局化的已初始化的变量<ul>
-<li>rodata: （只读data段）全局化的静态变量（const）</li>
-</ul>
-</li>
-</ol>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;   //.data</span><br><span class="line">int b;       //.bss</span><br><span class="line">const double PI = 3.1415    //rodata</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    int c = 2;    //stack</span><br><span class="line">	char *d = malloc(16);    //heap</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="linux下将shellcode运行"><a href="#linux下将shellcode运行" class="headerlink" title="linux下将shellcode运行"></a>linux下将shellcode运行</h3><p>1.手写简易shellcode</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">jmp sh</span><br><span class="line">run:</span><br><span class="line">    pop ebx</span><br><span class="line">    mov BYTE [ebx+7],0</span><br><span class="line">    xor eax,eax</span><br><span class="line">    mov al,11</span><br><span class="line">    xor ecx,ecx</span><br><span class="line">    xor edx,edx</span><br><span class="line">    int 0x80</span><br><span class="line">sh:</span><br><span class="line">    call run</span><br><span class="line">    db &quot;/bin/sh&quot;</span><br></pre></td></tr></table></figure>
-<p>2.一系列步骤</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Assembly:  nasm a.asm -o a.o -felf32   </span><br><span class="line">Extract Shellcode: objcopy -O binary a.o code   //将a.o中需要用内容的提取到code中</span><br><span class="line">                   xxd -i code        //将提取出来的code转换为机器码</span><br></pre></td></tr></table></figure>
-<p>3.带入调用shellcode的程序test.c</p>
-<pre><code>#include  &quot;code.h&quot;
-
-typedef int(*CODE)();
-
-int main()
-{
-    ((CODE)shellcode)();
-}
-
-Run Shellcode: gcc test.c -o test -m32 -zexexstack       
-</code></pre><p><em>syscalls.kernelgrok.com linux下的系统调用.</em></p>
-
-        </div>
-        
-<blockquote class="post-copyright">
-    <div class="content">
-        
-<span class="post-time">
-    Last updated: <time datetime="2018-08-24T05:03:15.663Z" itemprop="dateUpdated">2018-08-24 13:03:15</time>
-</span><br>
-
-
-        
-        转载注明出处，原文地址：<a href="/2018/08/13/pwn-入门1-1/" target="_blank" rel="external">http://yoursite.com/2018/08/13/pwn-入门1-1/</a>
-        
-    </div>
-    <footer>
-        <a href="http://yoursite.com">
-            <img src="/img/avatar.jpg" alt="Sirius Whiter">
-            Sirius Whiter
-        </a>
-    </footer>
-</blockquote>
-
         
             <div class="page-reward">
     <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
 </div>
 
-            
         
-        <div class="post-footer">
-            
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
-
+        
+        <div class="card page-about-me flex-row">
+            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/avatar.jpg"></a>
+            <div class="content flex-col">
+                <p><strong>Sirius Whiter</strong></p>
+                <p><em>pwn what you want</em></p>
+                <p></p>
+            </div>
             <div class="page-share-wrap">
     
 
@@ -309,7 +242,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/08/13/pwn-入门1-1/&title=《pwn 入门1.1》 — Room of Equirement&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/categories/&title=《categories》 — Room of Equirement&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -321,7 +254,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/08/13/pwn-入门1-1/&title=《pwn 入门1.1》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/categories/&title=《categories》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -338,46 +271,16 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
 
         </div>
         
-            
-
-
         
-    </div>
-    
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="prev">
-      <a href="/2018/08/15/hexo-essay-writing/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">hexo essay writing</h4>
-      </a>
-    </div>
-  
-
-  
-    <div class="next">
-      <a href="/2018/08/12/hello-world/" id="post-next" class="post-nav-link">
-        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">Hello World</h4>
-      </a>
-    </div>
-  
-</nav>
+        <div class="card">   
+           
 
 
+        </div>
+        
+    </article>
     
-    
-        <aside class="post-widget">
-            <nav class="post-toc-wrap" id="post-toc">
-                <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#各种变量的存储位置"><span class="post-toc-number">1.</span> <span class="post-toc-text">各种变量的存储位置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#linux下将shellcode运行"><span class="post-toc-number">2.</span> <span class="post-toc-text">linux下将shellcode运行</span></a></li></ol>
-            </nav>
-            <div class="toc-bar"><div>
-        </aside>
-    
-</article>
-
-    <div id="reward" class="page-modal reward-lay">
+        <div id="reward" class="page-modal reward-lay">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
@@ -456,7 +359,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/08/13/pwn-入门1-1/&title=《pwn 入门1.1》 — Room of Equirement&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/categories/&title=《categories》 — Room of Equirement&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -468,7 +371,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/08/13/pwn-入门1-1/&title=《pwn 入门1.1》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/categories/&title=《categories》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -480,7 +383,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKklEQVR42u3ay67CMAxFUf7/p4vEFDU5x3ahtXdG6FLdZmVg4sfrJa/js9afz779Xuu3rJ9JLRgwYDyWcSzX2QtcjLsHfW8wYMCYw1CCrPKafPhWjgAGDBgw3KCpYNbPrI8JBgwYMGIMZUPKX2LXShgwYMxkKEmsfuFzU9+f5uIwYMB4IKOqMXDF5z/0N2DAgHEzxmEudyv59oC0KxgwYLRmxEpdVRtVEmljIAMGDBitGZkymVs4c8fIUkU3GDBgtGNUpbhuuc3FX5i1w4AB45YMJVl1S/NV4bigswEDBowWjNoAqjQylSNzhzlgwIDRm5EZd4gNT+RLb6f9DRgwYDRlKIFSD8H5lNXNtmHAgDGB4Y5Q5BuZbtFfuWjCgAFjDsNtIsZS0HXsd0M2DBgwJjD0Eps+luEmwLE02EhiYcCA8XBGbOuxtqLypDsiBgMGjAmMfOk/P0CmB9bN8cGAAaMpwx3bckv5V9xhT2+1MGDAaMrQU1A3XGYakzpj87sBAwaMFgy3cJYZknCHxuz+BgwYMAYw3FJarA0QS3E338KAAaM1QwlwsWf0jcYui5tgDQMGjEaMw1yZ0lttYgwDBow5jNpA6T5zxTHBgAGjK0MPspmmY6zxmWphwoABox0jk6zGjiD2C7CZboMBA8Z4ht50dJ/MHB8MGDBg6Jtzi2tu+WxzPYUBA8YAhn69s0cf5BEN/T/DgAFjGiPWGHC3Utt4sAEwYMB4KuMN9ytGvP/T5V0AAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAB2klEQVR42u3aQW7DMAwEwP7/0ynQa2FlSUpCWoxPQZo44x4Ikquvr/h6/VxP76//+vuT629tuHBxccfc1/J6+sz6Dk8Ps34dPRIuLu5FblKGkhKWl6r1/R/fx8XF/TBuUuAS4rrA4eLi/kVu0h7h4uL+D24y/ORNTD7wHJzVcHFxB9zqwvTE64P7XVxc3CL31brmkUnzd3Fxca9wq+1LMrT0Vqv5/XFxcU9zkyajGpomiOTBCvsbXFzcrdxq5JkfzJo/5BsJLi7uFW5vMVqNZCa7Dlxc3DvcPPKsBhvzeOZxIYKLi3uY2wtOeo+XH7ZoRiy4uLibuNUIpPpjk0VJOUTBxcXdxM2jjl5AMmlror4MFxf3GDdpL6rNTfW7ebHDxcU9zU2amElhqi5SC8EJLi7uMW6vYFUHpN7SpHAIAxcXdys3KVJJ85G3R72i+Riy4uLiHuBOjltVw5heTFvo1HBxcTdxRyvLeBVSDVoe74yLi3uF2zuQ0RtpkoMdk8KHi4u7l5sUr+ogVD2uUWincHFxL3JPBCpRuhv/+3BxcT+Zm29cJke73kxsuLi4H8OtFqb8EEZ5m4uLi3uFWx1+do1G1YMguLi4d7jzhDZffKwbncnIhIuLu4n7DfuRbMPq/ZwcAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 
