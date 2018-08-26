@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://siriuswhiter.github.io/"/>
-  <updated>2018-08-25T01:52:46.910Z</updated>
+  <updated>2018-08-25T11:15:33.954Z</updated>
   <id>http://siriuswhiter.github.io/</id>
   
   <author>
@@ -21,19 +21,15 @@
     <link href="http://siriuswhiter.github.io/2018/08/25/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4-%E8%BD%AF%E4%BB%B6%E7%A0%B4%E8%A7%A3-%E5%8F%8A%E5%AF%B9%E6%8A%97/"/>
     <id>http://siriuswhiter.github.io/2018/08/25/软件保护-软件破解-及对抗/</id>
     <published>2018-08-25T01:30:41.000Z</published>
-    <updated>2018-08-25T01:52:46.910Z</updated>
+    <updated>2018-08-25T11:15:33.954Z</updated>
     
-    <content type="html"><![CDATA[<p>#软件保护 </p><p>##简单算法注册保护：</p><p>输入用户名序列号，计算并检测序列号；</p><p>##简单算法注册保护的对抗：</p><p>①修改关键指令：暴力破解；patcher<br>②dll注入或使用加载器（使序列号计算结果展示出来）；内存注册机<br>③还原本身算法；keygen</p><p>##复杂算法注册保护：</p><p>通常内置rsa公钥/签名/绑定硬件码/注册信息分段校验/运行时校验等；</p><p>##复杂算法注册保护的对抗：</p><p>①patch<br>②补丁修改公钥，使用自己的公钥对；</p><p>##网络加密及硬件加密：</p><p>本质上与本地加密相同/运行前检测？？</p><p>##网络加密及硬件加密的对抗：</p><p>①patch<br>②模拟与远程端的通信，及模拟执行；<br>③使用中转程序，从服务器获得远程执行结果；</p><p>##复杂系统注册保护：</p><p>以上内容混杂</p><p>附：常用–壳（压缩壳/加密壳）：程序运行前的检测，校验/程序注册机制/程序运行二次检测</p><p>#软件破解及对抗</p><p>##程序分析及对抗：</p><p>代码变形mutation；<br>代码膨胀expansion；<br>花指令；<br>代码乱序；<br>平坦化；</p><p>##程序调试及对抗：</p><p>系统API检测程序是否处于被调试状态；<br>检测调试器窗口信息、状态码；<br>检测调试器驱动，符号；<br>程序执行行为检测（如检测运行时间，时间较长则处于被调试状态）；<br>利用驱动接管本身程序的中断，阻止被调试器接管；<br>利用驱动修改内核参数，阻止程序被调试；<br>双进程反调试；</p><p>##程序修改及对抗：</p><p>修改：文件补丁技术及工具；<br>对抗修改： hash校验/内存关键部分CRC校验/ipk劫持等；</p><p><em>dnspy：.NET程序逆向工具</em></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="软件保护"><a href="#软件保护" class="headerlink" title="软件保护"></a>软件保护</h1><h2 id="简单算法注册保护："><a href="#简单算法注册保护：" class="headerlink" title="简单算法注册保护："></a>简单算法注册保护：</h2><p>输入用户名序列号，计算并检测序列号；</p><h2 id="简单算法注册保护的对抗："><a href="#简单算法注册保护的对抗：" class="headerlink" title="简单算法注册保护的对抗："></a>简单算法注册保护的对抗：</h2><p>①修改关键指令：暴力破解；patcher<br>②dll注入或使用加载器（使序列号计算结果展示出来）；内存注册机<br>③还原本身算法；keygen</p><h2 id="复杂算法注册保护："><a href="#复杂算法注册保护：" class="headerlink" title="复杂算法注册保护："></a>复杂算法注册保护：</h2><p>通常内置rsa公钥/签名/绑定硬件码/注册信息分段校验/运行时校验等；</p><h2 id="复杂算法注册保护的对抗："><a href="#复杂算法注册保护的对抗：" class="headerlink" title="复杂算法注册保护的对抗："></a>复杂算法注册保护的对抗：</h2><p>①patch<br>②补丁修改公钥，使用自己的公钥对；</p><h2 id="网络加密及硬件加密："><a href="#网络加密及硬件加密：" class="headerlink" title="网络加密及硬件加密："></a>网络加密及硬件加密：</h2><p>本质上与本地加密相同/运行前检测？？</p><h2 id="网络加密及硬件加密的对抗："><a href="#网络加密及硬件加密的对抗：" class="headerlink" title="网络加密及硬件加密的对抗："></a>网络加密及硬件加密的对抗：</h2><p>①patch<br>②模拟与远程端的通信，及模拟执行；<br>③使用中转程序，从服务器获得远程执行结果；</p><h2 id="复杂系统注册保护："><a href="#复杂系统注册保护：" class="headerlink" title="复杂系统注册保护："></a>复杂系统注册保护：</h2><p>以上内容混杂</p><p>附：常用–壳（压缩壳/加密壳）：程序运行前的检测，校验/程序注册机制/程序运行二次检测</p><h1 id="软件破解及对抗"><a href="#软件破解及对抗" class="headerlink" title="软件破解及对抗"></a>软件破解及对抗</h1><h2 id="程序分析及对抗："><a href="#程序分析及对抗：" class="headerlink" title="程序分析及对抗："></a>程序分析及对抗：</h2><ul><li>代码变形mutation；</li><li>代码膨胀expansion；</li><li>花指令；</li><li>代码乱序；</li><li>平坦化；</li></ul><h2 id="程序调试及对抗："><a href="#程序调试及对抗：" class="headerlink" title="程序调试及对抗："></a>程序调试及对抗：</h2><ul><li>系统API检测程序是否处于被调试状态；</li><li>检测调试器窗口信息、状态码；</li><li>检测调试器驱动，符号；</li><li>程序执行行为检测（如检测运行时间，时间较长则处于被调试状态）；</li><li>利用驱动接管本身程序的中断，阻止被调试器接管；</li><li>利用驱动修改内核参数，阻止程序被调试；</li><li>双进程反调试；</li></ul><h2 id="程序修改及对抗："><a href="#程序修改及对抗：" class="headerlink" title="程序修改及对抗："></a>程序修改及对抗：</h2><p>修改：文件补丁技术及工具；<br>对抗修改： hash校验/内存关键部分CRC校验/ipk劫持等；</p><p><em>dnspy：.NET程序逆向工具</em></p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;#软件保护 &lt;/p&gt;
-&lt;p&gt;##简单算法注册保护：&lt;/p&gt;
-&lt;p&gt;输入用户名序列号，计算并检测序列号；&lt;/p&gt;
-&lt;p&gt;##简单算法注册保护的对抗：&lt;/p&gt;
-&lt;p&gt;①修改关键指令：暴力破解；patcher&lt;br&gt;②dll注入或使用加载器（使序列号计算结果展示出来）；内存注册机
+        &lt;h1 id=&quot;软件保护&quot;&gt;&lt;a href=&quot;#软件保护&quot; class=&quot;headerlink&quot; title=&quot;软件保护&quot;&gt;&lt;/a&gt;软件保护&lt;/h1&gt;&lt;h2 id=&quot;简单算法注册保护：&quot;&gt;&lt;a href=&quot;#简单算法注册保护：&quot; class=&quot;headerlink&quot; title=
       
     
     </summary>
@@ -48,9 +44,9 @@
     <link href="http://siriuswhiter.github.io/2018/08/15/hexo-essay-writing/"/>
     <id>http://siriuswhiter.github.io/2018/08/15/hexo-essay-writing/</id>
     <published>2018-08-15T15:33:24.000Z</published>
-    <updated>2018-08-16T01:38:25.232Z</updated>
+    <updated>2018-08-25T02:04:13.859Z</updated>
     
-    <content type="html"><![CDATA[<ol><li>打开git,进入MyBlog目录；</li><li>输入 <code>hexo new &quot;essay-name&quot;</code>；</li><li>打开source文件夹，找到 essay-name.md，使用markdown语法写作；</li><li>执行命令 <code>npm install hexo-deployer-git --save / hexo clean / hexo generate/ hexo deploy</code>；</li><li>over；</li></ol><p><strong>假如hexo命令出现问题，基本上就是_config.yml 文件的空格有问题，看报错就好了。</strong></p>]]></content>
+    <content type="html"><![CDATA[<ol><li>打开git,进入MyBlog目录；</li><li>输入 <code>hexo new &quot;essay-name&quot;</code>；</li><li>打开source文件夹，找到 essay-name.md，使用markdown语法写作；</li><li>执行命令 <code>/ hexo clean / hexo generate/ hexo deploy</code>；</li><li>over；</li></ol><p><strong>假如hexo命令出现问题，基本上就是_config.yml 文件的空格有问题，看报错就好了。</strong></p>]]></content>
     
     <summary type="html">
     
@@ -64,6 +60,8 @@
     
     </summary>
     
+    
+      <category term="skills" scheme="http://siriuswhiter.github.io/tags/skills/"/>
     
   </entry>
   
