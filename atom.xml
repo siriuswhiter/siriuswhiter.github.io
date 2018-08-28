@@ -5,9 +5,9 @@
   <subtitle>pwn what you want</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://siriuswhiter.github.io/"/>
-  <updated>2018-08-25T11:15:33.954Z</updated>
-  <id>http://siriuswhiter.github.io/</id>
+  <link href="http://siriuswhiter.tk/"/>
+  <updated>2018-08-28T01:49:53.406Z</updated>
+  <id>http://siriuswhiter.tk/</id>
   
   <author>
     <name>Sirius Whiter</name>
@@ -17,9 +17,33 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>pwn.入门1.2</title>
+    <link href="http://siriuswhiter.tk/2018/08/28/pwn-%E5%85%A5%E9%97%A81-2/"/>
+    <id>http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/</id>
+    <published>2018-08-28T01:46:58.000Z</published>
+    <updated>2018-08-28T01:49:53.406Z</updated>
+    
+    <content type="html"><![CDATA[<p>ret2libc学习</p><h1 id="ret2libc使用原因"><a href="#ret2libc使用原因" class="headerlink" title="ret2libc使用原因"></a>ret2libc使用原因</h1><p>程序不是静态编译，通常就不会有int 0x80</p><p>ret2syscall 就无法实现，因而使用</p><p>ret2library。</p><h1 id="调用函数的栈结构布局-："><a href="#调用函数的栈结构布局-：" class="headerlink" title="调用函数的栈结构布局 ："></a>调用函数的栈结构布局 ：</h1><ul><li><p>调用函数的返回地址</p></li><li><p>函数调用完的返回地址</p></li><li><p>调用函数的参数1</p></li><li><p>调用函数的参数2</p></li></ul><h1 id="利用过程分析："><a href="#利用过程分析：" class="headerlink" title="利用过程分析："></a>利用过程分析：</h1><p>ASLR使得每次载入的函数地址（base）都不同</p><p>实际地址 Address = base +offset</p><p><em>若地址为 0xf…  则其为实际地址；</em></p><p>offset在libc库中是固定的；</p><ul><li>查看libc库版本：</li></ul><p>ldd  ./file想·</p><ul><li>寻找偏移地址 ：</li></ul><p>readelf -a  /lib32/libc.so.6 | grep gets@</p><ul><li>目标是寻找libc 的 base :</li></ul><p>1.通过程序中的其他函数leak 程序libc的实际地址（Address）,base = Address - offset</p><p>2.从stack残渣中获取libc地址信息</p><h1 id="延迟绑定（没搞清楚，之后再写）"><a href="#延迟绑定（没搞清楚，之后再写）" class="headerlink" title="延迟绑定（没搞清楚，之后再写）"></a>延迟绑定（没搞清楚，之后再写）</h1><p>函数调用方式：</p><p>call  func@plt –&gt; .got.plt –&gt;.got.plt的值为该func的实际地址（所需address）</p><h1 id="使用调用函数的栈结构布局："><a href="#使用调用函数的栈结构布局：" class="headerlink" title="使用调用函数的栈结构布局："></a>使用调用函数的栈结构布局：</h1><p>1.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gets()</span><br><span class="line"></span><br><span class="line">pop1_ret(pop&lt;buf&gt; 然后 return）</span><br><span class="line"></span><br><span class="line">&lt;buf&gt;</span><br><span class="line"></span><br><span class="line">system()</span><br><span class="line"></span><br><span class="line">xxx</span><br><span class="line"></span><br><span class="line">&lt;buf&gt;</span><br></pre></td></tr></table></figure><p>2.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gets()</span><br><span class="line"></span><br><span class="line">system()</span><br><span class="line"></span><br><span class="line">&lt;buf&gt;</span><br><span class="line"></span><br><span class="line">&lt;buf&gt;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;ret2libc学习&lt;/p&gt;
+&lt;h1 id=&quot;ret2libc使用原因&quot;&gt;&lt;a href=&quot;#ret2libc使用原因&quot; class=&quot;headerlink&quot; title=&quot;ret2libc使用原因&quot;&gt;&lt;/a&gt;ret2libc使用原因&lt;/h1&gt;&lt;p&gt;程序不是静态编译，通常就
+      
+    
+    </summary>
+    
+    
+      <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
+    
+  </entry>
+  
+  <entry>
     <title>软件保护/软件破解 及对抗</title>
-    <link href="http://siriuswhiter.github.io/2018/08/25/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4-%E8%BD%AF%E4%BB%B6%E7%A0%B4%E8%A7%A3-%E5%8F%8A%E5%AF%B9%E6%8A%97/"/>
-    <id>http://siriuswhiter.github.io/2018/08/25/软件保护-软件破解-及对抗/</id>
+    <link href="http://siriuswhiter.tk/2018/08/25/%E8%BD%AF%E4%BB%B6%E4%BF%9D%E6%8A%A4-%E8%BD%AF%E4%BB%B6%E7%A0%B4%E8%A7%A3-%E5%8F%8A%E5%AF%B9%E6%8A%97/"/>
+    <id>http://siriuswhiter.tk/2018/08/25/软件保护-软件破解-及对抗/</id>
     <published>2018-08-25T01:30:41.000Z</published>
     <updated>2018-08-25T11:15:33.954Z</updated>
     
@@ -35,14 +59,14 @@
     </summary>
     
     
-      <category term="RE" scheme="http://siriuswhiter.github.io/tags/re/"/>
+      <category term="RE" scheme="http://siriuswhiter.tk/tags/re/"/>
     
   </entry>
   
   <entry>
     <title>hexo essay writing</title>
-    <link href="http://siriuswhiter.github.io/2018/08/15/hexo-essay-writing/"/>
-    <id>http://siriuswhiter.github.io/2018/08/15/hexo-essay-writing/</id>
+    <link href="http://siriuswhiter.tk/2018/08/15/hexo-essay-writing/"/>
+    <id>http://siriuswhiter.tk/2018/08/15/hexo-essay-writing/</id>
     <published>2018-08-15T15:33:24.000Z</published>
     <updated>2018-08-25T02:04:13.859Z</updated>
     
@@ -61,14 +85,14 @@
     </summary>
     
     
-      <category term="skills" scheme="http://siriuswhiter.github.io/tags/skills/"/>
+      <category term="skills" scheme="http://siriuswhiter.tk/tags/skills/"/>
     
   </entry>
   
   <entry>
     <title>markdown规范学习</title>
-    <link href="http://siriuswhiter.github.io/2018/08/13/markdown%E8%A7%84%E8%8C%83%E5%AD%A6%E4%B9%A0/"/>
-    <id>http://siriuswhiter.github.io/2018/08/13/markdown规范学习/</id>
+    <link href="http://siriuswhiter.tk/2018/08/13/markdown%E8%A7%84%E8%8C%83%E5%AD%A6%E4%B9%A0/"/>
+    <id>http://siriuswhiter.tk/2018/08/13/markdown规范学习/</id>
     <published>2018-08-13T14:46:46.000Z</published>
     <updated>2018-08-24T05:18:29.983Z</updated>
     
@@ -84,14 +108,14 @@
     </summary>
     
     
-      <category term="skills" scheme="http://siriuswhiter.github.io/tags/skills/"/>
+      <category term="skills" scheme="http://siriuswhiter.tk/tags/skills/"/>
     
   </entry>
   
   <entry>
     <title>pwn 入门1.1</title>
-    <link href="http://siriuswhiter.github.io/2018/08/13/pwn-%E5%85%A5%E9%97%A81-1/"/>
-    <id>http://siriuswhiter.github.io/2018/08/13/pwn-入门1-1/</id>
+    <link href="http://siriuswhiter.tk/2018/08/13/pwn-%E5%85%A5%E9%97%A81-1/"/>
+    <id>http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/</id>
     <published>2018-08-13T14:35:13.000Z</published>
     <updated>2018-08-24T05:03:15.663Z</updated>
     
@@ -109,7 +133,7 @@
     </summary>
     
     
-      <category term="pwn" scheme="http://siriuswhiter.github.io/tags/pwn/"/>
+      <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
     
   </entry>
   
