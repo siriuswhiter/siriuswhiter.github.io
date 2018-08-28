@@ -255,11 +255,11 @@
 <ul>
 <li>查看libc库版本：</li>
 </ul>
-<p>ldd  ./file想·</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ldd  ./file</span><br></pre></td></tr></table></figure>
 <ul>
 <li>寻找偏移地址 ：</li>
 </ul>
-<p>readelf -a  /lib32/libc.so.6 | grep gets@</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -a  /lib32/libc.so.6 | grep gets@</span><br></pre></td></tr></table></figure>
 <ul>
 <li>目标是寻找libc 的 base :</li>
 </ul>
@@ -278,7 +278,7 @@
     <div class="content">
         
 <span class="post-time">
-    最後更新時間：<time datetime="2018-08-28T01:49:53.406Z" itemprop="dateUpdated">2018-08-28 09:49:53</time>
+    Last updated: <time datetime="2018-08-28T01:55:07.624Z" itemprop="dateUpdated">2018-08-28 09:55:07</time>
 </span><br>
 
 
@@ -347,7 +347,14 @@
         
     </div>
     
-<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/08/28/pwn-入门n-n/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">pwn 入门n.n</h4>
+      </a>
+    </div>
   
 
   
