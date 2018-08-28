@@ -3,6 +3,21 @@
   
     
     <entry>
+      <title>pwn 入门1.3--plt/got</title>
+      <link href="/2018/08/28/pwn-%E5%85%A5%E9%97%A81-3-plt-got/"/>
+      <url>/2018/08/28/pwn-%E5%85%A5%E9%97%A81-3-plt-got/</url>
+      <content type="html"><![CDATA[<pre><code>关于ret2libc 中的plt/got </code></pre><h1 id="延迟绑定"><a href="#延迟绑定" class="headerlink" title="延迟绑定"></a>延迟绑定</h1><p>即当第一次使用某函数时，GOT表中对应表项保存的并不是真实的函数地址，需要通过_dl_runtime_resolve查找到真实的函数地址并填入GOT对应表项，从而在下次再使用该函数时，无需进行查找。我们要泄漏的就是初始化查找后填入GOT对应表项中的函数地址。</p><h1 id="plt-与-got"><a href="#plt-与-got" class="headerlink" title="plt 与 got"></a>plt 与 got</h1><p>文件的plt表中存放着函数的.plt.got 地址，.plt.got 地址处的值为该函数的真正的got地址（也就是我们需要泄露的）</p><p>由于延迟绑定机制的存在，我们只能通过泄露被调用的函数的got地址，同时又因为同一libc库中各函数之间的偏移是固定的，我们就能因此来求出其他函数的got地址。</p><h1 id="ret2libc的实现"><a href="#ret2libc的实现" class="headerlink" title="ret2libc的实现"></a>ret2libc的实现</h1><ol><li>checksec查看文件保护，IDA 查看源码，可以看到buf大小只有0x8，read却允许读入0x100大小的数据，有着明显的栈溢出；</li></ol><figure class="image-box">                <img src="/2018/08/28/pwn-入门1-3-plt-got/ida.png" alt="图一](pwn-入门1-3-plt-got/checksec.png)  ![图二" title="" class="">                <p>图一](pwn-入门1-3-plt-got/checksec.png)  ![图二</p>            </figure><ol start="2"><li>查看应用调用函数plt表，<code>objdump -d -M intel -j .plt pwnme</code>可以看到没有调用sysytem，需要我们利用其它已调用的来泄露；</li></ol><figure class="image-box">                <img src="/2018/08/28/pwn-入门1-3-plt-got/plt.png" alt="图三" title="" class="">                <p>图三</p>            </figure><ol start="3"><li>这里决定泄露write函数的got地址：使用gdb，断点下在write函数之后，运行，x查看write.plt.got处的值，即got地址；</li></ol><p><img src="/2018/08/28/pwn-入门1-3-plt-got/write.png" alt="图四">    <img src="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" alt="图五"></p><ol start="4"><li><p>查询libc版本的write_off，system_off，str_bin_sh_off，计算sys_got/str_bin_sh_got = write_got - write_off + sys_off/str_bin_sh_off，计算sys_add/str_bin_sh_off</p></li><li><p>构造payload <code>payload = flat([&#39;a&#39;*20 , sys_got , 0xdeadbeef , binsh_got])</code></p></li></ol><p><em>因为某些不知名的原因，各个偏移得到的got地址并不是特别对，所以先不放payload及结果。之后再补</em></p>]]></content>
+      
+      
+        <tags>
+            
+            <tag> pwn </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>pwn 入门n.n</title>
       <link href="/2018/08/28/pwn-%E5%85%A5%E9%97%A8n-n/"/>
       <url>/2018/08/28/pwn-%E5%85%A5%E9%97%A8n-n/</url>

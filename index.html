@@ -217,6 +217,71 @@
         <ul class="post-list">
         
             <li class="post-list-item fade">
+                <article id="post-pwn-入门1-3-plt-got"
+  class="article-card article-type-post" itemprop="blogPost">
+  
+        
+<div class="item-thumb">
+    <a class="thumb-link" href="/2018/08/28/pwn-入门1-3-plt-got/"></a>
+    <div class="thumb-hover">
+        <span class="icon icon-eye"></span>
+    </div>
+    <img src="/img/thumb/7.jpg" alt="图片路径不正确">
+    
+
+
+  
+    <h3 class="post-title ab-title" itemprop="name">
+      <a class="post-title-link" href="/2018/08/28/pwn-入门1-3-plt-got/">pwn 入门1.3--plt/got</a>
+    </h3>
+  
+
+
+
+</div>
+
+        
+    
+    
+    
+    <div class="post-meta">
+        <time class="post-time" title="2018-08-28 12:12:56" datetime="2018-08-28T04:12:56.000Z"  itemprop="datePublished">2018-08-28</time>
+
+        
+
+
+        
+
+        
+
+
+        
+        
+    </div>
+    
+    <div class="post-content" id="post-content" itemprop="postContent">
+    
+    
+        关于ret2libc 中的plt/got 
+延迟绑定即当第一次使用某函数时，GOT表中对应表项保存的并不是真实的函数地址，需要通过_dl_runtime_resolve查找到真实的函数地址并填入GOT对应表项，从而在下次再使用该函数时，无需进行查找。我们要泄漏的就是初始化查找后填入GOT对应表项中的函数地址。
+plt 与 got文件的plt表中存放着函数的.plt.got 地址，.plt.g...
+    
+    <a href="/2018/08/28/pwn-入门1-3-plt-got/" class="post-more waves-effect waves-button">
+        more
+    </a>
+    </div>
+</article>
+
+<div class="post-footer">
+    
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+</div>
+
+
+            </li>
+        
+            <li class="post-list-item fade">
                 <article id="post-pwn-入门n-n"
   class="article-card article-type-post" itemprop="blogPost">
   
