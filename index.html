@@ -262,9 +262,10 @@
     <div class="post-content" id="post-content" itemprop="postContent">
     
     
-        关于ret2libc 中的plt/got 
+        &lt;center&gt;关于ret2libc 中的plt/got&lt;/center&gt; 
 延迟绑定即当第一次使用某函数时，GOT表中对应表项保存的并不是真实的函数地址，需要通过_dl_runtime_resolve查找到真实的函数地址并填入GOT对应表项，从而在下次再使用该函数时，无需进行查找。我们要泄漏的就是初始化查找后填入GOT对应表项中的函数地址。
-plt 与 got文件的plt表中存放着函数的.plt.got 地址，.plt.g...
+
+使用gdb，断点下在w...
     
     <a href="/2018/08/28/pwn-入门1-3-plt-got/" class="post-more waves-effect waves-button">
         more
@@ -791,7 +792,7 @@ rodata: （只读data段）全局化的静态变量（const）
 <script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
 <script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
 <script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
-<script type="text/javascript" color="255,0,0"opacity="0.5"count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="50" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
 
 <script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
 
