@@ -217,6 +217,69 @@
         <ul class="post-list">
         
             <li class="post-list-item fade">
+                <article id="post-pwn-300解析-格式化字符串漏洞利用巩固"
+  class="article-card article-type-post" itemprop="blogPost">
+  
+        
+<div class="item-thumb">
+    <a class="thumb-link" href="/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/"></a>
+    <div class="thumb-hover">
+        <span class="icon icon-eye"></span>
+    </div>
+    <img src="/img/thumb/8.jpg" alt="图片路径不正确">
+    
+
+
+  
+    <h3 class="post-title ab-title" itemprop="name">
+      <a class="post-title-link" href="/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/">pwn-300解析-格式化字符串漏洞利用巩固</a>
+    </h3>
+  
+
+
+
+</div>
+
+        
+    
+    
+    
+    <div class="post-meta">
+        <time class="post-time" title="2018-09-11 09:51:39" datetime="2018-09-11T01:51:39.000Z"  itemprop="datePublished">2018-09-11</time>
+
+        
+
+
+        
+
+        
+
+
+        
+        
+    </div>
+    
+    <div class="post-content" id="post-content" itemprop="postContent">
+    
+    
+        pwn-300之前有一道pwn-200，也具有canary保护及NX保护，但是直接给了system(‘/bin/sh’)的函数，所以问题的关键就在于如何使程序转向该函数地址执行；幸运的是该程序同时具有格式化字符串漏洞。所以最后的思路就是，第一次输入，格式化字符串漏洞泄露canary，第二次输入溢出到函数返回地址即可。而这道题将输入由gets变为fgets，也就是即使泄露出canary也无法溢...
+    
+    <a href="/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/" class="post-more waves-effect waves-button">
+        more
+    </a>
+    </div>
+</article>
+
+<div class="post-footer">
+    
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+</div>
+
+
+            </li>
+        
+            <li class="post-list-item fade">
                 <article id="post-pwn-入门1-3-plt-got"
   class="article-card article-type-post" itemprop="blogPost">
   
