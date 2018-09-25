@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     
     
-    <title>pwn.入门1.2 | Room of Equirement | pwn what you want</title>
+    <title>Introduction to pwn1.2--ret2libc | Room of Equirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="pwn">
+    <meta name="keywords" content="pwn,stack">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
     <link rel="stylesheet" href="/css/style.css?v=1.3.2">
@@ -171,7 +171,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>pwn.入门1.2</span>
+            <span>Introduction to pwn1.2--ret2libc</span>
             
         </div>
         
@@ -184,13 +184,15 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">pwn.入门1.2</h1>
+        <h1 class="title">Introduction to pwn1.2--ret2libc</h1>
         <h5 class="subtitle">
             
                 <time datetime="2018-08-28T01:46:58.000Z" itemprop="datePublished" class="page-time">
   2018-08-28
 </time>
 
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
 
             
         </h5>
@@ -218,11 +220,13 @@
     <article id="post-pwn-入门1-2"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">pwn.入门1.2</h1>
+        <h1 class="post-card-title">Introduction to pwn1.2--ret2libc</h1>
         <div class="post-meta">
             <time class="post-time" title="2018-08-28 09:46:58" datetime="2018-08-28T01:46:58.000Z"  itemprop="datePublished">2018-08-28</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
 
 
             
@@ -235,8 +239,7 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             
             <p>ret2libc学习</p>
-<h1 id="ret2libc使用原因"><a href="#ret2libc使用原因" class="headerlink" title="ret2libc使用原因"></a>ret2libc使用原因</h1><p>程序不是静态编译，通常就不会有int 0x80</p>
-<p>ret2syscall 就无法实现，因而使用</p>
+<h1 id="ret2libc使用原因"><a href="#ret2libc使用原因" class="headerlink" title="ret2libc使用原因"></a>ret2libc使用原因</h1><p>程序不是静态编译，通常就不会有int 0x80<br>s<br>ret2syscall 就无法实现，因而使用</p>
 <p>ret2library。</p>
 <h1 id="调用函数的栈结构布局-："><a href="#调用函数的栈结构布局-：" class="headerlink" title="调用函数的栈结构布局 ："></a>调用函数的栈结构布局 ：</h1><ul>
 <li><p>调用函数的返回地址</p>
@@ -278,7 +281,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2018-08-28T01:55:07.624Z" itemprop="dateUpdated">2018-08-28 09:55:07</time>
+    Last updated: <time datetime="2018-09-25T13:46:32.048Z" itemprop="dateUpdated">2018-09-25 21:46:32</time>
 </span><br>
 
 
@@ -303,7 +306,7 @@
         
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
 
             <div class="page-share-wrap">
     
@@ -312,7 +315,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《pwn.入门1.2》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《Introduction to pwn1.2--ret2libc》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -324,7 +327,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《pwn.入门1.2》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《Introduction to pwn1.2--ret2libc》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -352,7 +355,7 @@
     <div class="prev">
       <a href="/2018/08/28/pwn-入门n-n/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">pwn 入门n.n</h4>
+        <h4 class="title">Introduction to pwn2.2--UAF</h4>
       </a>
     </div>
   
@@ -459,7 +462,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《pwn.入门1.2》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《Introduction to pwn1.2--ret2libc》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -471,7 +474,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《pwn.入门1.2》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《Introduction to pwn1.2--ret2libc》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -493,7 +496,7 @@
 <script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
 <script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
 <script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
-<script type="text/javascript" color="255,0,0"opacity="0.3"count="50" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
 
 <script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
 

@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     
     
-    <title>pwn 入门1.3--plt/got | Room of Equirement | pwn what you want</title>
+    <title>Introduction to pwn 1.3--plt/got | Room of Equirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="pwn">
+    <meta name="keywords" content="pwn,stack">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
     <link rel="stylesheet" href="/css/style.css?v=1.3.2">
@@ -171,7 +171,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>pwn 入门1.3--plt/got</span>
+            <span>Introduction to pwn 1.3--plt/got</span>
             
         </div>
         
@@ -184,13 +184,15 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">pwn 入门1.3--plt/got</h1>
+        <h1 class="title">Introduction to pwn 1.3--plt/got</h1>
         <h5 class="subtitle">
             
                 <time datetime="2018-08-28T04:12:56.000Z" itemprop="datePublished" class="page-time">
   2018-08-28
 </time>
 
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
 
             
         </h5>
@@ -218,11 +220,13 @@
     <article id="post-pwn-入门1-3-plt-got"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">pwn 入门1.3--plt/got</h1>
+        <h1 class="post-card-title">Introduction to pwn 1.3--plt/got</h1>
         <div class="post-meta">
             <time class="post-time" title="2018-08-28 12:12:56" datetime="2018-08-28T04:12:56.000Z"  itemprop="datePublished">2018-08-28</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
 
 
             
@@ -237,7 +241,7 @@
             <pre><code>&lt;center&gt;关于ret2libc 中的plt/got&lt;/center&gt; 
 </code></pre><h1 id="延迟绑定"><a href="#延迟绑定" class="headerlink" title="延迟绑定"></a>延迟绑定</h1><p>即当第一次使用某函数时，GOT表中对应表项保存的并不是真实的函数地址，需要通过_dl_runtime_resolve查找到真实的函数地址并填入GOT对应表项，从而在下次再使用该函数时，无需进行查找。我们要泄漏的就是初始化查找后填入GOT对应表项中的函数地址。</p>
 <ul>
-<li>使用gdb，断点下在write函数之后，运行，x查看write.plt.got处的值，即实际地址；*<br><a rel=pwn 入门1.3--plt/got href="/2018/08/28/pwn-入门1-3-plt-got/write.png" class="swipebox" title=<img src="/2018/08/28/pwn-入门1-3-plt-got/write.png" alt="图四">><img src="/2018/08/28/pwn-入门1-3-plt-got/write.png" alt="图四"></a>    <a rel=pwn 入门1.3--plt/got href="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" class="swipebox" title=<img src="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" alt="图五">><img src="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" alt="图五"></a></li>
+<li>使用gdb，断点下在write函数之后，运行，x查看write.plt.got处的值，即实际地址；*<br><a rel=Introduction to pwn 1.3--plt/got href="/2018/08/28/pwn-入门1-3-plt-got/write.png" class="swipebox" title=<img src="/2018/08/28/pwn-入门1-3-plt-got/write.png" alt="图四">><img src="/2018/08/28/pwn-入门1-3-plt-got/write.png" alt="图四"></a>    <a rel=Introduction to pwn 1.3--plt/got href="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" class="swipebox" title=<img src="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" alt="图五">><img src="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" alt="图五"></a></li>
 </ul>
 <h1 id="plt-与-got"><a href="#plt-与-got" class="headerlink" title="plt 与 got"></a>plt 与 got</h1><p>文件的plt表中存放着函数的.plt.got 地址，.plt.got 地址处的值为该函数的真正的got地址（也就是我们需要泄露的）</p>
 <p>由于延迟绑定机制的存在，我们只能通过泄露被调用的函数的got地址，同时又因为同一libc库中各函数之间的偏移是固定的，我们就能因此来求出其他函数的got地址。</p>
@@ -245,14 +249,14 @@
 <li>文件给了一个pwnme文件与libc-2.19.so文件；checksec查看文件保护，IDA 查看源码，可以看到buf大小只有0x8，read却允许读入0x100大小的数据，有着明显的栈溢出；</li>
 </ol>
 <figure class="image-box">
-                <a rel=pwn 入门1.3--plt/got href="/2018/08/28/pwn-入门1-3-plt-got/ida.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门1-3-plt-got/ida.png" alt="图一](pwn-入门1-3-plt-got/checksec.png)  ![图二" title="" class=""></a>
+                <a rel=Introduction to pwn 1.3--plt/got href="/2018/08/28/pwn-入门1-3-plt-got/ida.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门1-3-plt-got/ida.png" alt="图一](pwn-入门1-3-plt-got/checksec.png)  ![图二" title="" class=""></a>
                 <p>图一](pwn-入门1-3-plt-got/checksec.png)  ![图二</p>
             </figure>
 <ol start="2">
 <li>查看应用调用函数plt表，<code>objdump -d -M intel -j .plt pwnme</code>可以看到没有调用system，需要我们利用其它已调用的来泄露；</li>
 </ol>
 <figure class="image-box">
-                <a rel=pwn 入门1.3--plt/got href="/2018/08/28/pwn-入门1-3-plt-got/plt.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门1-3-plt-got/plt.png" alt="图三" title="" class=""></a>
+                <a rel=Introduction to pwn 1.3--plt/got href="/2018/08/28/pwn-入门1-3-plt-got/plt.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门1-3-plt-got/plt.png" alt="图三" title="" class=""></a>
                 <p>图三</p>
             </figure>
 <ol start="3">
@@ -274,7 +278,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2018-09-03T13:45:49.643Z" itemprop="dateUpdated">2018-09-03 21:45:49</time>
+    Last updated: <time datetime="2018-09-25T13:46:03.943Z" itemprop="dateUpdated">2018-09-25 21:46:03</time>
 </span><br>
 
 
@@ -299,7 +303,7 @@
         
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
 
             <div class="page-share-wrap">
     
@@ -308,7 +312,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《pwn 入门1.3--plt/got》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《Introduction to pwn 1.3--plt/got》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -320,7 +324,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《pwn 入门1.3--plt/got》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《Introduction to pwn 1.3--plt/got》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -348,7 +352,7 @@
     <div class="prev">
       <a href="/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">pwn-300解析-格式化字符串漏洞利用巩固</h4>
+        <h4 class="title">pwn-300-Formatting string vulnerability</h4>
       </a>
     </div>
   
@@ -357,7 +361,7 @@
     <div class="next">
       <a href="/2018/08/28/pwn-入门n-n/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">pwn 入门n.n</h4>
+        <h4 class="title">Introduction to pwn2.2--UAF</h4>
       </a>
     </div>
   
@@ -455,7 +459,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《pwn 入门1.3--plt/got》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《Introduction to pwn 1.3--plt/got》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -467,7 +471,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《pwn 入门1.3--plt/got》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《Introduction to pwn 1.3--plt/got》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -489,7 +493,7 @@
 <script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
 <script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
 <script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
-<script type="text/javascript" color="255,0,0"opacity="0.3"count="50" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
 
 <script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
 
