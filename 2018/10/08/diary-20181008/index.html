@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     
     
-    <title>Introduction to pwn1.1 | Room of Equirement | pwn what you want</title>
+    <title>Diary.20181008 | Room of Equirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="pwn,stack">
+    <meta name="keywords" content="diary">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
     <link rel="stylesheet" href="/css/style.css?v=1.3.2">
@@ -171,7 +171,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>Introduction to pwn1.1</span>
+            <span>Diary.20181008</span>
             
         </div>
         
@@ -184,15 +184,15 @@
 <header class="content-header page-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">Introduction to pwn1.1</h1>
+        <h1 class="title">Diary.20181008</h1>
         <h5 class="subtitle">
             
-                <time datetime="2018-08-13T14:35:13.000Z" itemprop="datePublished" class="page-time">
-  2018-08-13
+                <time datetime="2018-10-08T13:10:48.000Z" itemprop="datePublished" class="page-time">
+  2018-10-08
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/diary/">diary</a></li></ul>
 
             
         </h5>
@@ -220,47 +220,9 @@
     <article class="page-article fade" itemprop="blogPage">
         <div class="post-content page-content" id="page-content" itemprop="pageContent">
             
-            <h3 id="各种变量的存储位置"><a href="#各种变量的存储位置" class="headerlink" title="各种变量的存储位置"></a>各种变量的存储位置</h3><ol>
-<li>stack：局部变量</li>
-<li>heap: 动态分配内存的变量（malloc/new）</li>
-<li>bss section: 全局化的未初始化的变量</li>
-<li>data section: 全局化的已初始化的变量<ul>
-<li>rodata: （只读data段）全局化的静态变量（const）</li>
-</ul>
-</li>
-</ol>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;   //.data</span><br><span class="line">int b;       //.bss</span><br><span class="line">const double PI = 3.1415    //rodata</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    int c = 2;    //stack</span><br><span class="line">	char *d = malloc(16);    //heap</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="linux下将shellcode运行"><a href="#linux下将shellcode运行" class="headerlink" title="linux下将shellcode运行"></a>linux下将shellcode运行</h3><p>1.手写简易shellcode</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">jmp sh</span><br><span class="line">run:</span><br><span class="line">    pop ebx</span><br><span class="line">    mov BYTE [ebx+7],0</span><br><span class="line">    xor eax,eax</span><br><span class="line">    mov al,11</span><br><span class="line">    xor ecx,ecx</span><br><span class="line">    xor edx,edx</span><br><span class="line">    int 0x80</span><br><span class="line">sh:</span><br><span class="line">    call run</span><br><span class="line">    db &quot;/bin/sh&quot;</span><br></pre></td></tr></table></figure>
-<p>2.一系列步骤</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Assembly:  nasm a.asm -o a.o -felf32   </span><br><span class="line">Extract Shellcode: objcopy -O binary a.o code   //将a.o中需要用内容的提取到code中</span><br><span class="line">                   xxd -i code        //将提取出来的code转换为机器码</span><br></pre></td></tr></table></figure>
-<p>3.带入调用shellcode的程序test.c</p>
-<pre><code>#include  &quot;code.h&quot;
+            <p>  下午摸了一道题，比较简单的格式化字符串；之后摸手机端的 termux ，试图在上面安装 nmap，metasploit；<br>nmap还是很顺利的，但是metasploit搞到自闭……各种安装包问题，一步一步的找问题找解决方法才好不容易把解决；<br>黑域brevent也搞了半天，最后我还是选择绿色守护……手机最近掉电掉的有点严重，必须管一管了；<br>配合帅气的termux，搞了个hacker’s keyboard ，打起字来方便了不少， 还换了个hacker live wallpaper，也就是像是黑客帝国那样的动态壁纸，hhhh整个手机炫酷了不少。<br>周四林少华老师要来学校做客震旦讲堂！！！一定要过去，顺便看能不能混个签名hhh</p>
+<p>&lt;%<br>page.password = ‘1’ in page ? !! page : !!history.back();<br>%&gt;</p>
 
-typedef int(*CODE)();
-
-int main()
-{
-    ((CODE)shellcode)();
-}
-
-Run Shellcode: gcc test.c -o test -m32 -zexexstack       
-</code></pre><p><em><a href="syscalls.kernelgrok.com" title="src">linux下的系统调用</a>.</em></p>
-<h1 id="之前的一些小知识点笔记："><a href="#之前的一些小知识点笔记：" class="headerlink" title="之前的一些小知识点笔记："></a>之前的一些小知识点笔记：</h1><p>gadget :一小段以ret结尾的code</p>
-<p>rop chain ：串联在一起的gadget</p>
-<p>rop 类型：控制寄存器做syscall；使用原有程序的func；使用libc里的gadget或func（绕过ASLR）.</p>
-<p>rop关键：</p>
-<p>查找gadget：</p>
-<pre><code>ROPgadget --binary ./file
-
-ROPgadget --binary ret2syscall  --only &apos;pop|ret&apos; | grep eax  
-ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
-</code></pre><p>排列gadget：</p>
-<p>peda：vmmap 查看程序段的可读写执行情况</p>
-<p>也可以：./file &amp;  (后台运行，返回pid0）</p>
-<pre><code>cat  /proc/pid0/maps
-</code></pre>
         </div>
         
             <div class="page-reward">
@@ -283,7 +245,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/10/08/diary-20181008/&title=《Diary.20181008》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -295,7 +257,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/10/08/diary-20181008/&title=《Diary.20181008》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -401,7 +363,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/10/08/diary-20181008/&title=《Diary.20181008》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -413,7 +375,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/10/08/diary-20181008/&title=《Diary.20181008》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -425,7 +387,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3ay46jMBAF0Pz/T2e2M+pA31smI2GOV63QgA+LkuvxesXr/WP9/P3o/2dveX1jYWBg3JbxPl3njL+vHj05/xD51Q9vxMDAeAAj2URyNb/rPHLme8PAwMBoQ+fsWDl7JgYGBka7xTzgzkI5BgYGRh74clIbxJPgfkEujoGBcUNGXnX//39/pb+BgYFxK8a7XLNjYhIu87s+PAcDA2NrRlusH6aXZbNhth8MDIy9GUm4XEk1Z6W68+0eUjEwMLZjrIxTrB/71j/iPydcDAyMTRn5Fs/HJnJ2e/QsSm8YGBgPYORhcVYmSyr5eRp8GHAxMDC2ZqwklishtdhokoVjYGBsypgljcnVbwyB/fIhMDAwtmO04xF5cpuH47zkd/jRMTAwtmbkl/Nm5Erzsj041rMYGBgYN2S05bMZbHY0rBNXDAyMTRkr6WVb4m/bohcMW2BgYGzEmCWWSRBMEteVt2BgYGC0t10VUofDFhgYGFsz2oRzpSXQNimLYhwGBsZjGLOG4sphbtbs/PALBgbGwxh5G7JNRPPSf9t4wMDAeAIjT19nQxL5u5ISHgYGxnMY73Llh8LkCbNmZyTDwMDYiHFBtC6Tz/Xg3rZRMTAw9mDMivVt+awd0agDLgYGxgMYbcKZ37U+YBE1JzAwMDDKFHR2rFxKWTEwMDAWhr3yhmXeTvilv4GBgbEpIx9FbYcn8qbC7C4MDIwnMNpzV9t6zDeRHzEvOD5iYGDcg/EHCe36CMFvdUkAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKklEQVR42u3aMW7DMAwF0N7/0i7QqUDi5JO0B0tPU5DGsp8HliL58xOv42+9fvN/vX5/ts/Z7z9fe8HCwMB4LOP4uM4YOTshJS/lCxUDA2MDRv4oZ8E3iYR5KM+fDQMDAyNJBHuf80QTAwMDoxpwk+NokgL2gjsGBsbOjPwwmYfLXvJ3+1kcAwPjgYxJ+ezuzzf2NzAwMB7COC5dV/UWy/fFwMBYmpGkfZPxizztq/613H/AwMB4LCO5bD54kb+4/C5v/m9gYGAszaiW+HujGNUQXBjRwMDAWJpRDbXz9K7XMIheNAYGxsaMvHyWB/FqszNKUjEwMJZm3HHgHI1ExMEXAwNjB0aeulUTxFH5DAMDA+NjY6A3pFUtos1D9pvcFgMDY1FGNWfsBdnqo+epatTlwMDAeDgjL6vlyVyeaM6DcvNBMTAwHshIonJS4r92XKywMwYGxtKM6kZ5+phce0FjEgMDYxtGoaTVOtzmpbRRsoiBgbE0I9+6d8TtjXZVW54YGBhrM6ob5cG02mzo7YCBgbEbI594TW7TjP3FFBMDA2MHxiTMVV/BvOgf9TowMDAWYhzFVX2UavjutVExMDDWZkzC3CQcT4J4r3WBgYHxdEa1fN88XhaPvs2zOAYGxtKMXuCbtDyr6d0XGAYGBkarlFYNuKPxVgwMDIzija8a1yh3NjAwMJZmTJoB1V82j6l55oiBgbEc49rGQB5M85GL3lUYGBhLMH4B/CO8Kqp0VNMAAAAASUVORK5CYII=" alt="微信分享二维码">
 </div>
 
 

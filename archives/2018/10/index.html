@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     
     
-    <title>Introduction to pwn1.1 | Room of Equirement | pwn what you want</title>
+    <title>Archives: 2018/10 | Room of Equirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="pwn,stack">
+    <meta name="keywords" content="For the pwn is long and full of terrors.">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
     <link rel="stylesheet" href="/css/style.css?v=1.3.2">
@@ -15,7 +15,7 @@
     <script type="text/javascript">
         // Data Center
         var DC = {
-            reward:	true,
+            reward:	false,
             lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
             v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
             g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
@@ -32,7 +32,7 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
@@ -138,7 +138,7 @@
               </a>
             </li>
         
-            <li class="">
+            <li class=" active">
               <a href="/archives"  >
                 <i class="icon icon-lg icon-archives"></i>
                 ARCHIVES
@@ -171,7 +171,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>Introduction to pwn1.1</span>
+            <span>Archives</span>
             
         </div>
         
@@ -181,21 +181,18 @@
         
     </div>
 </header>
-<header class="content-header page-header">
+<header class="content-header archives-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">Introduction to pwn1.1</h1>
+        <h1 class="title">Archives</h1>
         <h5 class="subtitle">
             
-                <time datetime="2018-08-13T14:35:13.000Z" itemprop="datePublished" class="page-time">
-  2018-08-13
-</time>
-
-
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
-
-            
         </h5>
+        
+        <div class="remind">
+            <p>总计文章( <span>14</span> )篇，约( <span>35.4K</span> )字</p>
+            <p>Keep moving😎!!!</p>
+        </div>
         
     </div>
     
@@ -215,141 +212,46 @@
     <div id="local-search-result"></div>
 </div>
 
-
-<div class="container body-wrap">
-    <article class="page-article fade" itemprop="blogPage">
-        <div class="post-content page-content" id="page-content" itemprop="pageContent">
+<div class="container body-wrap fade">
+    
+                <h3 class="archive-separator">October, 2018</h3>
+                <div class="waterfall">
             
-            <h3 id="各种变量的存储位置"><a href="#各种变量的存储位置" class="headerlink" title="各种变量的存储位置"></a>各种变量的存储位置</h3><ol>
-<li>stack：局部变量</li>
-<li>heap: 动态分配内存的变量（malloc/new）</li>
-<li>bss section: 全局化的未初始化的变量</li>
-<li>data section: 全局化的已初始化的变量<ul>
-<li>rodata: （只读data段）全局化的静态变量（const）</li>
-</ul>
-</li>
-</ol>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;   //.data</span><br><span class="line">int b;       //.bss</span><br><span class="line">const double PI = 3.1415    //rodata</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    int c = 2;    //stack</span><br><span class="line">	char *d = malloc(16);    //heap</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="linux下将shellcode运行"><a href="#linux下将shellcode运行" class="headerlink" title="linux下将shellcode运行"></a>linux下将shellcode运行</h3><p>1.手写简易shellcode</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">jmp sh</span><br><span class="line">run:</span><br><span class="line">    pop ebx</span><br><span class="line">    mov BYTE [ebx+7],0</span><br><span class="line">    xor eax,eax</span><br><span class="line">    mov al,11</span><br><span class="line">    xor ecx,ecx</span><br><span class="line">    xor edx,edx</span><br><span class="line">    int 0x80</span><br><span class="line">sh:</span><br><span class="line">    call run</span><br><span class="line">    db &quot;/bin/sh&quot;</span><br></pre></td></tr></table></figure>
-<p>2.一系列步骤</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Assembly:  nasm a.asm -o a.o -felf32   </span><br><span class="line">Extract Shellcode: objcopy -O binary a.o code   //将a.o中需要用内容的提取到code中</span><br><span class="line">                   xxd -i code        //将提取出来的code转换为机器码</span><br></pre></td></tr></table></figure>
-<p>3.带入调用shellcode的程序test.c</p>
-<pre><code>#include  &quot;code.h&quot;
+        <div class="waterfall-item">
+  <article class="article-card archive-article">
+    <div class="post-meta">
+      <time class="post-time" title="2018-10-08 21:10:48" datetime="2018-10-08T13:10:48.000Z"  itemprop="datePublished">2018-10-08</time>
 
-typedef int(*CODE)();
+      
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/diary/">diary</a></li></ul>
 
-int main()
-{
-    ((CODE)shellcode)();
-}
 
-Run Shellcode: gcc test.c -o test -m32 -zexexstack       
-</code></pre><p><em><a href="syscalls.kernelgrok.com" title="src">linux下的系统调用</a>.</em></p>
-<h1 id="之前的一些小知识点笔记："><a href="#之前的一些小知识点笔记：" class="headerlink" title="之前的一些小知识点笔记："></a>之前的一些小知识点笔记：</h1><p>gadget :一小段以ret结尾的code</p>
-<p>rop chain ：串联在一起的gadget</p>
-<p>rop 类型：控制寄存器做syscall；使用原有程序的func；使用libc里的gadget或func（绕过ASLR）.</p>
-<p>rop关键：</p>
-<p>查找gadget：</p>
-<pre><code>ROPgadget --binary ./file
 
-ROPgadget --binary ret2syscall  --only &apos;pop|ret&apos; | grep eax  
-ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
-</code></pre><p>排列gadget：</p>
-<p>peda：vmmap 查看程序段的可读写执行情况</p>
-<p>也可以：./file &amp;  (后台运行，返回pid0）</p>
-<pre><code>cat  /proc/pid0/maps
-</code></pre>
-        </div>
-        
-            <div class="page-reward">
-    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
-</div>
-
-        
-        
-        <div class="card page-about-me flex-row">
-            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/avatar.jpg"></a>
-            <div class="content flex-col">
-                <p><strong>Sirius Whiter</strong></p>
-                <p><em>pwn what you want</em></p>
-                <p></p>
-            </div>
-            <div class="page-share-wrap">
+    </div>
     
 
-<div class="page-share" id="pageShare">
-    <ul class="reset share-icons">
-      
-      <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      
-      <li>
-        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      
-      <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      
-    </ul>
- </div>
 
-
-
-    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
-        <i class="icon icon-share-alt icon-lg"></i>
-    </a>
-</div>
-
-        </div>
-        
-        
-        <div class="card">   
-           
-
-
-        </div>
-        
-    </article>
-    
-        <div id="reward" class="page-modal reward-lay">
-    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <h3 class="reward-title">
-        <i class="icon icon-quote-left"></i>
-        我们一起来让这个世界有趣一点
-        <i class="icon icon-quote-right"></i>
+  
+    <h3 class="post-title " itemprop="name">
+      <a class="post-title-link" href="/2018/10/08/diary-20181008/">Diary.20181008</a>
     </h3>
-    <div class="reward-content">
+  
+
+
+
+    
+    <div class="post-footer">
         
-        <div class="reward-code">
-            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
-        </div>
-        
-        <label class="reward-toggle">
-            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
-                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
-            <div class="reward-toggle-ctrol">
-                <span class="reward-toggle-item wechat">微信</span>
-                <span class="reward-toggle-label"></span>
-                <span class="reward-toggle-item alipay">支付宝</span>
-            </div>
-        </label>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/diary/">diary</a></li></ul>
+
+    </div>
+    
+  </article>
+</div>
         
     </div>
-</div>
-
     
 </div>
-
 
         <footer class="footer">
     
@@ -401,7 +303,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/archives/2018/10/&title=Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -413,7 +315,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/archives/2018/10/&title=Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -425,7 +327,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3ay46jMBAF0Pz/T2e2M+pA31smI2GOV63QgA+LkuvxesXr/WP9/P3o/2dveX1jYWBg3JbxPl3njL+vHj05/xD51Q9vxMDAeAAj2URyNb/rPHLme8PAwMBoQ+fsWDl7JgYGBka7xTzgzkI5BgYGRh74clIbxJPgfkEujoGBcUNGXnX//39/pb+BgYFxK8a7XLNjYhIu87s+PAcDA2NrRlusH6aXZbNhth8MDIy9GUm4XEk1Z6W68+0eUjEwMLZjrIxTrB/71j/iPydcDAyMTRn5Fs/HJnJ2e/QsSm8YGBgPYORhcVYmSyr5eRp8GHAxMDC2ZqwklishtdhokoVjYGBsypgljcnVbwyB/fIhMDAwtmO04xF5cpuH47zkd/jRMTAwtmbkl/Nm5Erzsj041rMYGBgYN2S05bMZbHY0rBNXDAyMTRkr6WVb4m/bohcMW2BgYGzEmCWWSRBMEteVt2BgYGC0t10VUofDFhgYGFsz2oRzpSXQNimLYhwGBsZjGLOG4sphbtbs/PALBgbGwxh5G7JNRPPSf9t4wMDAeAIjT19nQxL5u5ISHgYGxnMY73Llh8LkCbNmZyTDwMDYiHFBtC6Tz/Xg3rZRMTAw9mDMivVt+awd0agDLgYGxgMYbcKZ37U+YBE1JzAwMDDKFHR2rFxKWTEwMDAWhr3yhmXeTvilv4GBgbEpIx9FbYcn8qbC7C4MDIwnMNpzV9t6zDeRHzEvOD5iYGDcg/EHCe36CMFvdUkAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABuUlEQVR42u3aSw6DMAwFwN7/0vQEhGfnQytNVlULYejiKXby+cTjCsbdlePZPjsGLi7uNLeKyB88nmH8krcz4+LiHuQmD0uyZfxHJPQHGy4u7k9y80jqhRouLu7/cvOomglKXFzcd7lJ8VNduMy83oJaDRcXd4Kbdyn3fd7S38XFxW1xr+JIZkjmbz4dFxf3CDcPlFVlTDXIcHFx3+L2Gh+9YiZvxzwUP7i4uNu4M5ugebOjGmeFFRkuLu5mbi//kpcsbJOMXwkXF/cIN7k5X9BUt2x7wYeLi/sWNy+Eqk3SVU0WXFzcfdz8oENS/OR35e2SqFbDxcVdyk1KjvybPPJ61+Pi4p7kJoceZrZMqsSHIMPFxT3CHf9Q3Q7Jl03Vo6K4uLgnuQval/Ej85gr5C4uLu42bm/rtBdzvaILFxf3PDffZJ1vfDRXYbi4uEe4V3Hky5HqNkm0bMLFxT3CrRYweUMkCaaZoggXF3c3Nw+vHj0PvubxLFxc3G3cXtDkGblsKYOLi/vz3JlQq7ZicXFx/4u7IxZv58TFxT3I3Xdks7esWVCr4eLiTnDnb66G1/y2DS4u7jbuF3CtSOeAzQD2AAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 

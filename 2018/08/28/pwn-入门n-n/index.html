@@ -181,7 +181,7 @@
         
     </div>
 </header>
-<header class="content-header post-header">
+<header class="content-header page-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
         <h1 class="title">Introduction to pwn2.2--UAF</h1>
@@ -217,26 +217,8 @@
 
 
 <div class="container body-wrap">
-    <article id="post-pwn-入门n-n"
-  class="post-article article-type-post" itemprop="blogPost">
-    <div class="post-card">
-        <h1 class="post-card-title">Introduction to pwn2.2--UAF</h1>
-        <div class="post-meta">
-            <time class="post-time" title="2018-08-28 11:10:56" datetime="2018-08-28T03:10:56.000Z"  itemprop="datePublished">2018-08-28</time>
-
-            
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
-
-
-
-            
-
-            
-
-
-            
-        </div>
-        <div class="post-content" id="post-content" itemprop="postContent">
+    <article class="page-article fade" itemprop="blogPage">
+        <div class="post-content page-content" id="page-content" itemprop="pageContent">
             
             <h1 id="堆的UAF-use-after-free-利用"><a href="#堆的UAF-use-after-free-利用" class="headerlink" title="堆的UAF(use after free)利用"></a>堆的UAF(use after free)利用</h1><p><em>学长介绍了某CTF大佬聚集的交流群，但是入群需要做题，题目本来不是我这个段位可以搞定的，但是怎么说？有压力就有动力:)抱着入群的信念，<br>先看了misc，结果需要修复pyc文件，按流程走的时候出现了无法解决的一个奇怪问题，遂放弃；之后看了下pwn，感觉甚难；在看了逆向完全不会之后，<br>只能看了下pwn的tips，开始现学现卖。</em></p>
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>就像它的名字一样，即一个内存块被释放后再次被使用；主要利用的是一个指针对应的内存块被释放后，对应的指针没有被设为NULL；<br>而如果在这个指针在下一次被使用之前对应的内存块仍未被修改，程序可能还会正常运转；而若被已经修改，则有可能被利用，UAF就是利用该漏洞。</p>
@@ -254,37 +236,19 @@
 
         </div>
         
-<blockquote class="post-copyright">
-    <div class="content">
-        
-<span class="post-time">
-    Last updated: <time datetime="2018-09-25T13:46:12.344Z" itemprop="dateUpdated">2018-09-25 21:46:12</time>
-</span><br>
-
-
-        
-        转载注明出处，原文地址：<a href="/2018/08/28/pwn-入门n-n/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/</a>
-        
-    </div>
-    <footer>
-        <a href="http://siriuswhiter.tk">
-            <img src="/img/avatar.jpg" alt="Sirius Whiter">
-            Sirius Whiter
-        </a>
-    </footer>
-</blockquote>
-
-        
             <div class="page-reward">
     <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
 </div>
 
-            
         
-        <div class="post-footer">
-            
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heap/">heap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
-
+        
+        <div class="card page-about-me flex-row">
+            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/avatar.jpg"></a>
+            <div class="content flex-col">
+                <p><strong>Sirius Whiter</strong></p>
+                <p><em>pwn what you want</em></p>
+                <p></p>
+            </div>
             <div class="page-share-wrap">
     
 
@@ -321,46 +285,16 @@
 
         </div>
         
-            
-
-
         
-    </div>
-    
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="prev">
-      <a href="/2018/08/28/pwn-入门1-3-plt-got/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Introduction to pwn 1.3--plt/got</h4>
-      </a>
-    </div>
-  
-
-  
-    <div class="next">
-      <a href="/2018/08/28/pwn-入门1-2/" id="post-next" class="post-nav-link">
-        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">Introduction to pwn1.2--ret2libc</h4>
-      </a>
-    </div>
-  
-</nav>
+        <div class="card">   
+           
 
 
+        </div>
+        
+    </article>
     
-    
-        <aside class="post-widget">
-            <nav class="post-toc-wrap" id="post-toc">
-                <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#堆的UAF-use-after-free-利用"><span class="post-toc-number">1.</span> <span class="post-toc-text">堆的UAF(use after free)利用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#原理"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#漏洞的简单利用"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">漏洞的简单利用</span></a></li></ol></li></ol>
-            </nav>
-            <div class="toc-bar"><div>
-        </aside>
-    
-</article>
-
-    <div id="reward" class="page-modal reward-lay">
+        <div id="reward" class="page-modal reward-lay">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
@@ -388,6 +322,7 @@
 
     
 </div>
+
 
         <footer class="footer">
     

