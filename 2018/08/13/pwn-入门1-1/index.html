@@ -165,7 +165,20 @@
 </aside>
 
     <main id="main">
-        <header class="top-header" id="header">
+        
+<script>	
+    (function(){
+        if('{{ page.password}}' !== 0){
+            if (prompt('PASSWORD') !== '{{ page.password }}'){
+                alert('Wrong！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+<header class="top-header" id="header">
     <div class="flex-row clearfix">
         <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -181,7 +194,7 @@
         
     </div>
 </header>
-<header class="content-header page-header">
+<header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
         <h1 class="title">Introduction to pwn1.1</h1>
@@ -216,9 +229,29 @@
 </div>
 
 
+
+
 <div class="container body-wrap">
-    <article class="page-article fade" itemprop="blogPage">
-        <div class="post-content page-content" id="page-content" itemprop="pageContent">
+    <article id="post-pwn-入门1-1"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Introduction to pwn1.1</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-08-13 22:35:13" datetime="2018-08-13T14:35:13.000Z"  itemprop="datePublished">2018-08-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
             
             <h3 id="各种变量的存储位置"><a href="#各种变量的存储位置" class="headerlink" title="各种变量的存储位置"></a>各种变量的存储位置</h3><ol>
 <li>stack：局部变量</li>
@@ -263,19 +296,37 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
 </code></pre>
         </div>
         
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最後更新時間：<time datetime="2018-09-29T09:15:02.590Z" itemprop="dateUpdated">2018-09-29 17:15:02</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/08/13/pwn-入门1-1/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
             <div class="page-reward">
     <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
 </div>
 
+            
         
-        
-        <div class="card page-about-me flex-row">
-            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/avatar.jpg"></a>
-            <div class="content flex-col">
-                <p><strong>Sirius Whiter</strong></p>
-                <p><em>pwn what you want</em></p>
-                <p></p>
-            </div>
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
+
             <div class="page-share-wrap">
     
 
@@ -312,16 +363,46 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
 
         </div>
         
-        
-        <div class="card">   
-           
+            
 
 
-        </div>
         
-    </article>
+    </div>
     
-        <div id="reward" class="page-modal reward-lay">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/08/13/markdown规范学习/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Markdown standard</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2018/08/02/learning-python/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Learning python</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#各种变量的存储位置"><span class="post-toc-number">1.</span> <span class="post-toc-text">各种变量的存储位置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#linux下将shellcode运行"><span class="post-toc-number">2.</span> <span class="post-toc-text">linux下将shellcode运行</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#之前的一些小知识点笔记："><span class="post-toc-number"></span> <span class="post-toc-text">之前的一些小知识点笔记：</span></a>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
@@ -349,7 +430,6 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
 
     
 </div>
-
 
         <footer class="footer">
     

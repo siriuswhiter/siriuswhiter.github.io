@@ -6,7 +6,7 @@
       <title>Diary.20181008</title>
       <link href="/2018/10/08/diary-20181008/"/>
       <url>/2018/10/08/diary-20181008/</url>
-      <content type="html"><![CDATA[<p>  下午摸了一道题，比较简单的格式化字符串；之后摸手机端的 termux ，试图在上面安装 nmap，metasploit；<br>nmap还是很顺利的，但是metasploit搞到自闭……各种安装包问题，一步一步的找问题找解决方法才好不容易把解决；<br>黑域brevent也搞了半天，最后我还是选择绿色守护……手机最近掉电掉的有点严重，必须管一管了；<br>配合帅气的termux，搞了个hacker’s keyboard ，打起字来方便了不少， 还换了个hacker live wallpaper，也就是像是黑客帝国那样的动态壁纸，hhhh整个手机炫酷了不少。<br>周四林少华老师要来学校做客震旦讲堂！！！一定要过去，顺便看能不能混个签名hhh</p><p>&lt;%<br>page.password = ‘1’ in page ? !! page : !!history.back();<br>%&gt;</p>]]></content>
+      <content type="html"><![CDATA[<p>  下午摸了一道题，比较简单的格式化字符串；之后摸手机端的 termux ，试图在上面安装 nmap，metasploit；<br>nmap还是很顺利的，但是metasploit搞到自闭……各种安装包问题，一步一步的找问题找解决方法才好不容易把解决；<br>黑域brevent也搞了半天，最后我还是选择绿色守护……手机最近掉电掉的有点严重，必须管一管了；<br>配合帅气的termux，搞了个hacker’s keyboard ，打起字来方便了不少， 还换了个hacker live wallpaper，也就是像是黑客帝国那样的动态壁纸，hhhh整个手机炫酷了不少。<br>周四林少华老师要来学校做客震旦讲堂！！！一定要过去，顺便看能不能混个签名hhh</p><p>…搞了半天特定文章的加密，反而全都无法通过，搞不懂怎么回事…真麻烦</p>]]></content>
       
       <categories>
           

@@ -165,7 +165,20 @@
 </aside>
 
     <main id="main">
-        <header class="top-header" id="header">
+        
+<script>	
+    (function(){
+        if('{{ page.password}}' !== 0){
+            if (prompt('PASSWORD') !== '{{ page.password }}'){
+                alert('Wrong！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+<header class="top-header" id="header">
     <div class="flex-row clearfix">
         <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -181,7 +194,7 @@
         
     </div>
 </header>
-<header class="content-header page-header">
+<header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
         <h1 class="title">Hexo Essay Writing</h1>
@@ -216,9 +229,29 @@
 </div>
 
 
+
+
 <div class="container body-wrap">
-    <article class="page-article fade" itemprop="blogPage">
-        <div class="post-content page-content" id="page-content" itemprop="pageContent">
+    <article id="post-hexo-essay-writing"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Hexo Essay Writing</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-08-15 23:33:24" datetime="2018-08-15T15:33:24.000Z"  itemprop="datePublished">2018-08-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/skills/">skills</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
             
             <ol>
 <li>打开git,进入MyBlog目录；</li>
@@ -231,19 +264,37 @@
 
         </div>
         
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最後更新時間：<time datetime="2018-09-25T13:46:42.016Z" itemprop="dateUpdated">2018-09-25 21:46:42</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/08/15/hexo-essay-writing/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/15/hexo-essay-writing/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
             <div class="page-reward">
     <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
 </div>
 
+            
         
-        
-        <div class="card page-about-me flex-row">
-            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/avatar.jpg"></a>
-            <div class="content flex-col">
-                <p><strong>Sirius Whiter</strong></p>
-                <p><em>pwn what you want</em></p>
-                <p></p>
-            </div>
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/skills/">skills</a></li></ul>
+
             <div class="page-share-wrap">
     
 
@@ -280,16 +331,38 @@
 
         </div>
         
-        
-        <div class="card">   
-           
+            
 
 
-        </div>
         
-    </article>
+    </div>
     
-        <div id="reward" class="page-modal reward-lay">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/08/25/软件保护-软件破解-及对抗/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">软件保护/软件破解 及对抗</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2018/08/13/markdown规范学习/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Markdown standard</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
@@ -317,7 +390,6 @@
 
     
 </div>
-
 
         <footer class="footer">
     

@@ -165,7 +165,20 @@
 </aside>
 
     <main id="main">
-        <header class="top-header" id="header">
+        
+<script>	
+    (function(){
+        if('{{ page.password}}' !== 0){
+            if (prompt('PASSWORD') !== '{{ page.password }}'){
+                alert('Wrong！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+<header class="top-header" id="header">
     <div class="flex-row clearfix">
         <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -181,7 +194,7 @@
         
     </div>
 </header>
-<header class="content-header page-header">
+<header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
         <h1 class="title">Diary.20181008</h1>
@@ -216,28 +229,66 @@
 </div>
 
 
+
+
 <div class="container body-wrap">
-    <article class="page-article fade" itemprop="blogPage">
-        <div class="post-content page-content" id="page-content" itemprop="pageContent">
+    <article id="post-diary-20181008"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Diary.20181008</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-10-08 21:10:48" datetime="2018-10-08T13:10:48.000Z"  itemprop="datePublished">2018-10-08</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/diary/">diary</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
             
             <p>  下午摸了一道题，比较简单的格式化字符串；之后摸手机端的 termux ，试图在上面安装 nmap，metasploit；<br>nmap还是很顺利的，但是metasploit搞到自闭……各种安装包问题，一步一步的找问题找解决方法才好不容易把解决；<br>黑域brevent也搞了半天，最后我还是选择绿色守护……手机最近掉电掉的有点严重，必须管一管了；<br>配合帅气的termux，搞了个hacker’s keyboard ，打起字来方便了不少， 还换了个hacker live wallpaper，也就是像是黑客帝国那样的动态壁纸，hhhh整个手机炫酷了不少。<br>周四林少华老师要来学校做客震旦讲堂！！！一定要过去，顺便看能不能混个签名hhh</p>
-<p>&lt;%<br>page.password = ‘1’ in page ? !! page : !!history.back();<br>%&gt;</p>
+<p>…搞了半天特定文章的加密，反而全都无法通过，搞不懂怎么回事…真麻烦</p>
 
         </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最後更新時間：<time datetime="2018-10-08T14:37:11.195Z" itemprop="dateUpdated">2018-10-08 22:37:11</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/10/08/diary-20181008/" target="_blank" rel="external">http://siriuswhiter.tk/2018/10/08/diary-20181008/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
         
             <div class="page-reward">
     <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
 </div>
 
+            
         
-        
-        <div class="card page-about-me flex-row">
-            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/avatar.jpg"></a>
-            <div class="content flex-col">
-                <p><strong>Sirius Whiter</strong></p>
-                <p><em>pwn what you want</em></p>
-                <p></p>
-            </div>
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/diary/">diary</a></li></ul>
+
             <div class="page-share-wrap">
     
 
@@ -274,16 +325,31 @@
 
         </div>
         
-        
-        <div class="card">   
-           
+            
 
 
-        </div>
         
-    </article>
+    </div>
     
-        <div id="reward" class="page-modal reward-lay">
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2018/09/25/radare2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Radare2</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
@@ -311,7 +377,6 @@
 
     
 </div>
-
 
         <footer class="footer">
     

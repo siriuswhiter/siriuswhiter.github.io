@@ -165,7 +165,20 @@
 </aside>
 
     <main id="main">
-        <header class="top-header" id="header">
+        
+<script>	
+    (function(){
+        if('{{ page.password}}' !== 0){
+            if (prompt('PASSWORD') !== '{{ page.password }}'){
+                alert('Wrong！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+<header class="top-header" id="header">
     <div class="flex-row clearfix">
         <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -181,7 +194,7 @@
         
     </div>
 </header>
-<header class="content-header page-header">
+<header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
         <h1 class="title">pwn-300-Formatting string vulnerability</h1>
@@ -216,9 +229,29 @@
 </div>
 
 
+
+
 <div class="container body-wrap">
-    <article class="page-article fade" itemprop="blogPage">
-        <div class="post-content page-content" id="page-content" itemprop="pageContent">
+    <article id="post-pwn-300解析-格式化字符串漏洞利用巩固"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">pwn-300-Formatting string vulnerability</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-09-11 09:51:39" datetime="2018-09-11T01:51:39.000Z"  itemprop="datePublished">2018-09-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
             
             <p><em>pwn-300之前有一道pwn-200，也具有canary保护及NX保护，但是直接给了system(‘/bin/sh’)的函数，所以问题的关键就在于如何使程序转向该函数地址执行；幸运的是该程序同时具有格式化字符串漏洞。所以最后的思路就是，第一次输入，格式化字符串漏洞泄露canary，第二次输入溢出到函数返回地址即可。</em><br><em>而这道题将输入由gets变为fgets，也就是即使泄露出canary也无法溢出利用（canary必定以/x00结尾），同时没有了现成的system(‘/bin/sh’)函数。</em></p>
 <h1 id="查看内容及保护"><a href="#查看内容及保护" class="headerlink" title="查看内容及保护"></a>查看内容及保护</h1><h2 id="main函数为："><a href="#main函数为：" class="headerlink" title="main函数为："></a>main函数为：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl main(int argc, const char **argv, const char **envp)</span><br><span class="line">&#123;</span><br><span class="line">  char s; // [esp+Ch] [ebp-4Ch]</span><br><span class="line">  unsigned int v5; // [esp+4Ch] [ebp-Ch]</span><br><span class="line"></span><br><span class="line">  v5 = __readgsdword(0x14u);  //canary生成</span><br><span class="line">  setvbuf(stdout, 0, 2, 0);</span><br><span class="line">  setvbuf(stdin, 0, 1, 0);</span><br><span class="line">  fgets(&amp;s, 64, stdin);   //fgets,遇/x00停止</span><br><span class="line">  printf(&amp;s);             //格式化字符串漏洞</span><br><span class="line">  fgets(&amp;s, 64, stdin);</span><br><span class="line">  printf(&amp;s);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -238,19 +271,37 @@
 
         </div>
         
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最後更新時間：<time datetime="2018-09-25T13:44:41.876Z" itemprop="dateUpdated">2018-09-25 21:44:41</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/" target="_blank" rel="external">http://siriuswhiter.tk/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
             <div class="page-reward">
     <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
 </div>
 
+            
         
-        
-        <div class="card page-about-me flex-row">
-            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/avatar.jpg"></a>
-            <div class="content flex-col">
-                <p><strong>Sirius Whiter</strong></p>
-                <p><em>pwn what you want</em></p>
-                <p></p>
-            </div>
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/format/">format</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
             <div class="page-share-wrap">
     
 
@@ -287,16 +338,46 @@
 
         </div>
         
-        
-        <div class="card">   
-           
+            
 
 
-        </div>
         
-    </article>
+    </div>
     
-        <div id="reward" class="page-modal reward-lay">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/09/13/jarvis-oj-pwn/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Jarvis OJ-pwn</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2018/08/28/pwn-入门1-3-plt-got/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Introduction to pwn 1.3--plt/got</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#查看内容及保护"><span class="post-toc-number">1.</span> <span class="post-toc-text">查看内容及保护</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#main函数为："><span class="post-toc-number">1.1.</span> <span class="post-toc-text">main函数为：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#查看文件保护"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">查看文件保护</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#查看加载函数"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">查看加载函数</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#确定思路"><span class="post-toc-number">2.</span> <span class="post-toc-text">确定思路</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#流程实现"><span class="post-toc-number">3.</span> <span class="post-toc-text">流程实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#确定字符串位置"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">确定字符串位置</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#exp"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">exp</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
@@ -324,7 +405,6 @@
 
     
 </div>
-
 
         <footer class="footer">
     

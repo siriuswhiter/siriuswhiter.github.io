@@ -165,7 +165,20 @@
 </aside>
 
     <main id="main">
-        <header class="top-header" id="header">
+        
+<script>	
+    (function(){
+        if('{{ page.password}}' !== 0){
+            if (prompt('PASSWORD') !== '{{ page.password }}'){
+                alert('Wrong！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+<header class="top-header" id="header">
     <div class="flex-row clearfix">
         <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
@@ -181,7 +194,7 @@
         
     </div>
 </header>
-<header class="content-header page-header">
+<header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
         <h1 class="title">Learning python</h1>
@@ -216,9 +229,29 @@
 </div>
 
 
+
+
 <div class="container body-wrap">
-    <article class="page-article fade" itemprop="blogPage">
-        <div class="post-content page-content" id="page-content" itemprop="pageContent">
+    <article id="post-learning-python"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Learning python</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-08-02 19:11:04" datetime="2018-08-02T11:11:04.000Z"  itemprop="datePublished">2018-08-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/skills/">skills</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
             
             <p><em>最近将之前的博客逐渐搬运过来，因为可怜的服务器要到期了hhh</em></p>
 <p><em>为了能够完成各色python脚本的编写，迫不得已入门python大法！ 以下为简易的py语法：</em></p>
@@ -350,19 +383,37 @@
 
         </div>
         
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最後更新時間：<time datetime="2018-09-25T13:43:58.748Z" itemprop="dateUpdated">2018-09-25 21:43:58</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/08/02/learning-python/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/02/learning-python/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
             <div class="page-reward">
     <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
 </div>
 
+            
         
-        
-        <div class="card page-about-me flex-row">
-            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/avatar.jpg"></a>
-            <div class="content flex-col">
-                <p><strong>Sirius Whiter</strong></p>
-                <p><em>pwn what you want</em></p>
-                <p></p>
-            </div>
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/skills/">skills</a></li></ul>
+
             <div class="page-share-wrap">
     
 
@@ -399,16 +450,46 @@
 
         </div>
         
-        
-        <div class="card">   
-           
+            
 
 
-        </div>
         
-    </article>
+    </div>
     
-        <div id="reward" class="page-modal reward-lay">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/08/13/pwn-入门1-1/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Introduction to pwn1.1</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2018/07/26/the-art-0f-deploying-shellcode/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">The art 0f deploying shellcode</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Python-string"><span class="post-toc-number">1.</span> <span class="post-toc-text">Python string</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-list-and-tuple"><span class="post-toc-number">2.</span> <span class="post-toc-text">python list and tuple</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-dic"><span class="post-toc-number">3.</span> <span class="post-toc-text">python dic</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-set"><span class="post-toc-number">4.</span> <span class="post-toc-text">python set</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-loop"><span class="post-toc-number">5.</span> <span class="post-toc-text">python loop</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-func"><span class="post-toc-number">6.</span> <span class="post-toc-text">python func</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-slice"><span class="post-toc-number">7.</span> <span class="post-toc-text">python slice</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-iteration"><span class="post-toc-number">8.</span> <span class="post-toc-text">python iteration</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-list-generation"><span class="post-toc-number">9.</span> <span class="post-toc-text">python list generation</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-genarator"><span class="post-toc-number">10.</span> <span class="post-toc-text">python genarator</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
@@ -436,7 +517,6 @@
 
     
 </div>
-
 
         <footer class="footer">
     
