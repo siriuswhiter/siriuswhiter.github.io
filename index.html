@@ -217,6 +217,72 @@
         <ul class="post-list">
         
             <li class="post-list-item fade">
+                <article id="post-introduction-to-pwn2-1-fastbin-dup"
+  class="article-card article-type-post" itemprop="blogPost">
+  
+        
+<div class="item-thumb">
+    <a class="thumb-link" href="/2018/10/15/introduction-to-pwn2-1-fastbin-dup/"></a>
+    <div class="thumb-hover">
+        <span class="icon icon-eye"></span>
+    </div>
+    <img src="/img/thumb/10.jpg" alt="图片路径不正确">
+    
+
+
+  
+    <h3 class="post-title ab-title" itemprop="name">
+      <a class="post-title-link" href="/2018/10/15/introduction-to-pwn2-1-fastbin-dup/">Introduction to pwn2.1-fastbin_dup</a>
+    </h3>
+  
+
+
+
+</div>
+
+        
+    
+    
+    
+    <div class="post-meta">
+        <time class="post-time" title="2018-10-15 19:14:55" datetime="2018-10-15T11:14:55.000Z"  itemprop="datePublished">2018-10-15</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+        
+
+        
+
+
+        
+        
+    </div>
+    
+    <div class="post-content" id="post-content" itemprop="postContent">
+    
+    
+        尽量去有秩序的入门堆。。。但大部分堆看起来都太痛苦了。。
+fastbin_dup原理利用堆对fastbin的管理特性，当chunk在fastbin的表头时，再次释放会触发检测机制，防止double free，但是若不在表头，便不会有这个问题。产生这种结果的原因是： fastbin 在执行 free 的时候仅验证了 main_arena 直接指向的块，即链表指针头部的块。对于链表后面的块，并没...
+    
+    <a href="/2018/10/15/introduction-to-pwn2-1-fastbin-dup/" class="post-more waves-effect waves-button">
+        more
+    </a>
+    </div>
+</article>
+
+<div class="post-footer">
+    
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heap/">heap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+</div>
+
+
+            </li>
+        
+            <li class="post-list-item fade">
                 <article id="post-diary-20181008"
   class="article-card article-type-post" itemprop="blogPost">
   
@@ -226,7 +292,7 @@
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/10.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/9.jpg" alt="图片路径不正确">
     
 
 
@@ -291,7 +357,7 @@
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/9.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/8.jpg" alt="图片路径不正确">
     
 
 
@@ -358,7 +424,7 @@
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/8.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/7.jpg" alt="图片路径不正确">
     
 
 
@@ -425,7 +491,7 @@ level4 - DynELF题目给的东西很少，基本信息如下：
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/7.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/6.jpg" alt="图片路径不正确">
     
 
 
@@ -490,7 +556,7 @@ level4 - DynELF题目给的东西很少，基本信息如下：
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/6.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/5.jpg" alt="图片路径不正确">
     
 
 
@@ -558,7 +624,7 @@ level4 - DynELF题目给的东西很少，基本信息如下：
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/5.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/4.jpg" alt="图片路径不正确">
     
 
 
@@ -624,7 +690,7 @@ level4 - DynELF题目给的东西很少，基本信息如下：
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/4.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/3.jpg" alt="图片路径不正确">
     
 
 
@@ -703,7 +769,7 @@ ret2library。
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/3.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/2.jpg" alt="图片路径不正确">
     
 
 
@@ -772,7 +838,7 @@ ret2library。
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/2.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/1.jpg" alt="图片路径不正确">
     
 
 
@@ -820,78 +886,6 @@ over；
 假如hexo命令出现问题，基本上就是_config.yml 文件的空格有问题，看报错...
     
     <a href="/2018/08/15/hexo-essay-writing/" class="post-more waves-effect waves-button">
-        more
-    </a>
-    </div>
-</article>
-
-<div class="post-footer">
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/skills/">skills</a></li></ul>
-
-</div>
-
-
-            </li>
-        
-            <li class="post-list-item fade">
-                <article id="post-markdown规范学习"
-  class="article-card article-type-post" itemprop="blogPost">
-  
-        
-<div class="item-thumb">
-    <a class="thumb-link" href="/2018/08/13/markdown规范学习/"></a>
-    <div class="thumb-hover">
-        <span class="icon icon-eye"></span>
-    </div>
-    <img src="/img/thumb/1.jpg" alt="图片路径不正确">
-    
-
-
-  
-    <h3 class="post-title ab-title" itemprop="name">
-      <a class="post-title-link" href="/2018/08/13/markdown规范学习/">Markdown standard</a>
-    </h3>
-  
-
-
-
-</div>
-
-        
-    
-    
-    
-    <div class="post-meta">
-        <time class="post-time" title="2018-08-13 22:46:46" datetime="2018-08-13T14:46:46.000Z"  itemprop="datePublished">2018-08-13</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/skills/">skills</a></li></ul>
-
-
-
-        
-
-        
-
-
-        
-        
-    </div>
-    
-    <div class="post-content" id="post-content" itemprop="postContent">
-    
-    
-        MarkDown v1.01.1 全局规范
-
-MarkDown 文件使用‘.md’结尾 （小写字母)
-
-格式规范标题结构格式1.标题与紧贴的’上下正文‘使用’1整行换行‘隔开2.’#’号和文字之间’一个空格’连接3.标题层级最多六级 ‘#’到’######’
-加强和强调规范一般统一使用第一种
-12*emphasize*_emphasize_
-使用’~~’给文字添加删除线1~~striketh...
-    
-    <a href="/2018/08/13/markdown规范学习/" class="post-more waves-effect waves-button">
         more
     </a>
     </div>

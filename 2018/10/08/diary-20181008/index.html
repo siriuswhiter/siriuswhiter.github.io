@@ -166,18 +166,7 @@
 
     <main id="main">
         
-<script>	
-    (function(){
-        if('{{ page.password}}' !== 0){
-            if (prompt('PASSWORD') !== '{{ page.password }}'){
-                alert('Wrong！');
-                history.back();
-            }
-        }
-    })();
-</script>
-
-
+	
 <header class="top-header" id="header">
     <div class="flex-row clearfix">
         <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
@@ -255,6 +244,9 @@
             
             <p>  下午摸了一道题，比较简单的格式化字符串；之后摸手机端的 termux ，试图在上面安装 nmap，metasploit；<br>nmap还是很顺利的，但是metasploit搞到自闭……各种安装包问题，一步一步的找问题找解决方法才好不容易把解决；<br>黑域brevent也搞了半天，最后我还是选择绿色守护……手机最近掉电掉的有点严重，必须管一管了；<br>配合帅气的termux，搞了个hacker’s keyboard ，打起字来方便了不少， 还换了个hacker live wallpaper，也就是像是黑客帝国那样的动态壁纸，hhhh整个手机炫酷了不少。<br>周四林少华老师要来学校做客震旦讲堂！！！一定要过去，顺便看能不能混个签名hhh</p>
 <p>…搞了半天特定文章的加密，反而全都无法通过，搞不懂怎么回事…真麻烦</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;	</span><br><span class="line">    (function()&#123;</span><br><span class="line">        if(&apos;&#123;&#123; page.password&#125;&#125;&apos; !== 0)&#123;</span><br><span class="line">            if (prompt(&apos;PASSWORD&apos;) !== &apos;&#123;&#123; page.password &#125;&#125;&apos;)&#123;</span><br><span class="line">                alert(&apos;Wrong！&apos;);</span><br><span class="line">                history.back();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>上面这个运用js的alert阻断机制，但是会把我所有文章都加密。。<br>这下好了，越来越糟糕</p>
+<p>hexo-blog-encrypt 这个组件都不能用。。没办法了</p>
 
         </div>
         
@@ -262,7 +254,7 @@
     <div class="content">
         
 <span class="post-time">
-    最後更新時間：<time datetime="2018-10-08T14:37:11.195Z" itemprop="dateUpdated">2018-10-08 22:37:11</time>
+    Last updated: <time datetime="2018-10-15T12:17:30.737Z" itemprop="dateUpdated">2018-10-15 20:17:30</time>
 </span><br>
 
 
@@ -331,7 +323,14 @@
         
     </div>
     
-<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/10/15/introduction-to-pwn2-1-fastbin-dup/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Introduction to pwn2.1-fastbin_dup</h4>
+      </a>
+    </div>
   
 
   
