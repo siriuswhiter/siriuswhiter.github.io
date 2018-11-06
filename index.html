@@ -217,6 +217,140 @@
         <ul class="post-list">
         
             <li class="post-list-item fade">
+                <article id="post-pwnable-tw-wp"
+  class="article-card article-type-post" itemprop="blogPost">
+  
+        
+<div class="item-thumb">
+    <a class="thumb-link" href="/2018/11/06/pwnable-tw-wp/"></a>
+    <div class="thumb-hover">
+        <span class="icon icon-eye"></span>
+    </div>
+    <img src="/img/thumb/10.jpg" alt="图片路径不正确">
+    
+
+
+  
+    <h3 class="post-title ab-title" itemprop="name">
+      <a class="post-title-link" href="/2018/11/06/pwnable-tw-wp/">pwnable.tw-wp</a>
+    </h3>
+  
+
+
+
+</div>
+
+        
+    
+    
+    
+    <div class="post-meta">
+        <time class="post-time" title="2018-11-06 19:37:08" datetime="2018-11-06T11:37:08.000Z"  itemprop="datePublished">2018-11-06</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+        
+
+        
+
+
+        
+        
+    </div>
+    
+    <div class="post-content" id="post-content" itemprop="postContent">
+    
+    
+        好久没碰pwn了，找找感觉pwnable.tw网站的题都进不去，审查元素竟然没见到button响应？？于是就在源码里找题的文件源码保存下来，苟且做题
+start见到的最轻巧的一个题
+题目12345678910111213141516171819202122232425262728293031func main()push    esp; 4:   result = 3;push    off...
+    
+    <a href="/2018/11/06/pwnable-tw-wp/" class="post-more waves-effect waves-button">
+        more
+    </a>
+    </div>
+</article>
+
+<div class="post-footer">
+    
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heap/">heap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
+
+</div>
+
+
+            </li>
+        
+            <li class="post-list-item fade">
+                <article id="post-jarvis-oj-reverse"
+  class="article-card article-type-post" itemprop="blogPost">
+  
+        
+<div class="item-thumb">
+    <a class="thumb-link" href="/2018/11/06/jarvis-oj-reverse/"></a>
+    <div class="thumb-hover">
+        <span class="icon icon-eye"></span>
+    </div>
+    <img src="/img/thumb/9.jpg" alt="图片路径不正确">
+    
+
+
+  
+    <h3 class="post-title ab-title" itemprop="name">
+      <a class="post-title-link" href="/2018/11/06/jarvis-oj-reverse/">Jarvis Oj-reverse</a>
+    </h3>
+  
+
+
+
+</div>
+
+        
+    
+    
+    
+    <div class="post-meta">
+        <time class="post-time" title="2018-11-06 16:01:46" datetime="2018-11-06T08:01:46.000Z"  itemprop="datePublished">2018-11-06</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">RE</a></li></ul>
+
+
+
+        
+
+        
+
+
+        
+        
+    </div>
+    
+    <div class="post-content" id="post-content" itemprop="postContent">
+    
+    
+        稍微学学逆向
+FindKey  拿到文件顺手就往ida里拖，结果说是bin文件，所以还是乖乖将他拖到了kali里，file查看文件属性，是个pyc？（仿佛想到了某入群题）  将pyc还原成py文件  发现一个简单的加密过程（不过还是有点没太明白那个 +- &amp; 的执行顺序）  直接上wp
+1234567891011import syslookup = [ 196, 153, 149, ...
+    
+    <a href="/2018/11/06/jarvis-oj-reverse/" class="post-more waves-effect waves-button">
+        more
+    </a>
+    </div>
+</article>
+
+<div class="post-footer">
+    
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/re/">RE</a></li></ul>
+
+</div>
+
+
+            </li>
+        
+            <li class="post-list-item fade">
                 <article id="post-diary-20181027"
   class="article-card article-type-post" itemprop="blogPost">
   
@@ -226,7 +360,7 @@
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/10.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/8.jpg" alt="图片路径不正确">
     
 
 
@@ -291,7 +425,7 @@
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/9.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/7.jpg" alt="图片路径不正确">
     
 
 
@@ -357,7 +491,7 @@ fastbin_dup_consolidate原理  当创建一个0x20-0x80大小的chunk并free的�
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/8.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/6.jpg" alt="图片路径不正确">
     
 
 
@@ -423,7 +557,7 @@ fastbin_dup原理利用堆对fastbin的管理特性，当chunk在fastbin的表�
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/7.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/5.jpg" alt="图片路径不正确">
     
 
 
@@ -488,7 +622,7 @@ fastbin_dup原理利用堆对fastbin的管理特性，当chunk在fastbin的表�
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/6.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/4.jpg" alt="图片路径不正确">
     
 
 
@@ -555,7 +689,7 @@ fastbin_dup原理利用堆对fastbin的管理特性，当chunk在fastbin的表�
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/5.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/3.jpg" alt="图片路径不正确">
     
 
 
@@ -622,7 +756,7 @@ level4 - DynELF题目给的东西很少，基本信息如下：
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/4.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/2.jpg" alt="图片路径不正确">
     
 
 
@@ -687,7 +821,7 @@ level4 - DynELF题目给的东西很少，基本信息如下：
     <div class="thumb-hover">
         <span class="icon icon-eye"></span>
     </div>
-    <img src="/img/thumb/3.jpg" alt="图片路径不正确">
+    <img src="/img/thumb/1.jpg" alt="图片路径不正确">
     
 
 
@@ -731,151 +865,6 @@ level4 - DynELF题目给的东西很少，基本信息如下：
 使用gdb，断点下在w...
     
     <a href="/2018/08/28/pwn-入门1-3-plt-got/" class="post-more waves-effect waves-button">
-        more
-    </a>
-    </div>
-</article>
-
-<div class="post-footer">
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
-
-</div>
-
-
-            </li>
-        
-            <li class="post-list-item fade">
-                <article id="post-pwn-入门n-n"
-  class="article-card article-type-post" itemprop="blogPost">
-  
-        
-<div class="item-thumb">
-    <a class="thumb-link" href="/2018/08/28/pwn-入门n-n/"></a>
-    <div class="thumb-hover">
-        <span class="icon icon-eye"></span>
-    </div>
-    <img src="/img/thumb/2.jpg" alt="图片路径不正确">
-    
-
-
-  
-    <h3 class="post-title ab-title" itemprop="name">
-      <a class="post-title-link" href="/2018/08/28/pwn-入门n-n/">Introduction to pwn2.2--UAF</a>
-    </h3>
-  
-
-
-
-</div>
-
-        
-    
-    
-    
-    <div class="post-meta">
-        <time class="post-time" title="2018-08-28 11:10:56" datetime="2018-08-28T03:10:56.000Z"  itemprop="datePublished">2018-08-28</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
-
-
-
-        
-
-        
-
-
-        
-        
-    </div>
-    
-    <div class="post-content" id="post-content" itemprop="postContent">
-    
-    
-        堆的UAF(use after free)利用学长介绍了某CTF大佬聚集的交流群，但是入群需要做题，题目本来不是我这个段位可以搞定的，但是怎么说？有压力就有动力:)抱着入群的信念，先看了misc，结果需要修复pyc文件，按流程走的时候出现了无法解决的一个奇怪问题，遂放弃；之后看了下pwn，感觉甚难；在看了逆向完全不会之后，只能看了下pwn的tips，开始现学现卖。
-原理就像它的名字一样，即一...
-    
-    <a href="/2018/08/28/pwn-入门n-n/" class="post-more waves-effect waves-button">
-        more
-    </a>
-    </div>
-</article>
-
-<div class="post-footer">
-    
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heap/">heap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
-
-</div>
-
-
-            </li>
-        
-            <li class="post-list-item fade">
-                <article id="post-pwn-入门1-2"
-  class="article-card article-type-post" itemprop="blogPost">
-  
-        
-<div class="item-thumb">
-    <a class="thumb-link" href="/2018/08/28/pwn-入门1-2/"></a>
-    <div class="thumb-hover">
-        <span class="icon icon-eye"></span>
-    </div>
-    <img src="/img/thumb/1.jpg" alt="图片路径不正确">
-    
-
-
-  
-    <h3 class="post-title ab-title" itemprop="name">
-      <a class="post-title-link" href="/2018/08/28/pwn-入门1-2/">Introduction to pwn1.2--ret2libc</a>
-    </h3>
-  
-
-
-
-</div>
-
-        
-    
-    
-    
-    <div class="post-meta">
-        <time class="post-time" title="2018-08-28 09:46:58" datetime="2018-08-28T01:46:58.000Z"  itemprop="datePublished">2018-08-28</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
-
-
-
-        
-
-        
-
-
-        
-        
-    </div>
-    
-    <div class="post-content" id="post-content" itemprop="postContent">
-    
-    
-        ret2libc学习
-ret2libc使用原因程序不是静态编译，通常就不会有int 0x80sret2syscall 就无法实现，因而使用
-ret2library。
-调用函数的栈结构布局 ：
-调用函数的返回地址
-
-函数调用完的返回地址
-
-调用函数的参数1
-
-调用函数的参数2
-
-
-利用过程分析：ASLR使得每次载入的函数地址（base）都不同
-实际地址 Address = base +offs...
-    
-    <a href="/2018/08/28/pwn-入门1-2/" class="post-more waves-effect waves-button">
         more
     </a>
     </div>
