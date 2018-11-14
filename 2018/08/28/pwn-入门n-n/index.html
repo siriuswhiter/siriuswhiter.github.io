@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     
     
-    <title>Introduction to pwn2.2--UAF | Room of Equirement | pwn what you want</title>
+    <title>Introduction to pwn2.3--UAF | Room of Equirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="keywords" content="pwn,heap">
@@ -173,7 +173,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>Introduction to pwn2.2--UAF</span>
+            <span>Introduction to pwn2.3--UAF</span>
             
         </div>
         
@@ -186,7 +186,7 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">Introduction to pwn2.2--UAF</h1>
+        <h1 class="title">Introduction to pwn2.3--UAF</h1>
         <h5 class="subtitle">
             
                 <time datetime="2018-08-28T03:10:56.000Z" itemprop="datePublished" class="page-time">
@@ -224,7 +224,7 @@
     <article id="post-pwn-入门n-n"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">Introduction to pwn2.2--UAF</h1>
+        <h1 class="post-card-title">Introduction to pwn2.3--UAF</h1>
         <div class="post-meta">
             <time class="post-time" title="2018-08-28 11:10:56" datetime="2018-08-28T03:10:56.000Z"  itemprop="datePublished">2018-08-28</time>
 
@@ -250,7 +250,7 @@
 <h2 id="漏洞的简单利用"><a href="#漏洞的简单利用" class="headerlink" title="漏洞的简单利用"></a>漏洞的简单利用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">typedef void (*func_ptr)(char *);</span><br><span class="line">void evil_fuc(char command[])</span><br><span class="line">&#123;</span><br><span class="line">system(command);</span><br><span class="line">&#125;</span><br><span class="line">void echo(char content[])</span><br><span class="line">&#123;</span><br><span class="line">printf(&quot;%s&quot;,content);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    func_ptr *p1=(func_ptr*)malloc(4*sizeof(int));</span><br><span class="line">    printf(&quot;malloc addr: %p\n&quot;,p1);</span><br><span class="line">    p1[3]=echo;</span><br><span class="line">    p1[3](&quot;hello world\n&quot;);</span><br><span class="line">    free(p1); //在这里free了p1,但并未将p1置空,导致后续可以再使用p1指针</span><br><span class="line">    p1[3](&quot;hello again\n&quot;); //p1指针未被置空,虽然free了,但仍可使用.只是其内存块是被标记为空闲状态</span><br><span class="line">    func_ptr *p2=(func_ptr*)malloc(4*sizeof(int));//malloc在free一块内存后,再次申请同样大小的指针会把刚刚释放的内存分配出来.</span><br><span class="line">    printf(&quot;malloc addr: %p\n&quot;,p2);</span><br><span class="line">    printf(&quot;malloc addr: %p\n&quot;,p1);//p2与p1指针指向的内存为同一地址</span><br><span class="line">    p2[3]=evil_fuc; //在这里将p1指针里面保存的echo函数指针覆盖成为了evil_func指针.</span><br><span class="line">    p1[3](&quot;/bin/sh&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>最终运行效果：</p>
 <figure class="image-box">
-                <a rel=Introduction to pwn2.2--UAF href="/2018/08/28/pwn-入门n-n/result.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门n-n/result.png" alt="result" title="" class=""></a>
+                <a rel=Introduction to pwn2.3--UAF href="/2018/08/28/pwn-入门n-n/result.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门n-n/result.png" alt="result" title="" class=""></a>
                 <p>result</p>
             </figure>
 <p><em>漏洞的利用方法原理上与其相同，之后会再加上入群题的解题过程</em></p>
@@ -262,7 +262,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2018-09-25T13:46:12.344Z" itemprop="dateUpdated">2018-09-25 21:46:12</time>
+    最后更新时间：<time datetime="2018-11-14T12:13:29.836Z" itemprop="dateUpdated">2018-11-14 20:13:29</time>
 </span><br>
 
 
@@ -296,7 +296,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.2--UAF》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -308,7 +308,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.2--UAF》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -443,7 +443,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.2--UAF》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -455,7 +455,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.2--UAF》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
