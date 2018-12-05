@@ -256,14 +256,22 @@
 <p>按理说 应该继续 apt-get update -f</p>
 <p>但会提示 输入 dpkg –configure -a</p>
 <p>完成后重新update 就ok啦</p>
-
+<p>2018-12-5 </p>
+<p>试着换了几个其他版本的linux，结果都不太合心意，最后还是回去修复了有些问题的gdb，暂时放弃了pwndbg的安装<br>kali 设定开机自动运行sh脚本方式不太一样，记在这里：</p>
+<p>Debian定义了多个运行级别脚本，分别存放在/etc/rc0.d至/etc/rc6.d中，默认级别为5.</p>
+<p>要增加开机自动运行脚本的方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/init.d/rc.local</span><br></pre></td></tr></table></figure>
+<p>写入你需要运行的脚本，:wq退出，这里我将自己的脚本放到/usr/local/bin下，然后在rc.local下指定脚本路径：./usr/local/bin/automount，注意要给脚本执行权限，rc.local中也要加入点’ . ‘来执行脚本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /etc/init.d/rc.local #增加脚本执行权限</span><br><span class="line"></span><br><span class="line">update-rc.d rc.local start 99 2 3 4 5 . stop 01 0 1 6 . #设置启动级别</span><br></pre></td></tr></table></figure>
+<p>若要删除脚本的启动级别运行如下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update-rc.d -f rc.local remove</span><br></pre></td></tr></table></figure>
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2018-10-18T10:18:49.905Z" itemprop="dateUpdated">2018-10-18 18:18:49</time>
+    最后更新时间：<time datetime="2018-12-05T14:31:45.783Z" itemprop="dateUpdated">2018-12-05 22:31:45</time>
 </span><br>
 
 
