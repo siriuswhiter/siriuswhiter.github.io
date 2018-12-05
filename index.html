@@ -264,9 +264,7 @@
     <div class="post-content" id="post-content" itemprop="postContent">
     
     
-        之前是为了学习搭pwn题的环境稍微碰了下docker，但是因为kali上的gdb被我搞得问题很大，再加上不能完全卸载重装，索性想着搞一个pwn工具的集成环境，一劳永逸，docker无疑是个好东西，顺便也记录下搭建pwn题的过程吧
-pwn环境部署  最基础的方法是socat， socat tcp-l:9999,fork exec:./pwn1  没有timeout，连得人多多半就爆炸了
-所以选...
+        之前是为了学习搭pwn题的环境稍微碰了下docker，但是因为kali上的gdb被我搞得问题很大，再加上不能完全卸载重装，索性想着搞一个pwn工具的集成环境，一劳永逸，docker无疑是个好东西...
     
     <a href="/2018/11/10/learning-docker/" class="post-more waves-effect waves-button">
         more
@@ -333,7 +331,7 @@ pwn环境部署  最基础的方法是socat， socat tcp-l:9999,fork exec:./pwn1
     
         好久没碰pwn了，找找感觉pwnable.tw网站的题都进不去，审查元素竟然没见到button响应？？于是就在源码里找题的文件源码保存下来，苟且做题
 start见到的最轻巧的一个题
-题目12345678910111213141516171819202122232425262728293031func main()push    esp; 4:   result = 3;push    off...
+题目1234...
     
     <a href="/2018/11/06/pwnable-tw-wp/" class="post-more waves-effect waves-button">
         more
@@ -399,8 +397,7 @@ start见到的最轻巧的一个题
     
     
         稍微学学逆向
-FindKey  拿到文件顺手就往ida里拖，结果说是bin文件，所以还是乖乖将他拖到了kali里，file查看文件属性，是个pyc？（仿佛想到了某入群题）  将pyc还原成py文件  发现一个简单的加密过程（不过还是有点没太明白那个 +- &amp; 的执行顺序）  直接上wp
-1234567891011import syslookup = [ 196, 153, 149, ...
+FindKey  拿到文件顺手就往ida里拖，结果说是bin文件，所以还是乖乖将他拖到了kali里，file查看文件属性，是个pyc？（仿佛想到了某入群题）  将pyc还原成py文...
     
     <a href="/2018/11/06/jarvis-oj-reverse/" class="post-more waves-effect waves-button">
         more
@@ -465,7 +462,7 @@ FindKey  拿到文件顺手就往ida里拖，结果说是bin文件，所以还�
     <div class="post-content" id="post-content" itemprop="postContent">
     
     
-          或许真的是极尽苦难的一周。  也是一事无成的一周。  少有的一个星期什么也干不成，任何一件本应该简简单单的事情都会动辄四五个小时而迎来没有任何变化的结果。  虚拟机上周已被搞得一塌糊涂，真的是失去才知道原来环境配置的多么棒。仅仅为了装pwndbg，将整个gdb给搞出了问题，并且无力回天。  再之后为了装docker，看了许许多多的教程，又是大片大片的时间丢失，结果最后在角落里找到的方法，...
+          或许真的是极尽苦难的一周。  也是一事无成的一周。  少有的一个星期什么也干不成，任何一件本应该简简单单的事情都会动辄四五个小时而迎来没有任何变化的结果。  虚拟机上周已被搞得一塌糊涂，真的...
     
     <a href="/2018/10/27/diary-20181027/" class="post-more waves-effect waves-button">
         more
@@ -531,7 +528,7 @@ FindKey  拿到文件顺手就往ida里拖，结果说是bin文件，所以还�
     
     
         比较神奇的一个利用。pwntools —&gt;  cyclic   cyclic_findi locals
-fastbin_dup_consolidate原理  当创建一个0x20-0x80大小的chunk并free的话，该chunk会被放入fastbins，此时如果再次free便会报错；但是如果此时分配一个比较大的chunk（起码smallbin大小），便会触发程序的malloc_con...
+fastbin_dup_consolidate原理  当创建一个0x20-0x80大...
     
     <a href="/2018/10/18/introduction-to-pwn2-2-fastbin-dup-consolidate/" class="post-more waves-effect waves-button">
         more
@@ -597,7 +594,7 @@ fastbin_dup_consolidate原理  当创建一个0x20-0x80大小的chunk并free的�
     
     
         尽量去有秩序的入门堆。。。但大部分堆看起来都太痛苦了。。
-fastbin_dup原理利用堆对fastbin的管理特性，当chunk在fastbin的表头时，再次释放会触发检测机制，防止double free，但是若不在表头，便不会有这个问题。产生这种结果的原因是： fastbin 在执行 free 的时候仅验证了 main_arena 直接指向的块，即链表指针头部的块。对于链表后面的块，并没...
+fastbin_dup原理利用堆对fastbin的管理特性，当chunk在fastbin的表头时，再次释放会触发检测机制，防止doubl...
     
     <a href="/2018/10/15/introduction-to-pwn2-1-fastbin-dup/" class="post-more waves-effect waves-button">
         more
@@ -662,7 +659,7 @@ fastbin_dup原理利用堆对fastbin的管理特性，当chunk在fastbin的表�
     <div class="post-content" id="post-content" itemprop="postContent">
     
     
-          下午摸了一道题，比较简单的格式化字符串；之后摸手机端的 termux ，试图在上面安装 nmap，metasploit；nmap还是很顺利的，但是metasploit搞到自闭……各种安装包问题，一步一步的找问题找解决方法才好不容易把解决；黑域brevent也搞了半天，最后我还是选择绿色守护……手机最近掉电掉的有点严重，必须管一管了；配合帅气的termux，搞了个hacker’s keyb...
+          下午摸了一道题，比较简单的格式化字符串；之后摸手机端的 termux ，试图在上面安装 nmap，metasploit；nmap还是很顺利的，但是metasploit搞到自闭……各种安装包问...
     
     <a href="/2018/10/08/diary-20181008/" class="post-more waves-effect waves-button">
         more
@@ -728,8 +725,7 @@ fastbin_dup原理利用堆对fastbin的管理特性，当chunk在fastbin的表�
     
     
         之前听闻学长说许多大佬都用这个工具？(雾；就没事来瞎搞一搞这个可以用来逆向或pwn的神器？感觉还是很帅的hhhh，就是用起来有点emmm
-安装git clone r2仓库即可，尽量每天使用前 ./sys/install.sh 更新一下
-123$ git clone https://github.com/radare/radare2.git$ cd radare2$ ./sys/install...
+安装git clone r2仓库即可，尽量每天使用前 ....
     
     <a href="/2018/09/25/radare2/" class="post-more waves-effect waves-button">
         more
@@ -796,7 +792,7 @@ fastbin_dup原理利用堆对fastbin的管理特性，当chunk在fastbin的表�
     
         开始漫漫刷题之路
 level4 - DynELF题目给的东西很少，基本信息如下：
-信息main：123456int __cdecl main(int argc, const char **argv, const char **envp)&#123;  vulnerable_function();  write(1, &quot;Hello, World!\n&quot;, 0xEu);  r...
+信息main：123456int __cdecl main(int argc, const char **arg...
     
     <a href="/2018/09/13/jarvis-oj-pwn/" class="post-more waves-effect waves-button">
         more
@@ -861,7 +857,7 @@ level4 - DynELF题目给的东西很少，基本信息如下：
     <div class="post-content" id="post-content" itemprop="postContent">
     
     
-        pwn-300之前有一道pwn-200，也具有canary保护及NX保护，但是直接给了system(‘/bin/sh’)的函数，所以问题的关键就在于如何使程序转向该函数地址执行；幸运的是该程序同时具有格式化字符串漏洞。所以最后的思路就是，第一次输入，格式化字符串漏洞泄露canary，第二次输入溢出到函数返回地址即可。而这道题将输入由gets变为fgets，也就是即使泄露出canary也无法溢...
+        pwn-300之前有一道pwn-200，也具有canary保护及NX保护，但是直接给了system(‘/bin/sh’)的函数，所以问题的关键就在于如何使程序转向该函数地址执行；幸运的是该程序同...
     
     <a href="/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/" class="post-more waves-effect waves-button">
         more
