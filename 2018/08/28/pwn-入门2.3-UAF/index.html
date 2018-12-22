@@ -221,7 +221,7 @@
 
 
 <div class="container body-wrap">
-    <article id="post-pwn-入门n-n"
+    <article id="post-pwn-入门2.3-UAF"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
         <h1 class="post-card-title">Introduction to pwn2.3--UAF</h1>
@@ -250,7 +250,7 @@
 <h2 id="漏洞的简单利用"><a href="#漏洞的简单利用" class="headerlink" title="漏洞的简单利用"></a>漏洞的简单利用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">typedef void (*func_ptr)(char *);</span><br><span class="line">void evil_fuc(char command[])</span><br><span class="line">&#123;</span><br><span class="line">system(command);</span><br><span class="line">&#125;</span><br><span class="line">void echo(char content[])</span><br><span class="line">&#123;</span><br><span class="line">printf(&quot;%s&quot;,content);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    func_ptr *p1=(func_ptr*)malloc(4*sizeof(int));</span><br><span class="line">    printf(&quot;malloc addr: %p\n&quot;,p1);</span><br><span class="line">    p1[3]=echo;</span><br><span class="line">    p1[3](&quot;hello world\n&quot;);</span><br><span class="line">    free(p1); //在这里free了p1,但并未将p1置空,导致后续可以再使用p1指针</span><br><span class="line">    p1[3](&quot;hello again\n&quot;); //p1指针未被置空,虽然free了,但仍可使用.只是其内存块是被标记为空闲状态</span><br><span class="line">    func_ptr *p2=(func_ptr*)malloc(4*sizeof(int));//malloc在free一块内存后,再次申请同样大小的指针会把刚刚释放的内存分配出来.</span><br><span class="line">    printf(&quot;malloc addr: %p\n&quot;,p2);</span><br><span class="line">    printf(&quot;malloc addr: %p\n&quot;,p1);//p2与p1指针指向的内存为同一地址</span><br><span class="line">    p2[3]=evil_fuc; //在这里将p1指针里面保存的echo函数指针覆盖成为了evil_func指针.</span><br><span class="line">    p1[3](&quot;/bin/sh&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>最终运行效果：</p>
 <figure class="image-box">
-                <a rel=Introduction to pwn2.3--UAF href="/2018/08/28/pwn-入门n-n/result.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门n-n/result.png" alt="result" title="" class=""></a>
+                <a rel=Introduction to pwn2.3--UAF href="/2018/08/28/pwn-入门2.3-UAF/pwn-入门n-n/result.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门2.3-UAF/pwn-入门n-n/result.png" alt="result" title="" class=""></a>
                 <p>result</p>
             </figure>
 <p><em>漏洞的利用方法原理上与其相同，之后会再加上入群题的解题过程</em></p>
@@ -262,12 +262,12 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2018-11-14T12:13:29.836Z" itemprop="dateUpdated">2018-11-14 20:13:29</time>
+    Last updated: <time datetime="2018-12-19T13:02:45.413Z" itemprop="dateUpdated">2018-12-19 21:02:45</time>
 </span><br>
 
 
         
-        转载注明出处，原文地址：<a href="/2018/08/28/pwn-入门n-n/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/</a>
+        转载注明出处，原文地址：<a href="/2018/08/28/pwn-入门2.3-UAF/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/28/pwn-入门2.3-UAF/</a>
         
     </div>
     <footer>
@@ -296,7 +296,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门2.3-UAF/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -308,7 +308,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门2.3-UAF/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -443,7 +443,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门2.3-UAF/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -455,7 +455,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门n-n/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门2.3-UAF/&title=《Introduction to pwn2.3--UAF》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -467,7 +467,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIUlEQVR42u3aQY7jMAwEwPn/p7MPCOJ0i84ClkqngRM7Kh84JMW/v3i93tb79U/fv35me9doYWBgPJbxulzXjE8ber++9vxkbxgYGOcwkk0kn+Z3tU/+smcMDAyM8XfaIIuBgYFxL6MNuNffx8DAwJgUsS0pfzUJ7LZaHAMD44GMvOv+///+yfkGBgbGoxivcs3b/cnRQr0rDAyMrRl5gGvHLNrA3Q5bYGBgnMNIWl3zkYi1Vl3xsjAwMA5g5I9rU8PkZbUv8WPAxcDAOICRA9ojz/zAoP0tDAyMExjzAa+6KbY0olEUuhgYGJsyftHcnzfs6l/BwMDYmrGWFBZF5q1DYF9CMwYGxnaMPLzO56/a0jdPUjEwMPZmtB+vFbdraeIiAAMD4zBGHnbbQYo2NH/ZNAYGxtaMfItrbbi1pPO2YQsMDIwtGHkIzq+39+bHnDf8J8HAwHggo03F8uvzIJ4nrxgYGHszJsXnPOFLEsq2GYeBgbErY9Kryw8D1kY68nsxMDBOYOQBNAdMWv/twQMGBsZpjHx4q809iyy1LWIxMDA2ZbzKNZl2SJLCpD1XT4hgYGA8nLEW5ibF5zy4Lw5bYGBgPJyx1qzPE8E8cI8CLgYGxgGMXxeckwGL6MVhYGBgrB0rXvf57i1ZMTAwMAbDXjk1P074cr6BgYGxKSMfRW2HJ9pCt70LAwPjBEabd7VHj/kmrhk3p48YGBjPYPwDUVzRP8ZjH3wAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKklEQVR42u3ayW6DQBBFUf7/p/E2kgV5g3HS1ZeVZSHo40W5puOQr/Pt+vn9/f3ZW44nLhgwYCzLOG+vqxdc3fn+ZOUtynt/eSMMGDA2YCiHuCfdf86+Uc4GAwYMGEro1NPELODCgAEDRsZwg69y/x8EXBgwYCzFyAKf2yxzE8pHanEYMGAsyNC77t///Mh8AwYMGEsxssLSLWuzQGycCgYMGKMZWdqnF7F6EHeXLWDAgLEnwx0DZHtZWetNGXzCgAFjKqNZz1KGBFkS6f64MGDA2IGRrVA0Y84s6bwMxDBgwBjNcJO/pk2mJJH6DydNYmHAgDGC4RaQzepDH4KlvTYYMGAMZWRBVg+pWRms3w8DBozZjOyIbnqnPOc+6Bt5LgwYMDZgZI/QR5790ob9JwEDBozFGfoQUS8p3ZTOHYLa9TEMGDAWZ7gNMn0xwi1Qq2ULGDBgbMbIxo1uoHQDt562woABYx7DXY9o2vdZkJUGnDBgwBjNaJa9lOCYNebc58CAAWMHRjZc7O9shp2XCSIMGDA2YLhjxWY5rC9iYcCAsSejOW4zT+wnkjBgwJjKOM1Lb3hlLTy3uJUGAzBgwFic4Ya5fnVMOUqzQAYDBoypDHckmQ0M9N8vDLgwYMDYgNG3+z/bbnNPCwMGDBj9kNJt9IfZKwwYMGDINbGb3rnLHNIIEwYMGOMY2TDALYB78AfabTBgwFiQ0eddelHajBAeTx9hwIDxHxkvN19Bz3v36ZcAAAAASUVORK5CYII=" alt="微信分享二维码">
 </div>
 
 
