@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>JavaScript Naughts and Crosses | Room of Equirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="skills">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>JavaScript Naughts and Crosses</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">JavaScript Naughts and Crosses</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-01-24T05:00:13.000Z" itemprop="datePublished" class="page-time">
+  2018-01-24
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/skills/">skills</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-javascript-naughts-and-crosses"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">JavaScript Naughts and Crosses</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-01-24 13:00:13" datetime="2018-01-24T05:00:13.000Z"  itemprop="datePublished">2018-01-24</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/skills/">skills</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <p><em>转移自之前的博客</em></p>
+<p>学习html,js,css一周做了个粗糙的人机井字棋，虽然很丑，但是有彩蛋啊，比如说：黑白图片来自我c语言课设那刷屏的烫烫烫hhh。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;澳门皇家赌场&lt;/title&gt;</span><br><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">h1&#123;color:blue;&#125;</span><br><span class="line">table&#123;background-color:rgb(182,194,154);</span><br><span class="line">width:450px;</span><br><span class="line">height:450px;&#125;</span><br><span class="line">body&#123;background-color:rgb(131,175,155);&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line">&lt;script type=&quot;text/javascript&quot; &gt;</span><br><span class="line">alert(&quot;欢迎来到棋牌室！&quot;);</span><br><span class="line">var a=new Array(10)</span><br><span class="line">for(var i=0;i&lt;9;i++)</span><br><span class="line">a[i]=0;</span><br><span class="line"></span><br><span class="line">function start()</span><br><span class="line">&#123;</span><br><span class="line">for(var i=0;i&lt;9;i++)</span><br><span class="line">&#123; a[i]=0;</span><br><span class="line">document.getElementById(&quot;srci&quot;+String(i)).src=&quot;back.png&quot;;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">coun=0;</span><br><span class="line"></span><br><span class="line">function restart()</span><br><span class="line">&#123;</span><br><span class="line">window.location.reload();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function img_change(id)</span><br><span class="line">&#123;</span><br><span class="line">var x=1;</span><br><span class="line">while(x==1)&#123;</span><br><span class="line">if(id==&quot;div0&quot;&amp;&amp;a[0]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[0]=1;</span><br><span class="line">document.getElementById(&quot;srci0&quot;).src=&quot;timg.png&quot;;</span><br><span class="line">x=0;</span><br><span class="line">&#125;</span><br><span class="line">else if(id==&quot;div1&quot;&amp;&amp;a[1]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[1]=1;</span><br><span class="line">document.getElementById(&quot;srci1&quot;).src=&quot;timg.png&quot;;</span><br><span class="line">x=0;</span><br><span class="line">&#125;</span><br><span class="line">else if(id==&quot;div2&quot;&amp;&amp;a[2]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[2]=1;</span><br><span class="line">document.getElementById(&quot;srci2&quot;).src=&quot;timg.png&quot;;</span><br><span class="line">x=0;</span><br><span class="line">&#125;</span><br><span class="line">else if(id==&quot;div3&quot;&amp;&amp;a[3]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[3]=1;</span><br><span class="line">document.getElementById(&quot;srci3&quot;).src=&quot;timg.png&quot;;</span><br><span class="line">x=0;</span><br><span class="line">&#125;</span><br><span class="line">else if(id==&quot;div4&quot;&amp;&amp;a[4]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[4]=1;</span><br><span class="line">document.getElementById(&quot;srci4&quot;).src=&quot;timg.png&quot;;</span><br><span class="line">x=0;</span><br><span class="line">&#125;</span><br><span class="line">else if(id==&quot;div5&quot;&amp;&amp;a[5]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[5]=1;</span><br><span class="line">document.getElementById(&quot;srci5&quot;).src=&quot;timg.png&quot;;</span><br><span class="line">x=0;</span><br><span class="line">&#125;</span><br><span class="line">else if(id==&quot;div6&quot;&amp;&amp;a[6]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[6]=1;</span><br><span class="line">document.getElementById(&quot;srci6&quot;).src=&quot;timg.png&quot;;</span><br><span class="line">x=0;</span><br><span class="line">&#125;</span><br><span class="line">else if(id==&quot;div7&quot;&amp;&amp;a[7]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[7]=1;</span><br><span class="line">document.getElementById(&quot;srci7&quot;).src=&quot;timg.png&quot;;</span><br><span class="line">x=0;</span><br><span class="line">&#125;</span><br><span class="line">else if(id==&quot;div8&quot;&amp;&amp;a[8]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[8]=1;</span><br><span class="line">document.getElementById(&quot;srci8&quot;).src=&quot;timg.png&quot;;</span><br><span class="line">x=0;</span><br><span class="line">&#125;</span><br><span class="line">else</span><br><span class="line"></span><br><span class="line">return;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(!(winner()))&#123;</span><br><span class="line">coun++;</span><br><span class="line">Robots_Time();&#125;</span><br><span class="line"></span><br><span class="line">if(!(winner())&amp;&amp;coun==9)</span><br><span class="line">alert(&quot;draw&quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">function Robots_Time()</span><br><span class="line">&#123;</span><br><span class="line">var z=1;</span><br><span class="line">while(z==1)&#123;</span><br><span class="line">var ran=Math.random()*9;</span><br><span class="line">ran=parseInt(ran);</span><br><span class="line">if(a[ran]==0)</span><br><span class="line">&#123;</span><br><span class="line">a[ran]=2;</span><br><span class="line">document.getElementById(&quot;srci&quot;+String(ran)).src=&quot;white.png&quot;;</span><br><span class="line">coun++;</span><br><span class="line">z=0;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">winner();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function winner()&#123;</span><br><span class="line">if(a[0]==2&amp;&amp;a[1]==2&amp;&amp;a[2]==2||a[0]==2&amp;&amp;a[4]==2&amp;&amp;a[8]==2||a[0]==2&amp;&amp;a[3]==2&amp;&amp;a[6]==2)&#123;</span><br><span class="line">alert(&quot;You failed&quot;);</span><br><span class="line">return 1;&#125;</span><br><span class="line">else</span><br><span class="line">if(a[1]==2&amp;&amp;a[4]==2&amp;&amp;a[7]==2||a[2]==2&amp;&amp;a[5]==2&amp;&amp;a[8]==2||a[3]==2&amp;&amp;a[4]==2&amp;&amp;a[5]==2)&#123;</span><br><span class="line">alert(&quot;You failed&quot;);</span><br><span class="line">return 1;&#125;</span><br><span class="line">else</span><br><span class="line">if(a[2]==2&amp;&amp;a[4]==2&amp;&amp;a[6]==2||a[6]==2&amp;&amp;a[7]==2&amp;&amp;a[8]==2)&#123;</span><br><span class="line">alert(&quot;You failed&quot;);</span><br><span class="line">return 1;&#125;</span><br><span class="line"></span><br><span class="line">if(a[0]==1&amp;&amp;a[1]==1&amp;&amp;a[2]==1||a[0]==1&amp;&amp;a[4]==1&amp;&amp;a[8]==1||a[0]==1&amp;&amp;a[3]==1&amp;&amp;a[6]==1)&#123;</span><br><span class="line">alert(&quot;You win!&quot;);</span><br><span class="line">return 1;&#125;</span><br><span class="line">else</span><br><span class="line">if(a[1]==1&amp;&amp;a[4]==1&amp;&amp;a[7]==1||a[2]==1&amp;&amp;a[5]==1&amp;&amp;a[8]==1||a[3]==1&amp;&amp;a[4]==1&amp;&amp;a[5]==1)&#123;</span><br><span class="line">alert(&quot;You win!&quot;);</span><br><span class="line">return 1;&#125;</span><br><span class="line">else</span><br><span class="line">if(a[2]==1&amp;&amp;a[4]==1&amp;&amp;a[6]==1||a[6]==1&amp;&amp;a[7]==1&amp;&amp;a[8]==1)&#123;</span><br><span class="line">alert(&quot;You win!&quot;);</span><br><span class="line">return 1;&#125;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;table border=&quot;1&quot;</span><br><span class="line">cellpadding=&quot;1&quot;</span><br><span class="line">cellspacing=&quot;1&quot;</span><br><span class="line">align=&quot;center&quot;&gt;</span><br><span class="line">&lt;caption&gt;Play with NPC&lt;audio loop=&quot;loop&quot; autoplay=&quot;autoplay/&quot;&gt;</span><br><span class="line">&lt;source src=&quot;I Need To Be In Love.mp3&quot; type=&quot;audio/mpeg&quot;&gt;&lt;/caption&gt;</span><br><span class="line">&lt;tr&gt;</span><br><span class="line">&lt;td align=&quot;center&quot; id=&quot;div0&quot; onclick=&quot;img_change(id)&quot;&gt; &lt;img src=&quot;back.png&quot; id=&quot;srci0&quot; style=&quot;width:150px;height:150px&quot;&gt;&lt;/td&gt;</span><br><span class="line">&lt;td align=&quot;center&quot; id=&quot;div1&quot; onclick=&quot;img_change(id)&quot;&gt; &lt;img src=&quot;back.png&quot; id=&quot;srci1&quot; style=&quot;width:150px;height:150px&quot;&gt;&lt;/td&gt;</span><br><span class="line">&lt;td align=&quot;center&quot; id=&quot;div2&quot; onclick=&quot;img_change(id)&quot;&gt; &lt;img src=&quot;back.png&quot; id=&quot;srci2&quot; style=&quot;width:150px;height:150px&quot;&gt;&lt;/td&gt;</span><br><span class="line">&lt;/tr&gt;</span><br><span class="line">&lt;tr&gt;</span><br><span class="line">&lt;td align=&quot;center&quot; id=&quot;div3&quot; onclick=&quot;img_change(id)&quot;&gt; &lt;img src=&quot;back.png&quot; id=&quot;srci3&quot; style=&quot;width:150px;height:150px&quot;&gt;&lt;/td&gt;</span><br><span class="line">&lt;td align=&quot;center&quot; id=&quot;div4&quot; onclick=&quot;img_change(id)&quot;&gt; &lt;img src=&quot;back.png&quot; id=&quot;srci4&quot; style=&quot;width:150px;height:150px&quot;&gt;&lt;/td&gt;</span><br><span class="line">&lt;td align=&quot;center&quot; id=&quot;div5&quot; onclick=&quot;img_change(id)&quot;&gt; &lt;img src=&quot;back.png&quot; id=&quot;srci5&quot; style=&quot;width:150px;height:150px&quot;&gt;&lt;/td&gt;</span><br><span class="line">&lt;/tr&gt;</span><br><span class="line">&lt;tr&gt;</span><br><span class="line">&lt;td align=&quot;center&quot; id=&quot;div6&quot; onclick=&quot;img_change(id)&quot;&gt; &lt;img src=&quot;back.png&quot; id=&quot;srci6&quot; style=&quot;width:150px;height:150px&quot;&gt;&lt;/td&gt;</span><br><span class="line">&lt;td align=&quot;center&quot; id=&quot;div7&quot; onclick=&quot;img_change(id)&quot;&gt; &lt;img src=&quot;back.png&quot; id=&quot;srci7&quot; style=&quot;width:150px;height:150px&quot;&gt;&lt;/td&gt;</span><br><span class="line">&lt;td align=&quot;center&quot; id=&quot;div8&quot; onclick=&quot;img_change(id)&quot;&gt; &lt;img src=&quot;back.png&quot; id=&quot;srci8&quot; style=&quot;width:150px;height:150px&quot;&gt;&lt;/td&gt;</span><br><span class="line">&lt;/tr&gt;</span><br><span class="line">&lt;/table&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;center&gt;&lt;button onclick=&quot;restart()&quot;&gt;重新开始&lt;/button&gt;&lt;/center&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>附地址：<a href="http://139.59.232.52/game.html" target="_blank" rel="noopener">点击与愚蠢的电脑过招井字棋，输了算你牛</a></p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-10-18T10:25:23.617Z" itemprop="dateUpdated">2018-10-18 18:25:23</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/01/24/javascript-naughts-and-crosses/" target="_blank" rel="external">http://siriuswhiter.tk/2018/01/24/javascript-naughts-and-crosses/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/skills/">skills</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/01/24/javascript-naughts-and-crosses/&title=《JavaScript Naughts and Crosses》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/01/24/javascript-naughts-and-crosses/&title=《JavaScript Naughts and Crosses》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/05/13/protection-technology/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Introduction to pwn0.0 --Protection technology</h4>
+      </a>
+    </div>
+  
+
+  
+</nav>
+
+
+    
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/01/24/javascript-naughts-and-crosses/&title=《JavaScript Naughts and Crosses》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/01/24/javascript-naughts-and-crosses/&title=《JavaScript Naughts and Crosses》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACvElEQVR42u3aQW7jQAwEwPz/07tATlnEsrtJTZwFyifBkeSpOQwZkh8f8efP52f//de/fr3n+/X3Nzx/5+qDh4eHN1r61ef5PVc/fPVN/s4rdr5mPDw8vNO854f75cPx0T97Krl+YcHDw8N7K68NJ3mQaNN6PDw8vP+Llyxr82ySpuPh4eH9Bl5bbsgP+v125IUMPDw8vJ/hbdLZd10f7O/h4eHhLbrqbZC4NwC05Y8Hz+Lh4eEd4CVp675NlY8RJH+t03o8PDy8Y7z2h9sCRH7Q74cSHgQGPDw8vJt4+cjpPmwk2zEbPrhcJx4eHt4xXtvcylPktpW1f/ZBYMDDw8O7lTcbZmrT3/Z6E4SKReDh4eGNeHnbabYR+63MSUV/Dw8PD2/Na5thG3AeVNpNeVHGxcPDwzvGy4/gtngxGxRIyhAvai14eHh4t/Jm5YA8AORJcFJDGAYYPDw8vAO8tq3VkvJRgHzTi5kyPDw8vGO8vNXUDgG0BYU8ZW9Hu/Dw8PDO8ZJjfVaQnRVq84AUBQY8PDy8BS856GdFh1lrLd++KDjh4eHhHePl//zniXW+3Hz0qk7l8fDw8I7x2jLBjNo2sWbtrsu4h4eHh3eA1/5MOyjwhjfj4eHhnXpzfVO7lLZNlQ8KFPVpPDw8vFt5m+5ZS2o3cTY08M+zeHh4eLfyhqNLTxfdjl617KJsgYeHh3eY1xZn2/jTPtWuBA8PD+9neHkanaS57RBqEkg2Y694eHh4J3iz43izrLzMMSsfv+jv4eHh4a15swN3n/LWZYV4a/LxAjw8PLwNb7bQ9uCeHeubsQM8PDy807x9KaHdmlkq34YTPDw8vPfy2sJEfn/yfQ3Dw8PD+zW8pCWWX8/KvkUQwsPDwzvG24w3DWvDQVFj1jbDw8PDO82rh5kWxdl8mw528/Dw8PDmvL9UeFS53uYCVwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>

