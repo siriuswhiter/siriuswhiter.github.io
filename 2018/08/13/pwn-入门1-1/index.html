@@ -272,24 +272,14 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
 <h1 id="之前的一些小知识点笔记："><a href="#之前的一些小知识点笔记：" class="headerlink" title="之前的一些小知识点笔记："></a>之前的一些小知识点笔记：</h1><p>gadget :一小段以ret结尾的code</p>
 <p>rop chain ：串联在一起的gadget</p>
 <p>rop 类型：控制寄存器做syscall；使用原有程序的func；使用libc里的gadget或func（绕过ASLR）.</p>
-<p>rop关键：</p>
-<p>查找gadget：</p>
-<pre><code>ROPgadget --binary ./file
 
-ROPgadget --binary ret2syscall  --only &apos;pop|ret&apos; | grep eax  
-ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
-</code></pre><p>排列gadget：</p>
-<p>peda：vmmap 查看程序段的可读写执行情况</p>
-<p>也可以：./file &amp;  (后台运行，返回pid0）</p>
-<pre><code>cat  /proc/pid0/maps
-</code></pre>
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2018-09-29T09:15:02.590Z" itemprop="dateUpdated">2018-09-29 17:15:02</time>
+    Last updated: <time datetime="2019-01-30T03:36:15.312Z" itemprop="dateUpdated">2019-01-30 11:36:15</time>
 </span><br>
 
 
