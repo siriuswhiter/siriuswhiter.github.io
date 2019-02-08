@@ -268,18 +268,14 @@ int main()
 }
 
 Run Shellcode: gcc test.c -o test -m32 -zexexstack       
-</code></pre><p><em><a href="syscalls.kernelgrok.com" title="src">linux下的系统调用</a>.</em></p>
-<h1 id="之前的一些小知识点笔记："><a href="#之前的一些小知识点笔记：" class="headerlink" title="之前的一些小知识点笔记："></a>之前的一些小知识点笔记：</h1><p>gadget :一小段以ret结尾的code</p>
-<p>rop chain ：串联在一起的gadget</p>
-<p>rop 类型：控制寄存器做syscall；使用原有程序的func；使用libc里的gadget或func（绕过ASLR）.</p>
-
+</code></pre>
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-01-30T03:36:15.312Z" itemprop="dateUpdated">2019-01-30 11:36:15</time>
+    最后更新时间：<time datetime="2019-01-30T06:21:07.211Z" itemprop="dateUpdated">2019-01-30 14:21:07</time>
 </span><br>
 
 
@@ -374,7 +370,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#各种变量的存储位置"><span class="post-toc-number">1.</span> <span class="post-toc-text">各种变量的存储位置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#linux下将shellcode运行"><span class="post-toc-number">2.</span> <span class="post-toc-text">linux下将shellcode运行</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#之前的一些小知识点笔记："><span class="post-toc-number"></span> <span class="post-toc-text">之前的一些小知识点笔记：</span></a>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#各种变量的存储位置"><span class="post-toc-number">1.</span> <span class="post-toc-text">各种变量的存储位置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#linux下将shellcode运行"><span class="post-toc-number">2.</span> <span class="post-toc-text">linux下将shellcode运行</span></a></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
