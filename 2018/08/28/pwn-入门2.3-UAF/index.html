@@ -250,8 +250,8 @@
 <h2 id="漏洞的简单利用"><a href="#漏洞的简单利用" class="headerlink" title="漏洞的简单利用"></a>漏洞的简单利用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">typedef void (*func_ptr)(char *);</span><br><span class="line">void evil_fuc(char command[])</span><br><span class="line">&#123;</span><br><span class="line">system(command);</span><br><span class="line">&#125;</span><br><span class="line">void echo(char content[])</span><br><span class="line">&#123;</span><br><span class="line">printf(&quot;%s&quot;,content);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    func_ptr *p1=(func_ptr*)malloc(4*sizeof(int));</span><br><span class="line">    printf(&quot;malloc addr: %p\n&quot;,p1);</span><br><span class="line">    p1[3]=echo;</span><br><span class="line">    p1[3](&quot;hello world\n&quot;);</span><br><span class="line">    free(p1); //在这里free了p1,但并未将p1置空,导致后续可以再使用p1指针</span><br><span class="line">    p1[3](&quot;hello again\n&quot;); //p1指针未被置空,虽然free了,但仍可使用.只是其内存块是被标记为空闲状态</span><br><span class="line">    func_ptr *p2=(func_ptr*)malloc(4*sizeof(int));//malloc在free一块内存后,再次申请同样大小的指针会把刚刚释放的内存分配出来.</span><br><span class="line">    printf(&quot;malloc addr: %p\n&quot;,p2);</span><br><span class="line">    printf(&quot;malloc addr: %p\n&quot;,p1);//p2与p1指针指向的内存为同一地址</span><br><span class="line">    p2[3]=evil_fuc; //在这里将p1指针里面保存的echo函数指针覆盖成为了evil_func指针.</span><br><span class="line">    p1[3](&quot;/bin/sh&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>最终运行效果：</p>
 <figure class="image-box">
-                <a rel=Introduction to pwn2.3--UAF href="/2018/08/28/pwn-入门2.3-UAF/pwn-入门n-n/result.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门2.3-UAF/pwn-入门n-n/result.png" alt="result" title="" class=""></a>
-                <p>result</p>
+                <a rel=Introduction to pwn2.3--UAF href="/2018/08/28/pwn-入门2.3-UAF/Introduction" class="swipebox" title=to><img src="/2018/08/28/pwn-入门2.3-UAF/Introduction" alt="result" title="to" class=""></a>
+                <p>to</p>
             </figure>
 <p><em>漏洞的利用方法原理上与其相同，之后会再加上入群题的解题过程</em></p>
 <p>学习借鉴文章来源：<a href="https://blog.csdn.net/qq_31481187/article/details/73612451?locationNum=10&amp;fps=1" target="_blank" rel="noopener">https://blog.csdn.net/qq_31481187/article/details/73612451?locationNum=10&amp;fps=1</a></p>
@@ -262,7 +262,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2018-12-19T13:02:45.413Z" itemprop="dateUpdated">2018-12-19 21:02:45</time>
+    Last updated: <time datetime="2019-02-08T09:27:56.342Z" itemprop="dateUpdated">2019-02-08 17:27:56</time>
 </span><br>
 
 

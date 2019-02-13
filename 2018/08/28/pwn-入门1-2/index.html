@@ -276,6 +276,14 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
 <p>1.通过程序中的其他函数leak 程序libc的实际地址（Address）,base = Address - offset</p>
 <p>2.从stack残渣中获取libc地址信息</p>
 <h3 id="延迟绑定"><a href="#延迟绑定" class="headerlink" title="延迟绑定"></a>延迟绑定</h3><p>简而言之就是程序在未调用过该函数时，其got地址处的值不是其真实地址；当程序调用一次该函数后，真实地址才会被初始化，此时got地址处的值才是真实地址。</p>
+<h2 id="给文件加载目标libc的方法："><a href="#给文件加载目标libc的方法：" class="headerlink" title="给文件加载目标libc的方法："></a>给文件加载目标libc的方法：</h2><ol>
+<li>加载环境变量:(64为UBUNTU调试32位程序会无法加载)</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export LD_LIBRARY_PATH=`pwd`       #当前目录为加载目录</span><br><span class="line">export LD_PRELOAD= libc            #加载本地pwn题目下的libc</span><br><span class="line"></span><br><span class="line">unset LD_PRELOAD                   #调试完删除环境变量</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>exp调试时使用</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh = process([‘./bin‘],env=&#123;&quot;LD_PRELOAD&quot;:&quot;./libc-2.23.so&quot;&#125;)</span><br></pre></td></tr></table></figure>
 
         </div>
         
@@ -283,7 +291,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-01-30T03:57:07.659Z" itemprop="dateUpdated">2019-01-30 11:57:07</time>
+    Last updated: <time datetime="2019-02-12T12:21:03.872Z" itemprop="dateUpdated">2019-02-12 20:21:03</time>
 </span><br>
 
 
@@ -378,7 +386,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#静态链接"><span class="post-toc-number">1.</span> <span class="post-toc-text">静态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2text-amp-ret2shellcode"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ret2text &amp; ret2shellcode</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2syscall"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">ret2syscall</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#动态链接"><span class="post-toc-number">2.</span> <span class="post-toc-text">动态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2libc"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">ret2libc</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#利用过程："><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">利用过程：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#延迟绑定"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">延迟绑定</span></a></li></ol></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#静态链接"><span class="post-toc-number">1.</span> <span class="post-toc-text">静态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2text-amp-ret2shellcode"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ret2text &amp; ret2shellcode</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2syscall"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">ret2syscall</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#动态链接"><span class="post-toc-number">2.</span> <span class="post-toc-text">动态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2libc"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">ret2libc</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#利用过程："><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">利用过程：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#延迟绑定"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">延迟绑定</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#给文件加载目标libc的方法："><span class="post-toc-number">2.2.</span> <span class="post-toc-text">给文件加载目标libc的方法：</span></a></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
