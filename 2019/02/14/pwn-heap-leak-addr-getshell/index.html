@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>Pwn Heap leak addr &amp;&amp; getshell | Room of Equirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="pwn,heap">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>Pwn Heap leak addr &amp;&amp; getshell</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">Pwn Heap leak addr &amp;&amp; getshell</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-02-14T05:37:18.000Z" itemprop="datePublished" class="page-time">
+  2019-02-14
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-pwn-heap-leak-addr-getshell"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Pwn Heap leak addr && getshell</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-02-14 13:37:18" datetime="2019-02-14T05:37:18.000Z"  itemprop="datePublished">2019-02-14</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <p><em>在堆相关的题中经常需要泄露地址及最后的getshell，总结一下比较常用的方法：</em></p>
+<h1 id="Leak-Address"><a href="#Leak-Address" class="headerlink" title="Leak Address"></a>Leak Address</h1><h2 id="heap-base"><a href="#heap-base" class="headerlink" title="heap base"></a>heap base</h2><ol>
+<li>最常用的即在存在UAF或溢出之类的条件下，因为fastbin 在内存中为单链存放，之后释放的fastbin范围的chunk的fd指针会指向之前释放的等大小范围的chunk，泄露fd指针即可得到heap base</li>
+<li>main arena中存放着top chunk的地址，如果有条件泄露其地址便可以得到heap base</li>
+</ol>
+<h2 id="libc-base"><a href="#libc-base" class="headerlink" title="libc base"></a>libc base</h2><ol>
+<li>unsorted bin为双向链表，而第一个unsorted bin的fd 与 bk指针都指向main_arena+88 处，泄露指针处即可计算得到libc base</li>
+</ol>
+<h2 id="stack-addr"><a href="#stack-addr" class="headerlink" title="stack addr"></a>stack addr</h2><ol>
+<li>一般在可以得到libc base的情况下，可以利用libc中存放的_environ指针，该指针指向栈中环境变量的位置，泄露该指针的值便可以得到栈地址</li>
+</ol>
+<h1 id="Get-Shell"><a href="#Get-Shell" class="headerlink" title="Get Shell"></a>Get Shell</h1><h2 id="Write-to-plt-got"><a href="#Write-to-plt-got" class="headerlink" title="Write to .plt.got"></a>Write to .plt.got</h2><p>当程序保护中got表不满时 即 ： RELRO: Partial RELRO 。此时got表可写，可以将某个函数的got地址改写为system()函数的地址，然后想办法将’/bin/sh’传参进去，get shell</p>
+<h2 id="Write-to-malloc-hook-or-free-hook"><a href="#Write-to-malloc-hook-or-free-hook" class="headerlink" title="Write to malloc_hook or free_hook"></a>Write to malloc_hook or free_hook</h2><p>malloc_hook &amp;&amp; free_hook 是程序在调用malloc或free时会首先检查的地方，如果不为空，会先执行其指针指向的地方，所以如果将one_gadget或system(‘/bin/sh’)的地址写向该地址，便可以 get shell</p>
+<h2 id="Write-to-stack"><a href="#Write-to-stack" class="headerlink" title="Write to stack"></a>Write to stack</h2><p>一般来说，这个真的是没有办法的话才用，利用上面的方法得到栈地址后，利用漏洞将one_gadget或system(‘/bin/sh’)的地址写向返回地址，这样程序在退出时便会getshell</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2019-02-14T06:02:41.269Z" itemprop="dateUpdated">2019-02-14 14:02:41</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/02/14/pwn-heap-leak-addr-getshell/" target="_blank" rel="external">http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heap/">heap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/02/12/l3c-sec-pwn-recruit-new-questions/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">l3c-sec Pwn Recruit New Questions</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Leak-Address"><span class="post-toc-number">1.</span> <span class="post-toc-text">Leak Address</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#heap-base"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">heap base</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#libc-base"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">libc base</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#stack-addr"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">stack addr</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Get-Shell"><span class="post-toc-number">2.</span> <span class="post-toc-text">Get Shell</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Write-to-plt-got"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Write to .plt.got</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Write-to-malloc-hook-or-free-hook"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Write to malloc_hook or free_hook</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Write-to-stack"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Write to stack</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        我们一起来让这个世界有趣一点
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJUlEQVR42u3a3WqEUAxFYd//pS30qmB7unaiA+Ysr4aho/kshJOf48DX+X1dv/n5/Xm5rr8lv7o+67ZLhgwZr2Wcy+svRuduax5B/hKPDBkyNmCsk2yaQNepmaRyHpsMGTJkrENJg+NHTBkyZMi4K+F2QiFFrAwZMmSkRWzadOscJR+sxWXIkPFCRjoY+OTnB+cbMmTIeAnjbF+czRNxHIMMGTJGM0jjvhYop3YOkQefP8iQIeO1jM7DOD4dEqRNOhkyZOzAWNeD6WgzvSdJ3P+8GhkyZIxm8AKSDzJ5AuWpHA0qZMiQMZRRC7qTlElKJSkb/R9kyJCxAaMfUK3FFr9EGTJkjGbw7jovNdPPwRlWhgwZGzNqh8K7FibSGFC7TYYMGYMY6/T6XEONvCC+pypDhozZDD5iJE18EkQ65uTrFzJkyJjNSB+clrvpyDNNxDJkyNiHUVu5qJWvKRithcmQIWM0ozYM6KRXkrLjp8iQIWMbBm/Zk/KVp+xaQStDhow9GWmFyNN0p5SNa24ZMmQMZZCyMx0npMjO65AhQ8ZsRm1gWSt6+d3iZQsZMmQMZdQa+uQxJJX3W3syZMjYgXHv4kU/TffXNWTIkDGVUVuwSItVfkpNlzxkyJCxD6MWCrlDbZCZLmHIkCFDRu1vasPLuEcoQ4YMGY3jYwcfL2HIkCFjA0baOEtb/PFRLz0+ypAhYzSjNhjgDL7S0R+FypAhYxzjC9Tgx2UnfYM9AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>
