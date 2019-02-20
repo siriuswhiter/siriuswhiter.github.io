@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     
     
-    <title>Pwn Heap leak addr &amp;&amp; getshell | Room of Equirement | pwn what you want</title>
+    <title>Pwn Heap leak addr &amp;&amp; getshell | Room of Requirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="keywords" content="pwn,heap">
@@ -253,9 +253,9 @@
 <h2 id="stack-addr"><a href="#stack-addr" class="headerlink" title="stack addr"></a>stack addr</h2><ol>
 <li>一般在可以得到libc base的情况下，可以利用libc中存放的_environ指针，该指针指向栈中环境变量的位置，泄露该指针的值便可以得到栈地址</li>
 </ol>
-<h1 id="Get-Shell"><a href="#Get-Shell" class="headerlink" title="Get Shell"></a>Get Shell</h1><h2 id="Write-to-plt-got"><a href="#Write-to-plt-got" class="headerlink" title="Write to .plt.got"></a>Write to .plt.got</h2><p>当程序保护中got表不满时 即 ： RELRO: Partial RELRO 。此时got表可写，可以将某个函数的got地址改写为system()函数的地址，然后想办法将’/bin/sh’传参进去，get shell</p>
-<h2 id="Write-to-malloc-hook-or-free-hook"><a href="#Write-to-malloc-hook-or-free-hook" class="headerlink" title="Write to malloc_hook or free_hook"></a>Write to malloc_hook or free_hook</h2><p>malloc_hook &amp;&amp; free_hook 是程序在调用malloc或free时会首先检查的地方，如果不为空，会先执行其指针指向的地方，所以如果将one_gadget或system(‘/bin/sh’)的地址写向该地址，便可以 get shell</p>
-<h2 id="Write-to-stack"><a href="#Write-to-stack" class="headerlink" title="Write to stack"></a>Write to stack</h2><p>一般来说，这个真的是没有办法的话才用，利用上面的方法得到栈地址后，利用漏洞将one_gadget或system(‘/bin/sh’)的地址写向返回地址，这样程序在退出时便会getshell</p>
+<h1 id="Get-Shell"><a href="#Get-Shell" class="headerlink" title="Get Shell"></a>Get Shell</h1><h2 id="write-to-plt-got"><a href="#write-to-plt-got" class="headerlink" title="write to .plt.got"></a>write to .plt.got</h2><p>当程序保护中got表不满时 即 ： RELRO: Partial RELRO 。此时got表可写，可以将某个函数的got地址改写为system()函数的地址，然后想办法将’/bin/sh’传参进去，get shell</p>
+<h2 id="write-to-malloc-hook-or-free-hook"><a href="#write-to-malloc-hook-or-free-hook" class="headerlink" title="write to malloc_hook or free_hook"></a>write to malloc_hook or free_hook</h2><p>malloc_hook &amp;&amp; free_hook 是程序在调用malloc或free时会首先检查的地方，如果不为空，会先执行其指针指向的地方，所以如果将one_gadget或system(‘/bin/sh’)的地址写向该地址，便可以 get shell</p>
+<h2 id="write-to-stack"><a href="#write-to-stack" class="headerlink" title="write to stack"></a>write to stack</h2><p>一般来说，这个真的是没有办法的话才用，利用上面的方法得到栈地址后，利用漏洞将one_gadget或system(‘/bin/sh’)的地址写向返回地址，这样程序在退出时便会getshell</p>
 
         </div>
         
@@ -263,7 +263,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-02-14T06:02:41.269Z" itemprop="dateUpdated">2019-02-14 14:02:41</time>
+    最后更新时间：<time datetime="2019-02-14T06:09:12.063Z" itemprop="dateUpdated">2019-02-14 14:09:12</time>
 </span><br>
 
 
@@ -297,7 +297,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -309,7 +309,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -332,7 +332,14 @@
         
     </div>
     
-<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/02/15/护网杯pwn复现/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">护网杯pwn复现</h4>
+      </a>
+    </div>
   
 
   
@@ -351,7 +358,7 @@
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Leak-Address"><span class="post-toc-number">1.</span> <span class="post-toc-text">Leak Address</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#heap-base"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">heap base</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#libc-base"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">libc base</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#stack-addr"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">stack addr</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Get-Shell"><span class="post-toc-number">2.</span> <span class="post-toc-text">Get Shell</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Write-to-plt-got"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Write to .plt.got</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Write-to-malloc-hook-or-free-hook"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Write to malloc_hook or free_hook</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Write-to-stack"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Write to stack</span></a></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Leak-Address"><span class="post-toc-number">1.</span> <span class="post-toc-text">Leak Address</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#heap-base"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">heap base</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#libc-base"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">libc base</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#stack-addr"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">stack addr</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Get-Shell"><span class="post-toc-number">2.</span> <span class="post-toc-text">Get Shell</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#write-to-plt-got"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">write to .plt.got</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#write-to-malloc-hook-or-free-hook"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">write to malloc_hook or free_hook</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#write-to-stack"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">write to stack</span></a></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
@@ -362,7 +369,7 @@
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <h3 class="reward-title">
         <i class="icon icon-quote-left"></i>
-        我们一起来让这个世界有趣一点
+        请我喝奶茶呀
         <i class="icon icon-quote-right"></i>
     </h3>
     <div class="reward-content">
@@ -437,7 +444,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Equirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -449,7 +456,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Equirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/02/14/pwn-heap-leak-addr-getshell/&title=《Pwn Heap leak addr && getshell》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
