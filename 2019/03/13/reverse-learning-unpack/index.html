@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     
     
-    <title>Introduction to pwn1.2 | Room of Requirement | pwn what you want</title>
+    <title>Reverse Learning-unpack | Room of Requirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="pwn,stack">
+    <meta name="keywords" content="re">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
     <link rel="stylesheet" href="/css/style.css?v=1.3.2">
@@ -173,7 +173,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>Introduction to pwn1.2</span>
+            <span>Reverse Learning-unpack</span>
             
         </div>
         
@@ -186,15 +186,15 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">Introduction to pwn1.2</h1>
+        <h1 class="title">Reverse Learning-unpack</h1>
         <h5 class="subtitle">
             
-                <time datetime="2018-08-28T01:46:58.000Z" itemprop="datePublished" class="page-time">
-  2018-08-28
+                <time datetime="2019-03-13T07:45:50.000Z" itemprop="datePublished" class="page-time">
+  2019-03-13
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">re</a></li></ul>
 
             
         </h5>
@@ -221,15 +221,15 @@
 
 
 <div class="container body-wrap">
-    <article id="post-pwn-入门1-2"
+    <article id="post-reverse-learning-unpack"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">Introduction to pwn1.2</h1>
+        <h1 class="post-card-title">Reverse Learning-unpack</h1>
         <div class="post-meta">
-            <time class="post-time" title="2018-08-28 09:46:58" datetime="2018-08-28T01:46:58.000Z"  itemprop="datePublished">2018-08-28</time>
+            <time class="post-time" title="2019-03-13 15:45:50" datetime="2019-03-13T07:45:50.000Z"  itemprop="datePublished">2019-03-13</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">re</a></li></ul>
 
 
 
@@ -242,48 +242,33 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             
-            <h1 id="静态链接"><a href="#静态链接" class="headerlink" title="静态链接"></a>静态链接</h1><h2 id="ret2text-amp-ret2shellcode"><a href="#ret2text-amp-ret2shellcode" class="headerlink" title="ret2text &amp; ret2shellcode"></a>ret2text &amp; ret2shellcode</h2><p>当程序中存在打印flag的地址或是可以得到shell的地址，我们就可以想办法覆盖返回地址到其地址处。也就是ret2text.</p>
-<p>若程序中有明显的溢出且无保护措施，我们可以自己写shellcode并覆盖返回地址至shellcode处改变程序流程。不过要注意写入shellcode的区域要有可执行权限，否则写了也白写。关于shellcode的布置可以查看<br><a href="&quot;https://www.siriuswhiter.tk/2018/07/26/the-art-0f-deploying-shellcode/&quot;">shellcode的布置</a></p>
-<p>查看程序段的可读写执行情况：</p>
-<ol>
-<li><p>gdb：vmmap</p>
-</li>
-<li><p>./file &amp;  (后台运行，返回pid0）<br> cat  /proc/pid0/maps</p>
-</li>
-</ol>
-<h2 id="ret2syscall"><a href="#ret2syscall" class="headerlink" title="ret2syscall"></a>ret2syscall</h2><p>栈不可执行开启的情况下，我们可以在栈上写入gadgets，使通过系统中断执行系统调用，从而达到获取shell的目的；</p>
-<p>查找gadget的方法：</p>
-<pre><code>ROPgadget --binary ./file
-
-ROPgadget --binary file  --only &apos;pop|ret&apos; | grep eax     
-ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
-</code></pre><p><em><a href="syscalls.kernelgrok.com" title="src">linux下的系统调用</a>.</em></p>
-<h1 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h1><h2 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h2><p>程序不是静态编译，通常就不会有int 0x80; ret2syscall 就无法实现，因而使用ret2libc。</p>
-<h3 id="利用过程："><a href="#利用过程：" class="headerlink" title="利用过程："></a>利用过程：</h3><p>ASLR使得每次载入的函数地址（base）都不同；实际地址 Address = base +offset</p>
-<p><em>若地址为 0xf…  则其一般为实际地址；</em></p>
-<p>而各函数offset在libc库中是固定的；</p>
-<ul>
-<li>查看libc库版本：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldd  ./file</span><br></pre></td></tr></table></figure>
-<ul>
-<li>寻找偏移地址 ：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -a  /lib32/libc.so.6 | grep gets@</span><br></pre></td></tr></table></figure>
-<ul>
-<li>目标是寻找libc 的 base :</li>
-</ul>
-<p>1.通过程序中的其他函数leak 程序libc的实际地址（Address）,base = Address - offset</p>
-<p>2.从stack残渣中获取libc地址信息</p>
-<h3 id="延迟绑定"><a href="#延迟绑定" class="headerlink" title="延迟绑定"></a>延迟绑定</h3><p>简而言之就是程序在未调用过该函数时，其got地址处的值不是其真实地址；当程序调用一次该函数后，真实地址才会被初始化，此时got地址处的值才是真实地址。</p>
-<h2 id="给文件加载目标libc的方法："><a href="#给文件加载目标libc的方法：" class="headerlink" title="给文件加载目标libc的方法："></a>给文件加载目标libc的方法：</h2><ol>
-<li>加载环境变量:(64为UBUNTU调试32位程序会无法加载)</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export LD_LIBRARY_PATH=`pwd`       #当前目录为加载目录</span><br><span class="line">export LD_PRELOAD= libc            #加载本地pwn题目下的libc</span><br><span class="line"></span><br><span class="line">unset LD_PRELOAD                   #调试完删除环境变量</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>exp调试时使用</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh = process([‘./bin‘],env=&#123;&quot;LD_PRELOAD&quot;:&quot;./libc-2.23.so&quot;&#125;)</span><br></pre></td></tr></table></figure>
+            <p><em>学习一下基础的软件脱壳，之后慢慢更新</em></p>
+<h1 id="upx"><a href="#upx" class="headerlink" title="upx"></a>upx</h1><h2 id="type"><a href="#type" class="headerlink" title="type"></a>type</h2><p>upx属于比较经典的压缩壳，支持大多数操作系统运行文件，可以使压缩过的可执行文件体积缩小50%-70% ；</p>
+<p>文件位压缩后的运行方式便是在压缩文件的开始加入解压缩的代码，所以程序在运行完解压缩代码之后，程序的代码实际上就与压缩前一致了，而这也是我们可以手动调试脱壳的前提。</p>
+<h2 id="pack"><a href="#pack" class="headerlink" title="pack"></a>pack</h2><p>先下载 <a href="https://upx.github.io/" target="_blank" rel="noopener">upx</a></p>
+<p>od 查看文件在upx 之前的内存情况，从开始处，信息比较清楚</p>
+<figure class="image-box">
+                <a rel=Reverse Learning-unpack href="/2019/03/13/reverse-learning-unpack/1.png" class="swipebox" title=undefined><img src="/2019/03/13/reverse-learning-unpack/1.png" alt="未加壳" title="" class=""></a>
+                <p>未加壳</p>
+            </figure>
+<p>命令行调用upx 给文件加壳   <figure class="highlight plain"><figcaption><span>filename.exe```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">再次查看文件情况，当然也可以使用IDA。</span><br><span class="line"></span><br><span class="line">![加壳](reverse-learning-unpack/2.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## unpack</span><br><span class="line"></span><br><span class="line">1. upx自带脱壳命令，加个-d 就是脱壳模式</span><br><span class="line">2. 手动脱壳</span><br><span class="line"></span><br><span class="line">文件起始有个pushad将所有寄存器的值入栈，之后从加壳后的文件起始处按f8单步往后走，发现不久后就开始了反复循环</span><br></pre></td></tr></table></figure></p>
+<p>004079D0   &gt; /8A06          mov al,byte ptr ds:[esi]<br>004079D2   . |46            inc esi                                  ;  upxpacke.00407006<br>004079D3   . |8807          mov byte ptr ds:[edi],al<br>004079D5   . |47            inc edi                                  ;  upxpacke.00401002<br>004079D6   &gt; |01DB          add ebx,ebx<br>004079D8   . |75 07         jnz short upxpacke.004079E1<br>004079DA   &gt; |8B1E          mov ebx,dword ptr ds:[esi]<br>004079DC   . |83EE FC       sub esi,-0x4<br>004079DF   . |11DB          adc ebx,ebx<br>004079E1   &gt;^\72 ED         jb short upxpacke.004079D0<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">可以看到大概意思就是在疯狂复制esi地址的数据到 edi地址处</span><br><span class="line"></span><br><span class="line">而我们只需要找到之后的popad就可以了，所以右键-&gt;serch for-&gt;command 或直接 ctrl+F 寻找popad ，不过这里需要去掉entire block的勾选，否则会找到起始地址之前的popad，找到之后f2下断点，f9直接运行到这里</span><br><span class="line"></span><br><span class="line">之后继续单步,一个小循环之后，跳转到一个地址</span><br></pre></td></tr></table></figure></p>
+<p>00407B66   .  61            popad<br>00407B67   .  8D4424 80     lea eax,dword ptr ss:[esp-0x80]<br>00407B6B   &gt;  6A 00         push 0x0<br>00407B6D   .  39C4          cmp esp,eax<br>00407B6F   .^ 75 FA         jnz short upxpacke.00407B6B<br>00407B71   .  83EC 80       sub esp,-0x80<br>00407B74   .- E9 C897FFFF   jmp upxpacke.00401341</p>
+<p>00401341    E8 83040000     call upxpacke.004017C9<br>00401346  ^ E9 B3FDFFFF     jmp upxpacke.004010FE<br>0040134B    8BFF            mov edi,edi                              ; upxpacke.<moduleentrypoint><br>0040134D    55              push ebp<br>0040134E    8BEC            mov ebp,esp<br>00401350    81EC 28030000   sub esp,0x328<br><code>`</code></moduleentrypoint></p>
+<p>到达该地址后，可以看到有个call函数，此时就可以使用od 的插件OllyDump将文件脱壳，需要注意的是重建输入表一般会选择方式二，其他的可以根据情况来定，这次保持默认就可以了</p>
+<figure class="image-box">
+                <a rel=Reverse Learning-unpack href="/2019/03/13/reverse-learning-unpack/3.png" class="swipebox" title=undefined><img src="/2019/03/13/reverse-learning-unpack/3.png" alt="ollydump" title="" class=""></a>
+                <p>ollydump</p>
+            </figure>
+<p>打开输出的脱壳的文件，找到最初始的地方，发现与脱壳前一样，也就是说脱壳成功</p>
+<figure class="image-box">
+                <a rel=Reverse Learning-unpack href="/2019/03/13/reverse-learning-unpack/4.png" class="swipebox" title=undefined><img src="/2019/03/13/reverse-learning-unpack/4.png" alt="脱壳效果" title="" class=""></a>
+                <p>脱壳效果</p>
+            </figure>
+<h1 id="aspack"><a href="#aspack" class="headerlink" title="aspack"></a>aspack</h1><h2 id="type-1"><a href="#type-1" class="headerlink" title="type"></a>type</h2><p>专门针对win32程序的压缩软件，整体原理与upx差不多所以方法实际上是可以通用的。</p>
+<h2 id="unpack"><a href="#unpack" class="headerlink" title="unpack"></a>unpack</h2><p>aspack popad不容易找到，所以可以使用其他的办法来</p>
+<p>这里可以确定0x401000是程序本身的初始位置，只是在没有解包之前，这里还无法反汇编。</p>
+<p>我们这里使用硬件断点(硬件断点不通过0xCC/<em>int 3h</em>/中断程序运行并向调试器发送报告，而是通过写入DR寄存器来实现；其支持更复杂的中断，但是只能设置四个)，在0x401000处设置一个硬件断点，f9运行，程序到0x401000处停止执行，此时应该已经解包完成，如果没有显示的话按ctrl+A， 使得OD重新分析代码即可</p>
 
         </div>
         
@@ -291,12 +276,12 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-02-12T12:21:03.872Z" itemprop="dateUpdated">2019-02-12 20:21:03</time>
+    Last updated: <time datetime="2019-03-13T08:55:04.309Z" itemprop="dateUpdated">2019-03-13 16:55:04</time>
 </span><br>
 
 
         
-        转载注明出处，原文地址：<a href="/2018/08/28/pwn-入门1-2/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/</a>
+        转载注明出处，原文地址：<a href="/2019/03/13/reverse-learning-unpack/" target="_blank" rel="external">http://siriuswhiter.tk/2019/03/13/reverse-learning-unpack/</a>
         
     </div>
     <footer>
@@ -316,7 +301,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
         
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/re/">re</a></li></ul>
 
             <div class="page-share-wrap">
     
@@ -325,7 +310,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《Introduction to pwn1.2》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/03/13/reverse-learning-unpack/&title=《Reverse Learning-unpack》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -337,7 +322,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《Introduction to pwn1.2》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/03/13/reverse-learning-unpack/&title=《Reverse Learning-unpack》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -360,21 +345,14 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
         
     </div>
     
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="prev">
-      <a href="/2018/08/28/pwn-入门2.3-UAF/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Introduction to pwn2.3--UAF</h4>
-      </a>
-    </div>
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
   
 
   
     <div class="next">
-      <a href="/2018/08/25/软件保护-软件破解-及对抗/" id="post-next" class="post-nav-link">
+      <a href="/2019/03/12/reverse-learning-practical-practice/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">软件保护/软件破解 及对抗</h4>
+        <h4 class="title">Reverse Learning-Practical practice</h4>
       </a>
     </div>
   
@@ -386,7 +364,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#静态链接"><span class="post-toc-number">1.</span> <span class="post-toc-text">静态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2text-amp-ret2shellcode"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ret2text &amp; ret2shellcode</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2syscall"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">ret2syscall</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#动态链接"><span class="post-toc-number">2.</span> <span class="post-toc-text">动态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2libc"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">ret2libc</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#利用过程："><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">利用过程：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#延迟绑定"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">延迟绑定</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#给文件加载目标libc的方法："><span class="post-toc-number">2.2.</span> <span class="post-toc-text">给文件加载目标libc的方法：</span></a></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#upx"><span class="post-toc-number">1.</span> <span class="post-toc-text">upx</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#type"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">type</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#pack"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">pack</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#aspack"><span class="post-toc-number">2.</span> <span class="post-toc-text">aspack</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#type-1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">type</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#unpack"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">unpack</span></a></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
@@ -472,7 +450,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《Introduction to pwn1.2》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/03/13/reverse-learning-unpack/&title=《Reverse Learning-unpack》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -484,7 +462,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-2/&title=《Introduction to pwn1.2》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/03/13/reverse-learning-unpack/&title=《Reverse Learning-unpack》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -496,7 +474,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLklEQVR42u3aS07DUAwFUPa/6TJFognXdooU52RUgZq8A5Lj39dXfL1+XJOf955y2YWBgXFbxuv0OnrA0effdz56yvnT87NhYGA8h5Ec4jzWJd9Kgmn1D4SBgYGRhM7zlG4STDEwMDAmATd5cFLcngdlDAwMjF7gy0vQXhL58VocAwPjhoy86/7/nz8y38DAwLgV41W88uBYDZf5t97cBwMDYzWj2qw/P/RkhFBdtsDAwHgOIw+Xk1IzGRhUYYf/BwwMjHWMaijM68ck7asG9OQ+GBgYuxnJsXqjx3xgkH8LAwPjaYz5mlc1NeytgkVvDAwMjKWMSYpWbbTl9+m18zAwMJ7DyJtxV7Xq5gtqGBgYWxl56pandL1ydNLmw8DA2M2oJmS9svYTCWihX4iBgbGIUT3QZJGiOkKIClcMDIyljF56l48Bencol80YGBirGdUhwXkQ7I0QJgG9/A7BwMC4IWNSKJ4ncL02XP7cN+8NDAyMpYzeSkQeHKsp5jyUY2BgbGVUm2LVJK8apqvJKAYGxtMYefo1CZSTIH74WwwMjAcwestb1dyzkKVWi1gMDIyljN5gsrftcFV7rrwhgoGBcXNGL8xVQ+e8MB4tW2BgYKxg9Jr1OSAP3KOAi4GB8QDGVQVndZ2i+gb4I8/FwMDASBr0eZ/v2pIVAwMDI17tqjbaemVwNInFwMBYx0iK2N7yRC8cV0cRGBgYuxm90rQQCuND9JbMMDAwVjO+ASS7+giMEIo2AAAAAElFTkSuQmCC" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACI0lEQVR42u3aS24DIRAFQN//0pN1FJl5TTORBopV5NiCYtHqD59PvK4/K//+3C6fJxYGBsZrGddwfdsgx4wvIt/35ioxMDAOYCSHyOPeWvz4OxgYGBhz2+eZ23gvDAwMjDnGt+QsP1xexGJgYGBUi9g8sFbTvn+txTEwMF7ImCtN/+fvR+YbGBgYr2JcxTVO4MbJ4jhQXo2FgYGxN2OuvBwfa21qWHiWgYGBsSkjOdCqcDk3sIwuCwMD4wBG9dCFWB7vMtfy+xVwMTAwtmYkG4/Da6d9lh99wf1hYGC8kLFqtlANl/2k8KYWx8DA2IiRNMuSkcDcFeTUm10wMDAOYOSYPHWbG3NWk8VCEYuBgbEdI4lmq8aT+X+jESYGBsYBjDy9qz4d67f5bl6LYGBgbM2oNs5Wtd6q6WMU6TEwMLZj5M8s+m21HFB+bIGBgbE1o/MMotpiK9xrHGoxMDBOYLR+MHX06qUkl4uBgXECozMY6LTVkiK2MDrFwMA4hlF44lBM46oNvjy4Y2BgnMOoDglyas6rPtGYjO4YGBgbMarjyWpQnhsw3FThGBgY2zGu4pobUlbHotWrwcDA2JuxKmZXH43ln8wNPjEwMPZjPFegVgN3K+BiYGAcwMgLzk7y10/7bvJcDAwMjGSUmHT4+uEVAwMDo/jAYq4Zl5fB42vCwMA4h5GkbtUQ/FzAxcDAOI3Raej3j54PDPrPNTAwMF7I+AGX3Cy6K9VM7QAAAABJRU5ErkJggg==" alt="微信分享二维码">
 </div>
 
 

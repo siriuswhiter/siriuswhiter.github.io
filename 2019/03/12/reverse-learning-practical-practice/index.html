@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     
     
-    <title>Introduction to pwn1.1 | Room of Requirement | pwn what you want</title>
+    <title>Reverse Learning-Practical practice | Room of Requirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="pwn,stack">
+    <meta name="keywords" content="re">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
     <link rel="stylesheet" href="/css/style.css?v=1.3.2">
@@ -173,7 +173,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>Introduction to pwn1.1</span>
+            <span>Reverse Learning-Practical practice</span>
             
         </div>
         
@@ -186,15 +186,15 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">Introduction to pwn1.1</h1>
+        <h1 class="title">Reverse Learning-Practical practice</h1>
         <h5 class="subtitle">
             
-                <time datetime="2018-08-13T14:35:13.000Z" itemprop="datePublished" class="page-time">
-  2018-08-13
+                <time datetime="2019-03-12T14:23:42.000Z" itemprop="datePublished" class="page-time">
+  2019-03-12
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">re</a></li></ul>
 
             
         </h5>
@@ -221,15 +221,15 @@
 
 
 <div class="container body-wrap">
-    <article id="post-pwn-入门1-1"
+    <article id="post-reverse-learning-practical-practice"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">Introduction to pwn1.1</h1>
+        <h1 class="post-card-title">Reverse Learning-Practical practice</h1>
         <div class="post-meta">
-            <time class="post-time" title="2018-08-13 22:35:13" datetime="2018-08-13T14:35:13.000Z"  itemprop="datePublished">2018-08-13</time>
+            <time class="post-time" title="2019-03-12 22:23:42" datetime="2019-03-12T14:23:42.000Z"  itemprop="datePublished">2019-03-12</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">re</a></li></ul>
 
 
 
@@ -242,45 +242,48 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             
-            <h3 id="各种变量的存储位置"><a href="#各种变量的存储位置" class="headerlink" title="各种变量的存储位置"></a>各种变量的存储位置</h3><ol>
-<li>stack：局部变量</li>
-<li>heap: 动态分配内存的变量（malloc/new）</li>
-<li>bss section: 全局化的未初始化的变量</li>
-<li>data section: 全局化的已初始化的变量<ul>
-<li>rodata: （只读data段）全局化的静态变量（const）</li>
-</ul>
+            <p><em>这是之前l3c战队逆向的新手训练，本来想以后再搞，但最近又被最为任务下发了，菜的不行，上周什么也没干成，挣扎了一周。还是决定慢慢学习逆向</em></p>
+<h1 id="winRAR-去除广告"><a href="#winRAR-去除广告" class="headerlink" title="winRAR 去除广告"></a>winRAR 去除广告</h1><p>  拿x64dbg做调试器来达到理解原理并去除广告</p>
+<ol>
+<li><p>打开WinRAR，发现开始就有广告弹出；</p>
+</li>
+<li><p>使用x64dbg打开WinRAR，按f9直到程序完全加载，即程序看上去就和普通打开时一样；</p>
+<figure class="image-box">
+                <a rel=Reverse Learning-Practical practice href="/2019/03/12/reverse-learning-practical-practice/1.png" class="swipebox" title=undefined><img src="/2019/03/12/reverse-learning-practical-practice/1.png" alt="初始状态" title="" class=""></a>
+                <p>初始状态</p>
+            </figure>
 </li>
 </ol>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;   //.data</span><br><span class="line">int b;       //.bss</span><br><span class="line">const double PI = 3.1415    //rodata</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    int c = 2;    //stack</span><br><span class="line">	char *d = malloc(16);    //heap</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="linux下将shellcode运行"><a href="#linux下将shellcode运行" class="headerlink" title="linux下将shellcode运行"></a>linux下将shellcode运行</h3><p>1.手写简易shellcode</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">jmp sh</span><br><span class="line">run:</span><br><span class="line">    pop ebx</span><br><span class="line">    mov BYTE [ebx+7],0</span><br><span class="line">    xor eax,eax</span><br><span class="line">    mov al,11</span><br><span class="line">    xor ecx,ecx</span><br><span class="line">    xor edx,edx</span><br><span class="line">    int 0x80</span><br><span class="line">sh:</span><br><span class="line">    call run</span><br><span class="line">    db &quot;/bin/sh&quot;</span><br></pre></td></tr></table></figure>
-<p>2.一系列步骤</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Assembly:  nasm a.asm -o a.o -felf32   </span><br><span class="line">Extract Shellcode: objcopy -O binary a.o code   //将a.o中需要用内容的提取到code中</span><br><span class="line">                   xxd -i code        //将提取出来的code转换为机器码</span><br></pre></td></tr></table></figure>
-<p>3.带入调用shellcode的程序test.c</p>
-<pre><code>#include  &quot;code.h&quot;
+<ol start="3">
+<li>命令行输入 bp DestroyWindow  命令，意思就是在DestroyWindow处下断点，然后关掉广告，调试器会停在断点处；<figure class="image-box">
+                <a rel=Reverse Learning-Practical practice href="/2019/03/12/reverse-learning-practical-practice/2.png" class="swipebox" title=undefined><img src="/2019/03/12/reverse-learning-practical-practice/2.png" alt="断点状态" title="" class=""></a>
+                <p>断点状态</p>
+            </figure>
+</li>
+</ol>
+<ol start="4">
+<li>通过栈回溯到调用destroywindow 函数的地方，往上翻找到消息的开头(关于找到广告窗口子函数的开头，可以向上翻，也可以将其地址减去基址/<em>x64dbg在符号中可以看到基址</em>/得到偏移，将其放入IDA，加上IDA基址，找到函数模块，从而确定开头位置)，将其直接跳转至关闭广告窗口；<figure class="image-box">
+                <a rel=Reverse Learning-Practical practice href="/2019/03/12/reverse-learning-practical-practice/3.png" class="swipebox" title=undefined><img src="/2019/03/12/reverse-learning-practical-practice/3.png" alt="函数起始" title="" class=""></a>
+                <p>函数起始</p>
+            </figure>
+</li>
+</ol>
+<ol start="5">
+<li>保存patch即可。</li>
+</ol>
 
-typedef int(*CODE)();
-
-int main()
-{
-    ((CODE)shellcode)();
-}
-
-Run Shellcode: gcc test.c -o test -m32 -zexexstack       
-</code></pre>
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-01-30T06:21:07.211Z" itemprop="dateUpdated">2019-01-30 14:21:07</time>
+    Last updated: <time datetime="2019-03-13T07:54:16.887Z" itemprop="dateUpdated">2019-03-13 15:54:16</time>
 </span><br>
 
 
         
-        转载注明出处，原文地址：<a href="/2018/08/13/pwn-入门1-1/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/</a>
+        转载注明出处，原文地址：<a href="/2019/03/12/reverse-learning-practical-practice/" target="_blank" rel="external">http://siriuswhiter.tk/2019/03/12/reverse-learning-practical-practice/</a>
         
     </div>
     <footer>
@@ -300,7 +303,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
         
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/re/">re</a></li></ul>
 
             <div class="page-share-wrap">
     
@@ -309,7 +312,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/03/12/reverse-learning-practical-practice/&title=《Reverse Learning-Practical practice》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -321,7 +324,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/03/12/reverse-learning-practical-practice/&title=《Reverse Learning-Practical practice》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -347,18 +350,18 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="prev">
-      <a href="/2018/08/13/markdown规范学习/" id="post-prev" class="post-nav-link">
+      <a href="/2019/03/13/reverse-learning-unpack/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Markdown standard</h4>
+        <h4 class="title">Reverse Learning-unpack</h4>
       </a>
     </div>
   
 
   
     <div class="next">
-      <a href="/2018/08/02/learning-python/" id="post-next" class="post-nav-link">
+      <a href="/2019/03/11/0ctf-2018-pwn/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">Learning python</h4>
+        <h4 class="title">0ctf-2018-pwn</h4>
       </a>
     </div>
   
@@ -370,7 +373,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#各种变量的存储位置"><span class="post-toc-number">1.</span> <span class="post-toc-text">各种变量的存储位置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#linux下将shellcode运行"><span class="post-toc-number">2.</span> <span class="post-toc-text">linux下将shellcode运行</span></a></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#winRAR-去除广告"><span class="post-toc-number">1.</span> <span class="post-toc-text">winRAR 去除广告</span></a></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
@@ -456,7 +459,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/03/12/reverse-learning-practical-practice/&title=《Reverse Learning-Practical practice》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -468,7 +471,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/pwn-入门1-1/&title=《Introduction to pwn1.1》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/03/12/reverse-learning-practical-practice/&title=《Reverse Learning-Practical practice》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -480,7 +483,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3ay46jMBAF0Pz/T2e2M+pA31smI2GOV63QgA+LkuvxesXr/WP9/P3o/2dveX1jYWBg3JbxPl3njL+vHj05/xD51Q9vxMDAeAAj2URyNb/rPHLme8PAwMBoQ+fsWDl7JgYGBka7xTzgzkI5BgYGRh74clIbxJPgfkEujoGBcUNGXnX//39/pb+BgYFxK8a7XLNjYhIu87s+PAcDA2NrRlusH6aXZbNhth8MDIy9GUm4XEk1Z6W68+0eUjEwMLZjrIxTrB/71j/iPydcDAyMTRn5Fs/HJnJ2e/QsSm8YGBgPYORhcVYmSyr5eRp8GHAxMDC2ZqwklishtdhokoVjYGBsypgljcnVbwyB/fIhMDAwtmO04xF5cpuH47zkd/jRMTAwtmbkl/Nm5Erzsj041rMYGBgYN2S05bMZbHY0rBNXDAyMTRkr6WVb4m/bohcMW2BgYGzEmCWWSRBMEteVt2BgYGC0t10VUofDFhgYGFsz2oRzpSXQNimLYhwGBsZjGLOG4sphbtbs/PALBgbGwxh5G7JNRPPSf9t4wMDAeAIjT19nQxL5u5ISHgYGxnMY73Llh8LkCbNmZyTDwMDYiHFBtC6Tz/Xg3rZRMTAw9mDMivVt+awd0agDLgYGxgMYbcKZ37U+YBE1JzAwMDDKFHR2rFxKWTEwMDAWhr3yhmXeTvilv4GBgbEpIx9FbYcn8qbC7C4MDIwnMNpzV9t6zDeRHzEvOD5iYGDcg/EHCe36CMFvdUkAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACwklEQVR42u3awVIrMQwEQP7/p3lXql5tMiPZkEPnREHidedgmZG+vuLX94/Xz988vfPp59crvF7z6a8HXnh4eHiLrf//enrP7ItItvj66fme8fDw8G7zkiM+P9bzDb1+blJy3nwWDw8P72N4r0vL608lRWh/ocfDw8P7NF57+c63mBcePDw8vL/l5Yf1jdgiLzwXsxY8PDy8mJd3kT7n5yv9PTw8PLx1V71tjCUlpC0zm93i4eHh3eBtxqFmwWsbSeQRCR4eHt7v8PL2/+xf/Tx4bZteUbMNDw8P7wJvNgSQX3/bY31WWooCg4eHh7fmbdpOszBi9t3naz5mLXh4eHgXeHlM0I4abMKLpIDV41Z4eHh4h3jtQklJyIcP8kt8sX88PDy8C7zk2toe7u0K+3A2Kid4eHh4h3izBlgb6SYhb37oXx8dwMPDwwt2koeqmwC3vV7nPawD3yUeHh5ezNsfu+01ehaFzIoNHh4e3u/w6gyjbG5thrqSlfHw8PBu89p//pOl25bVZiSreD8eHh7eUV676Kzp1Ua9+WfflBA8PDy8a7xZOJsMXc2aam1JGM5E4OHh4ZW82RBV/vhZYLH/ovHw8PDu8fLrbHtpbkOKWRFq18fDw8M7y0vCiNn41CzsmMXBwykJPDw8vJiXt+fb1lcbH7SDXEUxwMPDwzvKa4OG9ig/G/iuLtN4eHh4h3h5rDC7p+dH/KxV9mZlPDw8vAu85AFJYciLyoHUJGi24eHh4d3jfZevZKP7sYN2fOGRioeHh3eBN5tQyqOB5GKds2dRLx4eHt4N3j54bQ/9WVsrLwxF9cPDw8Nb8PLrbDtScCrYbRtveHh4eJ/Aa8PcNmLI22BFsIuHh4f3p7x9+//GgELUBsPDw8O7wMsfuYlc9+9s23V4eHh4N3jtMFa+uby0bAYLjvX38PDw8N6v+Q9EIbGG93Ug/gAAAABJRU5ErkJggg==" alt="微信分享二维码">
 </div>
 
 

