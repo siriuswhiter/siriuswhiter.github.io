@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     
     
-    <title>What&#39;s PE files? | Room of Requirement | pwn what you want</title>
+    <title>kanxueCTF-2019 | Room of Requirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="RE">
+    <meta name="keywords" content="pwn,re">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
     <link rel="stylesheet" href="/css/style.css?v=1.3.2">
@@ -173,7 +173,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>What&#39;s PE files?</span>
+            <span>kanxueCTF-2019</span>
             
         </div>
         
@@ -186,15 +186,15 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">What&#39;s PE files?</h1>
+        <h1 class="title">kanxueCTF-2019</h1>
         <h5 class="subtitle">
             
-                <time datetime="2018-07-23T10:29:37.000Z" itemprop="datePublished" class="page-time">
-  2018-07-23
+                <time datetime="2019-03-14T13:57:23.000Z" itemprop="datePublished" class="page-time">
+  2019-03-14
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">RE</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">re</a></li></ul>
 
             
         </h5>
@@ -221,15 +221,15 @@
 
 
 <div class="container body-wrap">
-    <article id="post-what-s-pe-files"
+    <article id="post-kanxuectf-2019"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">What's PE files?</h1>
+        <h1 class="post-card-title">kanxueCTF-2019</h1>
         <div class="post-meta">
-            <time class="post-time" title="2018-07-23 18:29:37" datetime="2018-07-23T10:29:37.000Z"  itemprop="datePublished">2018-07-23</time>
+            <time class="post-time" title="2019-03-14 21:57:23" datetime="2019-03-14T13:57:23.000Z"  itemprop="datePublished">2019-03-14</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">RE</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">re</a></li></ul>
 
 
 
@@ -242,97 +242,14 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             
-            <p><em>转移自之前的博客</em></p>
-<h1 id="PE-文件概论"><a href="#PE-文件概论" class="headerlink" title="PE 文件概论"></a>PE 文件概论</h1><p>PE（portable Executable）windows系统下的可执行文件格式</p>
-<p>1 . 32位可执行文件-PE32 ；</p>
-<pre><code>64位可执行文件-PE+/PE32+ ，是PE文件的扩展形式。
-</code></pre><ol start="2">
-<li><p>分类：可执行系列 exe scr ；库系列 dll ocx cpl drv ；驱动程序系列 sys vxd ；对象文件系列 obj （唯一不可执行）。</p>
-</li>
-<li><p>基本结构</p>
-<figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/1.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/1.png" alt="1" title="" class=""></a>
-                <p>1</p>
-            </figure>
-</li>
-</ol>
-<p>DOS头到节区头是PE的头部分；</p>
-<p>文件中使用偏移offset，内存中使用VA（virtual address 虚拟地址）表示位置；</p>
-<ol start="4">
-<li>VA指进程虚拟内存的绝对地址，RVA指从某个基准位置开始的相对地址。</li>
-</ol>
-<p>RVA+ImageBase=VA</p>
-<h1 id="PE头-1"><a href="#PE头-1" class="headerlink" title="PE头(1)"></a>PE头(1)</h1><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/2.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/2.png" alt="2" title="" class=""></a>
-                <p>2</p>
-            </figure>
-<p>1.DOS头：IMAGE_DOS_HEADER结构体<br><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/3.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/3.png" alt="3" title="" class=""></a>
-                <p>3</p>
-            </figure></p>
-<p>40个字节/ e_magic:DOS签名（4D5A 签名值MZ）/e_lfanew:指示NT头的偏移（小端序标识法）</p>
-<p>2.DOS存根（stub）/可选项，大小不固定/DOS环境才会执行</p>
-<p>3.NT头： IMAGE_NT_HEADERS结构体</p>
-<figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/4.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/4.png" alt="4" title="" class=""></a>
-                <p>4</p>
-            </figure>
-<p>F8个字节/三个成员：签名（50450000）+文件头+可选头。</p>
-<p>①文件头：IMAGE_FILE_HEADER结构体<br><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/5.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/5.png" alt="5" title="" class=""></a>
-                <p>5</p>
-            </figure><br>该结构体重要成员（设置不正确，程序无法运行）</p>
-<figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/6.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/6.png" alt="6" title="" class=""></a>
-                <p>6</p>
-            </figure>
-<figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/7.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/7.png" alt="7" title="" class=""></a>
-                <p>7</p>
-            </figure>
-<figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/8.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/8.png" alt="8" title="" class=""></a>
-                <p>8</p>
-            </figure>
-<p>②可选头： IMAGE_OPTIONAL_HEADER32<br><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/9.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/9.png" alt="9" title="" class=""></a>
-                <p>9</p>
-            </figure><br>（PE头结构体中最大的）</p>
-<p>重要成员<br><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/10.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/10.png" alt="10" title="" class=""></a>
-                <p>10</p>
-            </figure><br><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/11.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/11.png" alt="11" title="" class=""></a>
-                <p>11</p>
-            </figure><br><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/12.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/12.png" alt="12" title="" class=""></a>
-                <p>12</p>
-            </figure></p>
-<p>③节区头： IMAGE_SECTION_HEADER<br><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/13.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/13.png" alt="13" title="" class=""></a>
-                <p>13</p>
-            </figure><br>不同内存属性访问权限：code  rwx /data rw /resource r<br><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/14.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/14.png" alt="14" title="" class=""></a>
-                <p>14</p>
-            </figure><br>重要成员</p>
-<h1 id="PE头-2"><a href="#PE头-2" class="headerlink" title="PE头(2)"></a>PE头(2)</h1><ol>
-<li>内存地址与文件偏移间的映射：RVA to RAW（即file offset）</li>
-</ol>
-<p>公式：RAW - PointerToRawData = RVA -VirtualAddress</p>
-<p>RAW = RVA -VirtualAddress + PointerToRawData<br><figure class="image-box">
-                <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/15.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/15.png" alt="15" title="" class=""></a>
-                <p>15</p>
-            </figure><br>eg：</p>
-<p>RVA = 5000 位于第一节区（.text），VA = 1000（该节区内存的的起始地址），</p>
-<p>PointerToRawData= 400 （该节区文件的起始地址） 。</p>
-<p>RAW = 5000 -1000 +400 =4400.</p>
-<p>2.DLL（动态链接库）</p>
-<p>不把库包含在程序中，而是单独组成DLL文件，需要时调用即可/更新库时只需要替换DLL文件即可/内存映射使加载后的DLL代码，资源在多个进程中实现共享。</p>
-<p>Windows版本不同，环境不同，被调用函数的位置（地址）也不相同。</p>
-<p>①为了确保在所有环境中都能正常调用被调用函数，编译器保存了被调用函数实际地址的位置。PE装载器将被调用函数的地址写到该位置。</p>
-<p>②DLL重定位。DLL的ImageBase默认为1000000，若某个程序使用a.dll与b.dll时，a已被装载到内存的10000000处，PE装载器只能查找其他空白的内存空间，将b装载进去。</p>
-<p>③PE头表示地址用RVA 而不是VA。</p>
-<p>3.IAT（Import Address Table 导入地址表）：用来记录程序正在使用库中的哪些函数。</p>
+            <p><em>刚好在学逆向，突然想着可以看一下还在比赛的看雪ctf</em></p>
+<h1 id="流浪者"><a href="#流浪者" class="headerlink" title="流浪者"></a>流浪者</h1><p>win32 gui 输入注册码，错误会有提示</p>
+<p>od 打开，搜索字符串，找到判断结果的函数位置；</p>
+<p>ida 打开，找到od确定的函数位置，根据ida的交叉引用，找到了判断的函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">sub_401770      proc near               ; CODE XREF: sub_4017F0+83↓p</span><br><span class="line"></span><br><span class="line">BOOL __cdecl sub_4017F0(int a1)</span><br><span class="line">&#123;</span><br><span class="line">  BOOL result; // eax</span><br><span class="line">  char Str1[28]; // [esp+D8h] [ebp-24h]</span><br><span class="line">  int v3; // [esp+F4h] [ebp-8h]</span><br><span class="line">  int v4; // [esp+F8h] [ebp-4h]</span><br><span class="line"></span><br><span class="line">  v4 = 0;</span><br><span class="line">  v3 = 0;</span><br><span class="line">  while ( *(_DWORD *)(a1 + 4 * v4) &lt; 62 &amp;&amp; *(_DWORD *)(a1 + 4 * v4) &gt;= 0 )</span><br><span class="line">  &#123;</span><br><span class="line">    Str1[v4] = aAbcdefghiabcde[*(_DWORD *)(a1 + 4 * v4)];</span><br><span class="line">    ++v4;</span><br><span class="line">  &#125;</span><br><span class="line">  Str1[v4] = 0;</span><br><span class="line">  if ( !strcmp(Str1, &quot;KanXueCTF2019JustForhappy&quot;) )</span><br><span class="line">    result = sub_401770();</span><br><span class="line">  else</span><br><span class="line">    result = sub_4017B0();</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">aAbcdefghiabcde db &apos;abcdefghiABCDEFGHIJKLMNjklmn0123456789opqrstuvwxyzOPQRSTUVWXYZ&apos;,0</span><br></pre></td></tr></table></figure>
+<p>可以看到就是字符串对应，直接写脚本<br>中间卡了一下就是得到的是数字位置，如19，42什么的，但是输入没法这样，出去溜了个弯，回去在od strcmp之前下了个断点，查看对输入字符串的处理，之后突然意识到可能是 0-9 a-z A-Z 对应，尝试了一下，bingo</p>
+<p>脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">a = &apos;abcdefghiABCDEFGHIJKLMNjklmn0123456789opqrstuvwxyzOPQRSTUVWXYZ&apos;</span><br><span class="line"></span><br><span class="line">b = &apos;KanXueCTF2019JustForhappy&apos;</span><br><span class="line">array = &apos;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&apos;</span><br><span class="line"></span><br><span class="line">c = &apos;&apos; </span><br><span class="line"></span><br><span class="line">for i in range(len(b)):</span><br><span class="line">	for j in range(len(a)):</span><br><span class="line">		if b[i]== a[j]:</span><br><span class="line">			c += array[j]</span><br><span class="line">print c</span><br></pre></td></tr></table></figure>
 
         </div>
         
@@ -340,12 +257,12 @@
     <div class="content">
         
 <span class="post-time">
-    最後更新時間：<time datetime="2018-10-18T10:44:36.677Z" itemprop="dateUpdated">2018-10-18 18:44:36</time>
+    最後更新時間：<time datetime="2019-03-14T14:05:51.142Z" itemprop="dateUpdated">2019-03-14 22:05:51</time>
 </span><br>
 
 
         
-        转载注明出处，原文地址：<a href="/2018/07/23/what-s-pe-files/" target="_blank" rel="external">http://siriuswhiter.tk/2018/07/23/what-s-pe-files/</a>
+        转载注明出处，原文地址：<a href="/2019/03/14/kanxuectf-2019/" target="_blank" rel="external">http://siriuswhiter.tk/2019/03/14/kanxuectf-2019/</a>
         
     </div>
     <footer>
@@ -365,7 +282,7 @@
         
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/re/">RE</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/re/">re</a></li></ul>
 
             <div class="page-share-wrap">
     
@@ -374,7 +291,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/07/23/what-s-pe-files/&title=《What's PE files?》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/03/14/kanxuectf-2019/&title=《kanxueCTF-2019》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -386,7 +303,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/07/23/what-s-pe-files/&title=《What's PE files?》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/03/14/kanxuectf-2019/&title=《kanxueCTF-2019》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -409,21 +326,14 @@
         
     </div>
     
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="prev">
-      <a href="/2018/07/26/the-art-0f-deploying-shellcode/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">The art 0f deploying shellcode</h4>
-      </a>
-    </div>
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
   
 
   
     <div class="next">
-      <a href="/2018/07/20/diary-20180720/" id="post-next" class="post-nav-link">
+      <a href="/2019/03/13/bugku-reverse-prac/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">diary-20180720</h4>
+        <h4 class="title">bugku-reverse prac</h4>
       </a>
     </div>
   
@@ -435,7 +345,7 @@
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PE-文件概论"><span class="post-toc-number">1.</span> <span class="post-toc-text">PE 文件概论</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PE头-1"><span class="post-toc-number">2.</span> <span class="post-toc-text">PE头(1)</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PE头-2"><span class="post-toc-number">3.</span> <span class="post-toc-text">PE头(2)</span></a></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#流浪者"><span class="post-toc-number">1.</span> <span class="post-toc-text">流浪者</span></a></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
@@ -521,7 +431,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2018/07/23/what-s-pe-files/&title=《What's PE files?》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/03/14/kanxuectf-2019/&title=《kanxueCTF-2019》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -533,7 +443,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2018/07/23/what-s-pe-files/&title=《What's PE files?》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/03/14/kanxuectf-2019/&title=《kanxueCTF-2019》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -545,7 +455,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIUlEQVR42u3aMXLDMAwEQP//00qbRvIdYRcml5UnViiuCwwI4PWK13Wz/n979/zaW17fWBgYGD/LuB7X3TPJi593aPe/ewYDA+McRnKIu6Mnn9f+kpwNAwMDI2Ek+6zhMTAwMCaMNhDnwRoDAwNjcolN8ElNLLnifvEujoGB8YOM+eu/9/kr/Q0MDIyfYlzlatO1PFxeg4WBgbE3Iw9weQvzebdPjWhgYGCczGgbipML52S87E3VEAMDYyNGUXaPi/g59TmUF00IDAyMrRltWzG5fObDGUnwLUpvGBgYxzDmI19tca1tkb4pt2FgYGzHyIPsWqvgUyH1zbswMDC2ZkTxOIa1yWJepCvGMjAwMDZl5Alc2xLI92nPEJXbMDAwtmBMimJrx8rTxPx/MTAw9mbkg1xrCVzbbGiLfRgYGCcw2kO0F8tJK7T4mTAwMI5k5DMMOS8fFGsH1DAwME5gzNuK89L/pEWBgYGxNyMvgbXNxXbPNnLe/tAYGBibMpKi/FoRPw/Tk7IdBgbGaYx2tZX5eaJZzLVhYGBszchD59qh88JcXvjDwMDYlTEPr23IzklFAoqBgbE1I1/5Udokr53yWgvuGBgYv86YjGTlhf72QlsHXAwMjAMYbeBrGZ9K+97kuRgYGBjlf7Ut0vYZDAwMjDbg5t8WYTRvQmBgYBzAWEvy1o4ejXm15T8MDIytGaOrY/mCtaZmnj5iYGBsx/gDvkjwLn0iDl8AAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMUlEQVR42u3azW6EMAxFYd7/panUVaXRwLl2qIRzWFUzlORj4Yl/jgNf5+/17fO/335+wu+//t8FlwwZMl7LOC+vTwZZmG+LrIuoMmTI2IBxHWQ7sTwNo2RdGTJkyCBBli/Pt3Ud6GXIkCGjs630mPjtnn/93ZAhQ8YLGTyZJOWz6yXJS3kwF5chQ8YLGZ3E8um/H+xvyJAh4yWMs3TxYFoL6PF+ZMiQMZrRKdyvSlbTY+Li/oMMGTJexaiduNY2NfmmvwZcGTJkjGOsPfCld5Kto8aADBkyRjPIhvpFf76VWsNAhgwZ+zB4+ONbT8cy+DDHzcyIDBkyxjHSQ2EHvKppevN8GTJkDGXwQjwvw6Xls1qdX4YMGTsw+AL8YMcPi7W1bk64MmTIGMeoBcQU0GkDxL8bMmTIGMToDHj1k9I0KN8EWRkyZIxmpCMUtaMep/ImqAwZMvZh8JYhHyrtFOP4AVGGDBk7MDpDFbysnzY4i80GGTJkjGakoTMdhkifsyy1liFDxiBGLeDWymdpIs3DtAwZMnZm8JIZHyxLG5zoqCpDhozRjFqRq1ak6zdH416HDBkyXs44w4u0MDsJaq2NKkOGjNmMzlAXD8Tp4AV/ggwZMvZhpOV7nqCm7UkecGXIkLEno5ay8sBKjpKtcp4MGTJkhEksD7hpKnvUYrwMGTK2YfBmQO0FxQ1LGTJkbMbgzYAakiSxrbqgDBkyRjNqIw61ZgAvt6UvWoYMGUMZP0iHk2HkRD6iAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 

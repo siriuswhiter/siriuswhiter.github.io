@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://siriuswhiter.tk/"/>
-  <updated>2019-03-13T09:03:37.042Z</updated>
+  <updated>2019-03-14T14:05:51.142Z</updated>
   <id>http://siriuswhiter.tk/</id>
   
   <author>
@@ -15,6 +15,60 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>kanxueCTF-2019</title>
+    <link href="http://siriuswhiter.tk/2019/03/14/kanxuectf-2019/"/>
+    <id>http://siriuswhiter.tk/2019/03/14/kanxuectf-2019/</id>
+    <published>2019-03-14T13:57:23.000Z</published>
+    <updated>2019-03-14T14:05:51.142Z</updated>
+    
+    <content type="html"><![CDATA[<p><em>刚好在学逆向，突然想着可以看一下还在比赛的看雪ctf</em></p><h1 id="流浪者"><a href="#流浪者" class="headerlink" title="流浪者"></a>流浪者</h1><p>win32 gui 输入注册码，错误会有提示</p><p>od 打开，搜索字符串，找到判断结果的函数位置；</p><p>ida 打开，找到od确定的函数位置，根据ida的交叉引用，找到了判断的函数</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">sub_401770      proc near               ; CODE XREF: sub_4017F0+83↓p</span><br><span class="line"></span><br><span class="line">BOOL __cdecl sub_4017F0(int a1)</span><br><span class="line">&#123;</span><br><span class="line">  BOOL result; // eax</span><br><span class="line">  char Str1[28]; // [esp+D8h] [ebp-24h]</span><br><span class="line">  int v3; // [esp+F4h] [ebp-8h]</span><br><span class="line">  int v4; // [esp+F8h] [ebp-4h]</span><br><span class="line"></span><br><span class="line">  v4 = 0;</span><br><span class="line">  v3 = 0;</span><br><span class="line">  while ( *(_DWORD *)(a1 + 4 * v4) &lt; 62 &amp;&amp; *(_DWORD *)(a1 + 4 * v4) &gt;= 0 )</span><br><span class="line">  &#123;</span><br><span class="line">    Str1[v4] = aAbcdefghiabcde[*(_DWORD *)(a1 + 4 * v4)];</span><br><span class="line">    ++v4;</span><br><span class="line">  &#125;</span><br><span class="line">  Str1[v4] = 0;</span><br><span class="line">  if ( !strcmp(Str1, &quot;KanXueCTF2019JustForhappy&quot;) )</span><br><span class="line">    result = sub_401770();</span><br><span class="line">  else</span><br><span class="line">    result = sub_4017B0();</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">aAbcdefghiabcde db &apos;abcdefghiABCDEFGHIJKLMNjklmn0123456789opqrstuvwxyzOPQRSTUVWXYZ&apos;,0</span><br></pre></td></tr></table></figure><p>可以看到就是字符串对应，直接写脚本<br>中间卡了一下就是得到的是数字位置，如19，42什么的，但是输入没法这样，出去溜了个弯，回去在od strcmp之前下了个断点，查看对输入字符串的处理，之后突然意识到可能是 0-9 a-z A-Z 对应，尝试了一下，bingo</p><p>脚本：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">a = &apos;abcdefghiABCDEFGHIJKLMNjklmn0123456789opqrstuvwxyzOPQRSTUVWXYZ&apos;</span><br><span class="line"></span><br><span class="line">b = &apos;KanXueCTF2019JustForhappy&apos;</span><br><span class="line">array = &apos;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&apos;</span><br><span class="line"></span><br><span class="line">c = &apos;&apos; </span><br><span class="line"></span><br><span class="line">for i in range(len(b)):</span><br><span class="line">for j in range(len(a)):</span><br><span class="line">if b[i]== a[j]:</span><br><span class="line">c += array[j]</span><br><span class="line">print c</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;em&gt;刚好在学逆向，突然想着可以看一下还在比赛的看雪ctf&lt;/em&gt;&lt;/p&gt;
+&lt;h1 id=&quot;流浪者&quot;&gt;&lt;a href=&quot;#流浪者&quot; class=&quot;headerlink&quot; title=&quot;流浪者&quot;&gt;&lt;/a&gt;流浪者&lt;/h1&gt;&lt;p&gt;win32 gui 输入注册码，错误会有提示&lt;
+      
+    
+    </summary>
+    
+      <category term="re" scheme="http://siriuswhiter.tk/categories/re/"/>
+    
+    
+      <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
+    
+      <category term="re" scheme="http://siriuswhiter.tk/tags/re/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>bugku-reverse prac</title>
+    <link href="http://siriuswhiter.tk/2019/03/13/bugku-reverse-prac/"/>
+    <id>http://siriuswhiter.tk/2019/03/13/bugku-reverse-prac/</id>
+    <published>2019-03-13T11:24:58.000Z</published>
+    <updated>2019-03-13T11:54:57.273Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="love"><a href="#love" class="headerlink" title="love"></a>love</h1><p><em>其实是比较简单的逆向，但是毕竟上手时间短，写一写顺便把思路缕清</em></p><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>打开是dos窗口，等待输入flag，随便输入后直接退出</p><p>拖入IDA，重点函数</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">__int64 main_0()</span><br><span class="line">&#123;</span><br><span class="line">  int len; // eax</span><br><span class="line">  const char *v1; // eax</span><br><span class="line">  size_t real_len; // eax</span><br><span class="line">  int v3; // edx</span><br><span class="line">  __int64 v4; // ST08_8</span><br><span class="line">  signed int j; // [esp-B0h] [ebp-B0h]</span><br><span class="line">  signed int i; // [esp-A4h] [ebp-A4h]</span><br><span class="line">  signed int v8; // [esp-A4h] [ebp-A4h]</span><br><span class="line">  int v9; // [esp-98h] [ebp-98h]</span><br><span class="line">  int flag; // [esp-2Ch] [ebp-2Ch]</span><br><span class="line">  int v11; // [esp-10h] [ebp-10h]</span><br><span class="line">  int v12; // [esp-4h] [ebp-4h]</span><br><span class="line"></span><br><span class="line">  for ( i = 0; i &lt; 100; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    if ( (unsigned int)i &gt;= 0x64 )</span><br><span class="line">      j____report_rangecheckfailure();</span><br><span class="line">    *((_BYTE *)&amp;v12 + i - 0x94) = 0;</span><br><span class="line">  &#125;</span><br><span class="line">  puts_(&quot;please enter the flag:&quot;);</span><br><span class="line">  scanf(&quot;%20s&quot;, &amp;flag);</span><br><span class="line">  len = j_strlen((const char *)&amp;flag);</span><br><span class="line">  v1 = (const char *)deal((int)&amp;flag, len, (int)&amp;v11);</span><br><span class="line">  strncpy((char *)&amp;v9, v1, 40u);</span><br><span class="line">  v8 = j_strlen((const char *)&amp;v9);</span><br><span class="line">  for ( j = 0; j &lt; v8; ++j )</span><br><span class="line">    *((_BYTE *)&amp;v12 + j - 0x94) += j;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  real_len = j_strlen((const char *)&amp;v9);</span><br><span class="line">  if ( !strncmp((const char *)&amp;v9, Str2, real_len) )</span><br><span class="line">    puts_(&quot;rigth flag!\n&quot;);</span><br><span class="line">  else</span><br><span class="line">    puts_(&quot;wrong flag!\n&quot;);</span><br><span class="line">  HIDWORD(v4) = v3;</span><br><span class="line">  LODWORD(v4) = 0;</span><br><span class="line">  return v4;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Str2            db &apos;e3nifIH9b_C@n@dH&apos;,0</span><br></pre></td></tr></table></figure><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>程序流程也比较清晰，初始时将一段栈内存置为0，可以看到是在v9处，之后请求输入flag，然后对输入的flag deal加密处理<br>然后处理得到的字符串再次每位加i，相当于第二次加密，之后将其与一段字符串相比，相等的话就输出right flag</p><p>所以问题的重点其实是第一次加密是怎样处理的，ida中看到一堆abcdef…，想着可能是base64，但是不确定。</p><p>将文件拖入x32dbg 先运行起来，然后搜索字符串，找到主函数的位置，根据ida可以知道在第一次加密之后调用了strncpy，所以我们在搜索到wrong flag地址，往上翻，可以大概确定加密的地址，在其之后下断点，运行程序输入任意flag，因为约定函数返回值是存在eax中的，查看此时的eax，发现其值就是输入flag的base64，接下来写脚本就完事了</p><h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import base64</span><br><span class="line"></span><br><span class="line">string=&apos;e3nifIH9b_C@n@dH&apos;</span><br><span class="line">unstring = &apos;&apos;</span><br><span class="line">for i in range(len(string)):</span><br><span class="line">unstring += chr(ord(string[i])-i)</span><br><span class="line"></span><br><span class="line">flag = base64.b64decode(unstring)</span><br><span class="line">print flag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ python lovewp.py </span><br><span class="line">&#123;i_l0ve_you&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;love&quot;&gt;&lt;a href=&quot;#love&quot; class=&quot;headerlink&quot; title=&quot;love&quot;&gt;&lt;/a&gt;love&lt;/h1&gt;&lt;p&gt;&lt;em&gt;其实是比较简单的逆向，但是毕竟上手时间短，写一写顺便把思路缕清&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&quot;题目&quot;&gt;&lt;a hr
+      
+    
+    </summary>
+    
+      <category term="re" scheme="http://siriuswhiter.tk/categories/re/"/>
+    
+    
+      <category term="re" scheme="http://siriuswhiter.tk/tags/re/"/>
+    
+  </entry>
   
   <entry>
     <title>Reverse Learning-unpack</title>
@@ -91,9 +145,9 @@
     
       <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
     
-      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
-    
       <category term="stack" scheme="http://siriuswhiter.tk/tags/stack/"/>
+    
+      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
     
   </entry>
   
@@ -175,9 +229,9 @@
     
       <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
     
-      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
-    
       <category term="stack" scheme="http://siriuswhiter.tk/tags/stack/"/>
+    
+      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
     
   </entry>
   
@@ -233,9 +287,9 @@
     
       <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
     
-      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
-    
       <category term="stack" scheme="http://siriuswhiter.tk/tags/stack/"/>
+    
+      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
     
   </entry>
   
@@ -289,9 +343,9 @@
     
       <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
     
-      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
-    
       <category term="stack" scheme="http://siriuswhiter.tk/tags/stack/"/>
+    
+      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
     
   </entry>
   
@@ -400,9 +454,9 @@
     
       <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
     
-      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
-    
       <category term="stack" scheme="http://siriuswhiter.tk/tags/stack/"/>
+    
+      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
     
   </entry>
   
@@ -513,60 +567,9 @@
     
       <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
     
-      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
-    
       <category term="stack" scheme="http://siriuswhiter.tk/tags/stack/"/>
     
-  </entry>
-  
-  <entry>
-    <title>Jarvis Oj-reverse</title>
-    <link href="http://siriuswhiter.tk/2018/11/06/jarvis-oj-reverse/"/>
-    <id>http://siriuswhiter.tk/2018/11/06/jarvis-oj-reverse/</id>
-    <published>2018-11-06T08:01:46.000Z</published>
-    <updated>2018-11-06T10:10:01.193Z</updated>
-    
-    <content type="html"><![CDATA[<p><em>稍微学学逆向</em></p><h1 id="FindKey"><a href="#FindKey" class="headerlink" title="FindKey"></a>FindKey</h1><p>  拿到文件顺手就往ida里拖，结果说是bin文件，所以还是乖乖将他拖到了kali里，file查看文件属性，是个pyc？（仿佛想到了某入群题）<br>  将pyc还原成py文件<br>  发现一个简单的加密过程（不过还是有点没太明白那个 +- &amp; 的执行顺序）<br>  直接上wp</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">lookup = [ 196, 153, 149, 206, 17, 221, 10, 217, 167, 18, 36, 135, 103, 61, 111, 31, 92, 152, 21, 228, 105, 191, 173, 41, 2, 245, 23, 144, 1, 246, 89, 178, 182, 119, 38, 85, 48, 226, 165, 241, 166, 214, 71, 90, 151, 3, 109, 169, 150, 224, 69, 156, 158, 57, 181, 29, 200, 37, 51, 252, 227, 93, 65, 82, 66, 80, 170, 77, 49, 177, 81, 94, 202, 107, 25, 73, 148, 98, 129, 231, 212, 14, 84, 121, 174, 171, 64, 180, 233, 74, 140, 242, 75, 104, 253, 44, 39, 87, 86, 27, 68, 22, 55, 76, 35, 248, 96, 5, 56, 20, 161, 213, 238, 220, 72, 100, 247, 8, 63, 249, 145, 243, 155, 222, 122, 32, 43, 186, 0, 102, 216, 126, 15, 42, 115, 138, 240, 147, 229, 204, 117, 223, 141, 159, 131, 232, 124, 254, 60, 116, 46, 113, 79, 16, 128, 6, 251, 40, 205, 137, 199, 83, 54, 188, 19, 184, 201, 110, 255, 26, 91, 211, 132, 160, 168, 154, 185, 183, 244, 78, 33, 123, 28, 59, 12, 210, 218, 47, 163, 215, 209, 108, 235, 237, 118, 101, 24, 234, 106, 143, 88, 9, 136, 95, 30, 193, 176, 225, 198, 197, 194, 239, 134, 162, 192, 11, 70, 58, 187, 50, 67, 236, 230, 13, 99, 190, 208, 207, 7, 53, 219, 203, 62, 114, 127, 125, 164, 179, 175, 112, 172, 250, 133, 130, 52, 189, 97, 146, 34, 157, 120, 195, 45, 4, 142, 139] </span><br><span class="line">pwda = [ 188, 155, 11, 58, 251, 208, 204, 202, 150, 120, 206, 237, 114, 92, 126, 6, 42]</span><br><span class="line">pwdb = [53,222,230,35,67,248 226,216,17,209,32,2,181,200,171,60,108]</span><br><span class="line"></span><br><span class="line">flag = &quot; &quot;</span><br><span class="line">for i in range (0,17):</span><br><span class="line">    flag += chr(lookup[i + pwdb[i]] - pwda[i] &amp; 255 )</span><br><span class="line"></span><br><span class="line">f = flag[::-1]</span><br><span class="line">print(f)</span><br></pre></td></tr></table></figure><ul><li>对od产生了深深的抗拒！！ 除了打开会报毒，用起来整个电脑都卡炸了！！ 差点gg</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;em&gt;稍微学学逆向&lt;/em&gt;&lt;/p&gt;
-&lt;h1 id=&quot;FindKey&quot;&gt;&lt;a href=&quot;#FindKey&quot; class=&quot;headerlink&quot; title=&quot;FindKey&quot;&gt;&lt;/a&gt;FindKey&lt;/h1&gt;&lt;p&gt;  拿到文件顺手就往ida里拖，结果说是bin文件，所
-      
-    
-    </summary>
-    
-      <category term="RE" scheme="http://siriuswhiter.tk/categories/re/"/>
-    
-    
-      <category term="RE" scheme="http://siriuswhiter.tk/tags/re/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>diary-20181027</title>
-    <link href="http://siriuswhiter.tk/2018/10/27/diary-20181027/"/>
-    <id>http://siriuswhiter.tk/2018/10/27/diary-20181027/</id>
-    <published>2018-10-27T02:42:19.000Z</published>
-    <updated>2018-10-27T03:03:57.266Z</updated>
-    
-    <content type="html"><![CDATA[<p>  或许真的是极尽苦难的一周。<br>  也是一事无成的一周。<br>  少有的一个星期什么也干不成，任何一件本应该简简单单的事情都会动辄四五个小时而迎来没有任何变化的结果。<br>  虚拟机上周已被搞得一塌糊涂，真的是失去才知道原来环境配置的多么棒。仅仅为了装pwndbg，将整个gdb给搞出了问题，并且无力回天。<br>  再之后为了装docker，看了许许多多的教程，又是大片大片的时间丢失，结果最后在角落里找到的方法，仅仅只用在src文件中加上docker的源地址，update就好了，心力交瘁。<br>  虚拟机装go的环境还算简单，没有太大的麻烦。而想着不能每次都打开虚拟机来写go，再加上意图要和同学搞个英才工程的python的团队项目，就想直接搞个vscode加上各个语言的插件呗，事实证明，这真是一个错误的选择，各种奇奇怪怪的报错，环境配置，乱到不行的目录，还是解决不了，两天就这样再次流失。<br>  所以还是选择了jetbrain家的pycharm和goland，pycharm倒是本本分分，goland却又是环境配置，还有项目的目录什么的，搞来搞去，goland的terminal又无法打开，寻找答案无果，重新安装，无果。抱着不准备管的心态，又突然不知道为什么就好了。。。蜜汁计算机。<br>  不出意外的话下个月还得去打一场工控比赛，为此又得学一下PLC的逆向，目前看来资料少的可怜，尽力而为吧。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;  或许真的是极尽苦难的一周。&lt;br&gt;  也是一事无成的一周。&lt;br&gt;  少有的一个星期什么也干不成，任何一件本应该简简单单的事情都会动辄四五个小时而迎来没有任何变化的结果。&lt;br&gt;  虚拟机上周已被搞得一塌糊涂，真的是失去才知道原来环境配置的多么棒。仅仅为了装pwndbg
-      
-    
-    </summary>
-    
-      <category term="diary" scheme="http://siriuswhiter.tk/categories/diary/"/>
-    
-    
-      <category term="diary" scheme="http://siriuswhiter.tk/tags/diary/"/>
+      <category term="heap" scheme="http://siriuswhiter.tk/tags/heap/"/>
     
   </entry>
   
