@@ -243,6 +243,10 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             
             <p><em>转移自之前的博客</em></p>
+<h1 id="judge-PE"><a href="#judge-PE" class="headerlink" title="judge PE"></a>judge PE</h1><p>简单的判断文件是否为pe文件： </p>
+<ol>
+<li>pe 指纹： 开头为 4D 5A （MZ）； 3C 处为一个值 ； 查找该值的地址为 50 45（PE）。</li>
+</ol>
 <h1 id="PE-文件概论"><a href="#PE-文件概论" class="headerlink" title="PE 文件概论"></a>PE 文件概论</h1><p>PE（portable Executable）windows系统下的可执行文件格式</p>
 <p>1 . 32位可执行文件-PE32 ；</p>
 <pre><code>64位可执行文件-PE+/PE32+ ，是PE文件的扩展形式。
@@ -262,26 +266,37 @@
 <li>VA指进程虚拟内存的绝对地址，RVA指从某个基准位置开始的相对地址。</li>
 </ol>
 <p>RVA+ImageBase=VA</p>
-<h1 id="PE头-1"><a href="#PE头-1" class="headerlink" title="PE头(1)"></a>PE头(1)</h1><figure class="image-box">
+<h1 id="PE头-1"><a href="#PE头-1" class="headerlink" title="PE头(1)"></a>PE头(1)</h1><h2 id="DOS部分"><a href="#DOS部分" class="headerlink" title="DOS部分"></a>DOS部分</h2><figure class="image-box">
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/2.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/2.png" alt="2" title="" class=""></a>
                 <p>2</p>
             </figure>
-<p>1.DOS头：IMAGE_DOS_HEADER结构体<br><figure class="image-box">
+<ol>
+<li>DOS头：IMAGE_DOS_HEADER结构体     –0x40个字节</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="image-box">
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/3.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/3.png" alt="3" title="" class=""></a>
                 <p>3</p>
-            </figure></p>
-<p>40个字节/ e_magic:DOS签名（4D5A 签名值MZ）/e_lfanew:指示NT头的偏移（小端序标识法）</p>
-<p>2.DOS存根（stub）/可选项，大小不固定/DOS环境才会执行</p>
-<p>3.NT头： IMAGE_NT_HEADERS结构体</p>
+            </figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">e_magic:DOS签名（4D5A 签名值MZ）</span><br><span class="line">e_lfanew:指示NT头的偏移（小端序标识法）</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>DOS存根（stub）         –可选项，大小不固定/DOS环境才会执行</li>
+</ol>
+<h2 id="PE文件头部分"><a href="#PE文件头部分" class="headerlink" title="PE文件头部分"></a>PE文件头部分</h2><ol start="3">
+<li>NT头： IMAGE_NT_HEADERS结构体     –32位：0xF8个字节。64位： 0x108</li>
+</ol>
 <figure class="image-box">
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/4.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/4.png" alt="4" title="" class=""></a>
                 <p>4</p>
             </figure>
-<p>F8个字节/三个成员：签名（50450000）+文件头+可选头。</p>
-<p>①文件头：IMAGE_FILE_HEADER结构体<br><figure class="image-box">
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">签名（50450000）</span><br><span class="line">标准PE header： 20个字节</span><br><span class="line">可选头。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>标准PE header：IMAGE_FILE_HEADER结构体<figure class="image-box">
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/5.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/5.png" alt="5" title="" class=""></a>
                 <p>5</p>
-            </figure><br>该结构体重要成员（设置不正确，程序无法运行）</p>
+            </figure>
+该结构体重要成员（设置不正确，程序无法运行）</li>
+</ul>
 <figure class="image-box">
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/6.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/6.png" alt="6" title="" class=""></a>
                 <p>6</p>
@@ -294,10 +309,13 @@
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/8.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/8.png" alt="8" title="" class=""></a>
                 <p>8</p>
             </figure>
-<p>②可选头： IMAGE_OPTIONAL_HEADER32<br><figure class="image-box">
+<ul>
+<li>可选头： IMAGE_OPTIONAL_HEADER32<figure class="image-box">
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/9.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/9.png" alt="9" title="" class=""></a>
                 <p>9</p>
-            </figure><br>（PE头结构体中最大的）</p>
+            </figure>
+（PE头结构体中最大的）</li>
+</ul>
 <p>重要成员<br><figure class="image-box">
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/10.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/10.png" alt="10" title="" class=""></a>
                 <p>10</p>
@@ -308,13 +326,17 @@
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/12.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/12.png" alt="12" title="" class=""></a>
                 <p>12</p>
             </figure></p>
-<p>③节区头： IMAGE_SECTION_HEADER<br><figure class="image-box">
+<ul>
+<li>节区头： IMAGE_SECTION_HEADER<figure class="image-box">
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/13.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/13.png" alt="13" title="" class=""></a>
                 <p>13</p>
-            </figure><br>不同内存属性访问权限：code  rwx /data rw /resource r<br><figure class="image-box">
+            </figure>
+不同内存属性访问权限：code  rwx /data rw /resource r<figure class="image-box">
                 <a rel=What's PE files? href="/2018/07/23/what-s-pe-files/14.png" class="swipebox" title=undefined><img src="/2018/07/23/what-s-pe-files/14.png" alt="14" title="" class=""></a>
                 <p>14</p>
-            </figure><br>重要成员</p>
+            </figure>
+重要成员</li>
+</ul>
 <h1 id="PE头-2"><a href="#PE头-2" class="headerlink" title="PE头(2)"></a>PE头(2)</h1><ol>
 <li>内存地址与文件偏移间的映射：RVA to RAW（即file offset）</li>
 </ol>
@@ -326,12 +348,19 @@
 <p>RVA = 5000 位于第一节区（.text），VA = 1000（该节区内存的的起始地址），</p>
 <p>PointerToRawData= 400 （该节区文件的起始地址） 。</p>
 <p>RAW = 5000 -1000 +400 =4400.</p>
-<p>2.DLL（动态链接库）</p>
+<ol start="2">
+<li>DLL（动态链接库）</li>
+</ol>
 <p>不把库包含在程序中，而是单独组成DLL文件，需要时调用即可/更新库时只需要替换DLL文件即可/内存映射使加载后的DLL代码，资源在多个进程中实现共享。</p>
 <p>Windows版本不同，环境不同，被调用函数的位置（地址）也不相同。</p>
-<p>①为了确保在所有环境中都能正常调用被调用函数，编译器保存了被调用函数实际地址的位置。PE装载器将被调用函数的地址写到该位置。</p>
-<p>②DLL重定位。DLL的ImageBase默认为1000000，若某个程序使用a.dll与b.dll时，a已被装载到内存的10000000处，PE装载器只能查找其他空白的内存空间，将b装载进去。</p>
-<p>③PE头表示地址用RVA 而不是VA。</p>
+<ul>
+<li><p>为了确保在所有环境中都能正常调用被调用函数，编译器保存了被调用函数实际地址的位置。PE装载器将被调用函数的地址写到该位置。</p>
+</li>
+<li><p>DLL重定位。DLL的ImageBase默认为1000000，若某个程序使用a.dll与b.dll时，a已被装载到内存的10000000处，PE装载器只能查找其他空白的内存空间，将b装载进去。</p>
+</li>
+<li><p>PE头表示地址用RVA 而不是VA。</p>
+</li>
+</ul>
 <p>3.IAT（Import Address Table 导入地址表）：用来记录程序正在使用库中的哪些函数。</p>
 
         </div>
@@ -340,7 +369,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-10-18T10:44:36.677Z" itemprop="dateUpdated">2018-10-18 18:44:36</time>
+    Last updated: <time datetime="2019-03-24T06:48:13.686Z" itemprop="dateUpdated">2019-03-24 14:48:13</time>
 </span><br>
 
 
@@ -435,7 +464,7 @@
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PE-文件概论"><span class="post-toc-number">1.</span> <span class="post-toc-text">PE 文件概论</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PE头-1"><span class="post-toc-number">2.</span> <span class="post-toc-text">PE头(1)</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PE头-2"><span class="post-toc-number">3.</span> <span class="post-toc-text">PE头(2)</span></a></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#judge-PE"><span class="post-toc-number">1.</span> <span class="post-toc-text">judge PE</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PE-文件概论"><span class="post-toc-number">2.</span> <span class="post-toc-text">PE 文件概论</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PE头-1"><span class="post-toc-number">3.</span> <span class="post-toc-text">PE头(1)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DOS部分"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">DOS部分</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#PE文件头部分"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">PE文件头部分</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PE头-2"><span class="post-toc-number">4.</span> <span class="post-toc-text">PE头(2)</span></a></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>

