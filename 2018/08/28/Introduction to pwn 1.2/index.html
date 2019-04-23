@@ -256,7 +256,8 @@
 <pre><code>ROPgadget --binary ./file
 
 ROPgadget --binary file  --only &apos;pop|ret&apos; | grep eax     
-ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
+ROPgadget --binary file  --opcode cd80c3（int 0x80 ; ret ）
+ROPgadget --binary file  --string &apos;/bin/sh&apos;
 </code></pre><p><em><a href="syscalls.kernelgrok.com" title="src">linux下的系统调用</a>.</em></p>
 <h1 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h1><h2 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h2><p>程序不是静态编译，通常就不会有int 0x80; ret2syscall 就无法实现，因而使用ret2libc。</p>
 <h3 id="利用过程："><a href="#利用过程：" class="headerlink" title="利用过程："></a>利用过程：</h3><p>ASLR使得每次载入的函数地址（base）都不同；实际地址 Address = base +offset</p>
@@ -284,6 +285,8 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
 <li>exp调试时使用</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh = process([‘./bin‘],env=&#123;&quot;LD_PRELOAD&quot;:&quot;./libc-2.23.so&quot;&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="需要注意的函数"><a href="#需要注意的函数" class="headerlink" title="需要注意的函数"></a>需要注意的函数</h2><p>read<br>gets</p>
+<p>write<br>puts</p>
 
         </div>
         
@@ -291,7 +294,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-03-20T07:35:16.849Z" itemprop="dateUpdated">2019-03-20 15:35:16</time>
+    最后更新时间：<time datetime="2019-04-06T06:31:27.591Z" itemprop="dateUpdated">2019-04-06 14:31:27</time>
 </span><br>
 
 
@@ -386,7 +389,7 @@ ROPgadget --binary  --opcode cd80c3（int 0x80 ; ret ）
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#静态链接"><span class="post-toc-number">1.</span> <span class="post-toc-text">静态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2text-amp-ret2shellcode"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ret2text &amp; ret2shellcode</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2syscall"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">ret2syscall</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#动态链接"><span class="post-toc-number">2.</span> <span class="post-toc-text">动态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2libc"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">ret2libc</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#利用过程："><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">利用过程：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#延迟绑定"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">延迟绑定</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#给文件加载目标libc的方法："><span class="post-toc-number">2.2.</span> <span class="post-toc-text">给文件加载目标libc的方法：</span></a></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#静态链接"><span class="post-toc-number">1.</span> <span class="post-toc-text">静态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2text-amp-ret2shellcode"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ret2text &amp; ret2shellcode</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2syscall"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">ret2syscall</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#动态链接"><span class="post-toc-number">2.</span> <span class="post-toc-text">动态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2libc"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">ret2libc</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#利用过程："><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">利用过程：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#延迟绑定"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">延迟绑定</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#给文件加载目标libc的方法："><span class="post-toc-number">2.2.</span> <span class="post-toc-text">给文件加载目标libc的方法：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#需要注意的函数"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">需要注意的函数</span></a></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
