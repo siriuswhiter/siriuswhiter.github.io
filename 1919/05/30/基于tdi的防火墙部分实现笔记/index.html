@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>基于TDI的防火墙部分实现笔记 | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="kernel,firewall">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>基于TDI的防火墙部分实现笔记</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">基于TDI的防火墙部分实现笔记</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="1919-05-30T08:55:25.000Z" itemprop="datePublished" class="page-time">
+  1919-05-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/kernel/">kernel</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-基于tdi的防火墙部分实现笔记"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">基于TDI的防火墙部分实现笔记</h1>
+        <div class="post-meta">
+            <time class="post-time" title="1919-05-30 16:55:25" datetime="1919-05-30T08:55:25.000Z"  itemprop="datePublished">1919-05-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/kernel/">kernel</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="TDI-过滤框架："><a href="#TDI-过滤框架：" class="headerlink" title="TDI 过滤框架："></a>TDI 过滤框架：</h1><h2 id="wdm-h"><a href="#wdm-h" class="headerlink" title="wdm.h"></a>wdm.h</h2><p>定义了PDRIVER_OBJECT结构体类型</p>
+<h2 id="tdi-fw-c"><a href="#tdi-fw-c" class="headerlink" title="tdi_fw.c"></a>tdi_fw.c</h2><ol>
+<li>c_n_a_device： 驱动生成设备  </li>
+<li>d_n_d_device：删除设备</li>
+<li>Devicepatch：唯一的设备分发函数 ，如果能get_original_devobj找到old_devobj就调用IoSkipCurrentIrpStackLocation栈中得到请求,再IoCallDriver将二者发到下层（实际：对请求（IRP）的主功能号（irps-&gt;MajorFunction）进行处理。<br>(<em>ps:次功能号：irps-&gt;MiniorFunction</em>)<br>对于特定请求：如IRP_MJ_CREATE ，先tdi_create 进行过滤得到结果，tdi_dispatch_complete 为完成函数，通过result来进行处理</li>
+<li>get_origin_devobj tcp/ip/udp 三对设备及其指针匹配</li>
+</ol>
+<h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><ol>
+<li>Onload 删除＋解绑所有已生成和绑定的设备</li>
+<li>DriverEntry 驱动入口＋分发函数+生成过滤设备并绑定三种设备（c_n_a_device)</li>
+</ol>
+<h1 id="过滤生成请求"><a href="#过滤生成请求" class="headerlink" title="过滤生成请求"></a>过滤生成请求</h1><h2 id="disp-obj-c："><a href="#disp-obj-c：" class="headerlink" title="disp_obj.c："></a>disp_obj.c：</h2><ol>
+<li><p>tdi_create: 对于 IRP_MJ_CREATE 请求的过滤 ，生成一个文件对象有两种可能：</p>
+<ul>
+<li>TdiTransportAddress：表明生成传输层地址</li>
+<li>TdiConnectionContext： 表明生成连接终端</li>
+</ul>
+<p>TDI先生成1，再2，再用控制请求将二者连接起来</p>
+<p>1.1 生成传输层地址时。询问被打开的文件对象来获得ip地址和端口，调用TdiBuildInternalDeviceControlIrp分配空的请求,此请求需要在Passive Level 进行调用<br>Ps: 完成函数一般在DisPatch level </p>
+<p>2.1  连接终端的结构：CONNECTION_CONTEXT， 可以从ea中得到</p>
+<p>为了将 文件对象 与 连接上下文 对应起来，可以使用hash表存储（ot_add_fileobj）<br>同理存储 文件对象 与 生成地址 对应起来</p>
+</li>
+<li><p>tdi_create_addrobj_complete/2  从上面的生成的传输层地址得到生成的IP地址（32位长整数即4字节）和端口（16字节整数）</p>
+</li>
+</ol>
+<h1 id="控制请求"><a href="#控制请求" class="headerlink" title="控制请求"></a>控制请求</h1><h2 id="disp-obj-c"><a href="#disp-obj-c" class="headerlink" title="disp_obj.c"></a>disp_obj.c</h2><ol>
+<li><p>两种控制请求（起相同的作用）：</p>
+<ul>
+<li>IRP_MJ_DEVICE_CONTROL：应用层向驱动层发送设备  </li>
+<li><p>IRP_MJ_INTERNAL_DEVICE_CONTROL：内核内部发送设备控制命令</p>
+<p>次功能号有：</p>
+<ol>
+<li>TDI_ASSOCIATE_ADDRESS：将传输层地址对象(IP)和连接对象(FileObj)连接起来,即与连接终端中使用hash表存储的文件对象与连接上下文这个组合连接。<br>使得：得到连接上下文对象时，能够立刻知道使用的本地地址。<br>方法：从栈空间参数中得到上面传入的传输层地址的文件的句柄并将其转化（ObReferenceObjectByHandle）为文件对象指针（addrobj）,ot_find_fileobj找到保存过这个连接上下文所对应的表单元ote_conn，使用<br>ote_conn-&gt;associated_fileobj= addrobj 将其连接<br>使得：将 连接上下文指针 与 地址文件对象指针 连接起来。 //？？上面？<br>方法：使用另一个表：ot_add_conn_ctx</li>
+</ol>
+<p>三者互联： 连接上下文指针–地址文件对象指针–传输层地址</p>
+<ol start="2">
+<li><p>TDI_DISASSOCIATE_ADDRESS<br>上面功能的反向</p>
+</li>
+<li><p>TDI_CONNECT<br>本地试图连接外界时会发生的请求<br>a. @1. 用户进程使用的本机地址：获取当前请求的当前栈空间，判断请求类型然后得到以前保存的连接对象和传输层地址等等。<br>b. @2. 用户试图连接的远程地址：从irps的参数中得到。</p>
+</li>
+<li><p>TDI_SEND/TDI_RECEIVE<br>流式传输，对应TCP<br>使得：得到连接及相关信息<br>方法：irps-&gt;FileObject 就是连接的文件对象，信息保存在ote_conn中，可以得到连接上下文的指针，地址端口等<br>使得：得到要发送或接收的数据<br>方法：irp-&gt;MdlAddress就是含有数据的MDL的指针</p>
+</li>
+<li><p>TDI_SEND_DATAGRAM/TDI_RECEIVE_DATAGRAM<br>报式传输，对应UDP<br>使得：获取地址<br>方法：因为没有连接的概念，所以查询到的直接就是ote_addr<br>其他与tcp一致</p>
+</li>
+<li><p>TDI_SET_EVENT_HANDLER<br>设置事件回调请求，即侦听，当外部连接我方端口时回调函数被调用<br>EventType 事件种类，EventHandler 回调函数</p>
+</li>
+</ol>
+<p>直接获取发送函数的过滤</p>
+<p>Netbt(基于TCP/IP的NetBios协议），在IRP_MJ_DEVICE_CONTROL的功能码为IOCTL_TDI_QUERY_DIRECT_SEND_HANDLER时，直接获取TCP协议驱动的内部函数TCPSenddata的指针来进行数据发送，即不通过TDI_SEND请求<br>处理：tcpsenddata在调用后会返回在DeviceIoControl.Type3InputBuffer<br>可以因此获得指针之后调用tdi_dispatch_complete让真实设备完成请求，之后将结果进行转换</p>
+<ol start="7">
+<li>清理请求的过滤IRP_MJ_CLEANUP<br>将IRP_MJ_DEVICE_CONTROL尝试转换为IRP_MJ_INTERNAL_CONTROL，转换不成功直接下发，成功则视为internal来进行过滤</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2019-05-30T09:04:56.157Z" itemprop="dateUpdated">2019-05-30 17:04:56</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/1919/05/30/基于tdi的防火墙部分实现笔记/" target="_blank" rel="external">http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/firewall/">firewall</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/">kernel</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/&title=《基于TDI的防火墙部分实现笔记》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/&title=《基于TDI的防火墙部分实现笔记》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2018/01/24/javascript-naughts-and-crosses/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JavaScript Naughts and Crosses</h4>
+      </a>
+    </div>
+  
+
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TDI-过滤框架："><span class="post-toc-number">1.</span> <span class="post-toc-text">TDI 过滤框架：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#wdm-h"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">wdm.h</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#tdi-fw-c"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">tdi_fw.c</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#框架"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">框架</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#过滤生成请求"><span class="post-toc-number">2.</span> <span class="post-toc-text">过滤生成请求</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#disp-obj-c："><span class="post-toc-number">2.1.</span> <span class="post-toc-text">disp_obj.c：</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#控制请求"><span class="post-toc-number">3.</span> <span class="post-toc-text">控制请求</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#disp-obj-c"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">disp_obj.c</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/&title=《基于TDI的防火墙部分实现笔记》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/&title=《基于TDI的防火墙部分实现笔记》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACuUlEQVR42u3a0W7jMAwEwP7/T+der+jZ2RUlX1CMnoIktTUqYDIkv77i9fqx7r/z9ztXV8i///PTzQsPDw9vvPWrSyc3uPrm/fuT/bw5ejw8PLxjvKuN5o/4JEgkyPxq93vGw8PD+xxenuDmj/LkmPDw8PB+By8vLuRHcx+Q8PDw8D6H1250rUSbf9om6BtqLXh4eHgxL+8ifc7rI/09PDw8vHFXPW+GteGkHQt4LS08PDy8E7y2ILuLNFn14AIeHh7eVl5bhmgT3LaoMWmV/eOaeHh4eAd4axttC6b5keXDXkV5Ag8PD28rL0+R71v1JwJJ2xJ7ExLw8PDwNvEmAaNNjtcS7vZeiz09PDw8vJKXM/Lt5g2zot4cBzM8PDy8c7y2eZ9gJo/+tTT6cj94eHh4B3jtiEA7NDC5QoKsR7jw8PDwxrzkQdyWBtpkOgkA90cT/a/w8PDwNvHyH/9rjf88aW5DUT1SgIeHh7eJ1256HgDysuy8EouHh4d3gpcnrPNybTt0NWmt4eHh4T3PWxspyMcC2hZaOyj27a/w8PDwDvPa8kEeQtbKGW3CjYeHh/ckb3HWIG6VtUl5uy53i4eHh3eAlz9k26GotdJDnnAXyTceHh7eI7x8W7uaYXnZoi6F4OHh4W3l5SWG5JbJMbUFjvxQ8PDw8J7kzR/Tu5peSTgp2Hh4eHjHeG2QSMoQbakiDzBFKQQPDw/vGK9teiUP+rVkfVIOxsPDwzvNe5Ur3/Rak6wd83pzKHh4eHgHeO1IU36zSXLcvt6w8PDw8ErePBjkV8uDyuS+eHh4eM/w2s5RWwJeS8e3xTQ8PDy8/8prk90cuVYgfvM+Hh4e3ofx1kYN8gCQF0Eur4OHh4d3jNe2stqmV5Lx5gdU5M94eHh4B3hrv+iTB/paUy3//rayBR4eHl66kz+kOyIWzHcfnAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>

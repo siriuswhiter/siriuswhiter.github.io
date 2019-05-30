@@ -268,14 +268,17 @@ int main()
 }
 
 Run Shellcode: gcc test.c -o test -m32 -zexexstack       
-</code></pre>
+</code></pre><h3 id="编译tips"><a href="#编译tips" class="headerlink" title="编译tips"></a>编译tips</h3><p>64位机上编译上面程序需要强制32位编译，用gcc -m32 、as –32选项</p>
+<p>AT&amp;T：<br>as easy.s  -o easy.o –32<br>ld easy.o -o easy -m elf_i386</p>
+<p>INTEL:<br>nasm srop.asm -f elf64<br>ld -m elf_x86_64 srop.o -o srop</p>
+
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-03-20T07:35:11.727Z" itemprop="dateUpdated">2019-03-20 15:35:11</time>
+    Last updated: <time datetime="2019-05-24T10:06:34.624Z" itemprop="dateUpdated">2019-05-24 18:06:34</time>
 </span><br>
 
 
@@ -370,7 +373,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#各种变量的存储位置"><span class="post-toc-number">1.</span> <span class="post-toc-text">各种变量的存储位置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#linux下将shellcode运行"><span class="post-toc-number">2.</span> <span class="post-toc-text">linux下将shellcode运行</span></a></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#各种变量的存储位置"><span class="post-toc-number">1.</span> <span class="post-toc-text">各种变量的存储位置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#linux下将shellcode运行"><span class="post-toc-number">2.</span> <span class="post-toc-text">linux下将shellcode运行</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#编译tips"><span class="post-toc-number">3.</span> <span class="post-toc-text">编译tips</span></a></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
