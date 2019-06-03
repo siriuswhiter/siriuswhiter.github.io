@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     
     
-    <title>基于TDI的防火墙部分实现笔记 | Room of Requirement | pwn what you want</title>
+    <title>信安大赛半决反省 | Room of Requirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="kernel,firewall">
+    <meta name="keywords" content="">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
     <link rel="stylesheet" href="/css/style.css?v=1.3.2">
@@ -173,7 +173,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>基于TDI的防火墙部分实现笔记</span>
+            <span>信安大赛半决反省</span>
             
         </div>
         
@@ -186,15 +186,13 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">基于TDI的防火墙部分实现笔记</h1>
+        <h1 class="title">信安大赛半决反省</h1>
         <h5 class="subtitle">
             
-                <time datetime="1919-05-30T08:55:25.000Z" itemprop="datePublished" class="page-time">
-  1919-05-30
+                <time datetime="1919-06-03T00:49:01.000Z" itemprop="datePublished" class="page-time">
+  1919-06-03
 </time>
 
-
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/kernel/">kernel</a></li></ul>
 
             
         </h5>
@@ -221,16 +219,14 @@
 
 
 <div class="container body-wrap">
-    <article id="post-基于tdi的防火墙部分实现笔记"
+    <article id="post-信安大赛半决反省"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">基于TDI的防火墙部分实现笔记</h1>
+        <h1 class="post-card-title">信安大赛半决反省</h1>
         <div class="post-meta">
-            <time class="post-time" title="1919-05-30 16:55:25" datetime="1919-05-30T08:55:25.000Z"  itemprop="datePublished">1919-05-30</time>
+            <time class="post-time" title="1919-06-03 08:49:01" datetime="1919-06-03T00:49:01.000Z"  itemprop="datePublished">1919-06-03</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/kernel/">kernel</a></li></ul>
-
 
 
             
@@ -242,62 +238,12 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             
-            <h1 id="TDI-过滤框架："><a href="#TDI-过滤框架：" class="headerlink" title="TDI 过滤框架："></a>TDI 过滤框架：</h1><h2 id="wdm-h"><a href="#wdm-h" class="headerlink" title="wdm.h"></a>wdm.h</h2><p>定义了PDRIVER_OBJECT结构体类型</p>
-<h2 id="tdi-fw-c"><a href="#tdi-fw-c" class="headerlink" title="tdi_fw.c"></a>tdi_fw.c</h2><ol>
-<li>c_n_a_device： 驱动生成设备  </li>
-<li>d_n_d_device：删除设备</li>
-<li>Devicepatch：唯一的设备分发函数 ，如果能get_original_devobj找到old_devobj就调用IoSkipCurrentIrpStackLocation栈中得到请求,再IoCallDriver将二者发到下层（实际：对请求（IRP）的主功能号（irps-&gt;MajorFunction）进行处理。<br>(<em>ps:次功能号：irps-&gt;MiniorFunction</em>)<br>对于特定请求：如IRP_MJ_CREATE ，先tdi_create 进行过滤得到结果，tdi_dispatch_complete 为完成函数，通过result来进行处理</li>
-<li>get_origin_devobj tcp/ip/udp 三对设备及其指针匹配</li>
-</ol>
-<h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><ol>
-<li>Onload 删除＋解绑所有已生成和绑定的设备</li>
-<li>DriverEntry 驱动入口＋分发函数+生成过滤设备并绑定三种设备（c_n_a_device)</li>
-</ol>
-<h1 id="过滤生成请求"><a href="#过滤生成请求" class="headerlink" title="过滤生成请求"></a>过滤生成请求</h1><h2 id="disp-obj-c："><a href="#disp-obj-c：" class="headerlink" title="disp_obj.c："></a>disp_obj.c：</h2><ol>
-<li><p>tdi_create: 对于 IRP_MJ_CREATE 请求的过滤 ，生成一个文件对象有两种可能：</p>
-<ul>
-<li>TdiTransportAddress：表明生成传输层地址</li>
-<li>TdiConnectionContext： 表明生成连接终端</li>
-</ul>
-<p>TDI先生成1，再2，再用控制请求将二者连接起来</p>
-<p>1.1 生成传输层地址时。询问被打开的文件对象来获得ip地址和端口，调用TdiBuildInternalDeviceControlIrp分配空的请求,此请求需要在Passive Level 进行调用<br>Ps: 完成函数一般在DisPatch level </p>
-<p>2.1  连接终端的结构：CONNECTION_CONTEXT， 可以从ea中得到</p>
-<p>为了将 文件对象 与 连接上下文 对应起来，可以使用hash表存储（ot_add_fileobj）<br>同理存储 文件对象 与 生成地址 对应起来</p>
-</li>
-<li><p>tdi_create_addrobj_complete/2  从上面的生成的传输层地址得到生成的IP地址（32位长整数即4字节）和端口（16字节整数）</p>
-</li>
-</ol>
-<h1 id="控制请求"><a href="#控制请求" class="headerlink" title="控制请求"></a>控制请求</h1><h2 id="disp-obj-c"><a href="#disp-obj-c" class="headerlink" title="disp_obj.c"></a>disp_obj.c</h2><ol>
-<li><p>两种控制请求（起相同的作用）：</p>
-<ul>
-<li>IRP_MJ_DEVICE_CONTROL：应用层向驱动层发送设备  </li>
-<li><p>IRP_MJ_INTERNAL_DEVICE_CONTROL：内核内部发送设备控制命令</p>
-<p>次功能号有：</p>
-<ol>
-<li>TDI_ASSOCIATE_ADDRESS：将传输层地址对象(IP)和连接对象(FileObj)连接起来,即与连接终端中使用hash表存储的文件对象与连接上下文这个组合连接。<br>使得：得到连接上下文对象时，能够立刻知道使用的本地地址。<br>方法：从栈空间参数中得到上面传入的传输层地址的文件的句柄并将其转化（ObReferenceObjectByHandle）为文件对象指针（addrobj）,ot_find_fileobj找到保存过这个连接上下文所对应的表单元ote_conn，使用<br>ote_conn-&gt;associated_fileobj= addrobj 将其连接<br>使得：将 连接上下文指针 与 地址文件对象指针 连接起来。 //？？上面？<br>方法：使用另一个表：ot_add_conn_ctx</li>
-</ol>
-<p>三者互联： 连接上下文指针–地址文件对象指针–传输层地址</p>
-<ol start="2">
-<li><p>TDI_DISASSOCIATE_ADDRESS<br>上面功能的反向</p>
-</li>
-<li><p>TDI_CONNECT<br>本地试图连接外界时会发生的请求<br>a. @1. 用户进程使用的本机地址：获取当前请求的当前栈空间，判断请求类型然后得到以前保存的连接对象和传输层地址等等。<br>b. @2. 用户试图连接的远程地址：从irps的参数中得到。</p>
-</li>
-<li><p>TDI_SEND/TDI_RECEIVE<br>流式传输，对应TCP<br>使得：得到连接及相关信息<br>方法：irps-&gt;FileObject 就是连接的文件对象，信息保存在ote_conn中，可以得到连接上下文的指针，地址端口等<br>使得：得到要发送或接收的数据<br>方法：irp-&gt;MdlAddress就是含有数据的MDL的指针</p>
-</li>
-<li><p>TDI_SEND_DATAGRAM/TDI_RECEIVE_DATAGRAM<br>报式传输，对应UDP<br>使得：获取地址<br>方法：因为没有连接的概念，所以查询到的直接就是ote_addr<br>其他与tcp一致</p>
-</li>
-<li><p>TDI_SET_EVENT_HANDLER<br>设置事件回调请求，即侦听，当外部连接我方端口时回调函数被调用<br>EventType 事件种类，EventHandler 回调函数</p>
-</li>
-</ol>
-<p>直接获取发送函数的过滤</p>
-<p>Netbt(基于TCP/IP的NetBios协议），在IRP_MJ_DEVICE_CONTROL的功能码为IOCTL_TDI_QUERY_DIRECT_SEND_HANDLER时，直接获取TCP协议驱动的内部函数TCPSenddata的指针来进行数据发送，即不通过TDI_SEND请求<br>处理：tcpsenddata在调用后会返回在DeviceIoControl.Type3InputBuffer<br>可以因此获得指针之后调用tdi_dispatch_complete让真实设备完成请求，之后将结果进行转换</p>
-<ol start="7">
-<li>清理请求的过滤IRP_MJ_CLEANUP<br>将IRP_MJ_DEVICE_CONTROL尝试转换为IRP_MJ_INTERNAL_CONTROL，转换不成功直接下发，成功则视为internal来进行过滤</li>
-</ol>
-</li>
-</ul>
-</li>
-</ol>
+            <p>昨天打完信安大赛的华中地区赛，真的是被打到自闭。实在是没想到水平会倒退的这么厉害，或许是本来就这么菜呢。<br>因为这一学期来了之后各种诡异的状态加上后面忙成狗的课加课设，直接将pwn给荒废了很久，本来以为学了就可以随便信手拈来的技巧，在赛场上才感觉到自己的水平有多差，第一天的题实际上不能算是特别难，除了第一道栈拿了三血，其他的本来以为最最擅长的fastbin都tm做不出来，时间稍微长一些，便连各种管理规则都忘得差不多，直到出现报错，才能够想起来有这样那样的检查，甚至在第一天完了之后，我才逐渐想到那个疯狂耗费时间的题的后半段时间都是在一条错误的思路上前进，犯了刚开始做堆时的傻逼错误。</p>
+<p>感觉到了自己有多自大，多煞笔。可能这就是所谓的一瓶不满，半瓶晃荡吧。学到了一些皮毛，就以为自己多么多么厉害，虽然知道自已与其他大佬的差距，但是不愿去接收，只是想着虽然他怎么样怎么样，但是我还咋咋咋的。我记得有人说，过分的谦虚实际上是骄傲，我不知道自己有没有这样过分谦虚，但是我能感觉到自己那即将漫出来的骄傲自大。我不知道怎样控制，本身一个人的性格如此，容易满足便容易骄傲。我向来是一个容易满足的人，我只愿做个谦卑的人。现在常说当今社会多么多么浮躁，我一直以为自己不是他们中的一员，或许我曾经不是，但是我现在一定是了。实话说，太容易迷茫了，我记得有人说，迷茫是因为太闲了，可是我觉得不是，忙忙碌碌与迷茫是不冲突的，甚至忙碌的人更容易迷茫。曾经很容易忘记自己到底为什么要做一件事。我甚至不记得我大一下学期那挣扎许久想出来人活着的理由，这实际上是很悲哀的。我耗费那么大的精力时间去思考，在终于说服了自己之后，我却忘了怎么说服的自己。</p>
+<p>我记得在上大学之前，他们告诉我，当许多年之后你想起你的青春，你可能印象深刻的是你努力学习的时光而不是娱乐的时光，或许是因为还没有过好多年，我的高中记忆已经越来越少，而令我印象深刻的，是那个周六的下午在窗口晒太阳听歌看书的情形，那或许才是我想要的生活。我不像那些与我一同敲代码或是打比赛的人一样有多么的热爱计算机，计算机让我感觉有意思，pwn让我感觉有意思，但都仅限于此了。我感受不到那种发自内心的喜爱，老实说，我甚至想不到多少能够让自己发自内心喜爱的事物。这个角度来讲，计算机，pwn实际上都挺好的，只是它们完全改变了我的生活轨迹，我也不知是好是坏。虽然报专业的时候基本上没报什么计算机相关的专业，但或许是命中注定吧，如果我命中注定要与计算机为伍，我也不愿去排斥。</p>
+<p>太久没写过东西了，懒得在日记本上写了，就在这里发发牢骚，随便东扯西扯。实话说，能够自闭这么久，感觉整个人都要崩溃了。人在自闭的时候，会想要逃避，前些天是想去参军来着，一份逃避，一份参军的心。但是因为这傻逼皮肤病，甚至没法去报。这个时候真的不知道该怎么办了，之前和老爸通过电话谈参军的事，不久就被揭穿了想逃避的心理。压力大的时候不敢跟家里人打电话了，太容易想哭了，真的不想让他们多担心。自己扛着就好了。这么大的人整天胡思乱想，我也不知道如何是好了。相信一切都会过去的吧。</p>
+<p>这个学期还剩一个月就过去了，之后就要搬到新校区了，原先是计划找个实习的，但是这次比赛让我想放弃这个选项了，回家潜心修炼也是一个不错的选项。最终结果如何，到时候都会知道了。</p>
+<p>罢了，就这样吧，一切终将尘埃落定。</p>
 
         </div>
         
@@ -305,12 +251,12 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-05-30T09:04:56.157Z" itemprop="dateUpdated">2019-05-30 17:04:56</time>
+    Last updated: <time datetime="2019-06-03T01:41:18.636Z" itemprop="dateUpdated">2019-06-03 09:41:18</time>
 </span><br>
 
 
         
-        转载注明出处，原文地址：<a href="/1919/05/30/基于tdi的防火墙部分实现笔记/" target="_blank" rel="external">http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/</a>
+        转载注明出处，原文地址：<a href="/1919/06/03/信安大赛半决反省/" target="_blank" rel="external">http://siriuswhiter.tk/1919/06/03/信安大赛半决反省/</a>
         
     </div>
     <footer>
@@ -330,8 +276,6 @@
         
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/firewall/">firewall</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/">kernel</a></li></ul>
-
             <div class="page-share-wrap">
     
 
@@ -339,7 +283,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/&title=《基于TDI的防火墙部分实现笔记》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/1919/06/03/信安大赛半决反省/&title=《信安大赛半决反省》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -351,7 +295,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/&title=《基于TDI的防火墙部分实现笔记》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/1919/06/03/信安大赛半决反省/&title=《信安大赛半决反省》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -377,26 +321,25 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="prev">
-      <a href="/1919/06/03/信安大赛半决反省/" id="post-prev" class="post-nav-link">
+      <a href="/2018/01/24/javascript-naughts-and-crosses/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">信安大赛半决反省</h4>
+        <h4 class="title">JavaScript Naughts and Crosses</h4>
       </a>
     </div>
   
 
   
+    <div class="next">
+      <a href="/1919/05/30/基于tdi的防火墙部分实现笔记/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">基于TDI的防火墙部分实现笔记</h4>
+      </a>
+    </div>
+  
 </nav>
 
 
     
-    
-        <aside class="post-widget">
-            <nav class="post-toc-wrap" id="post-toc">
-                <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TDI-过滤框架："><span class="post-toc-number">1.</span> <span class="post-toc-text">TDI 过滤框架：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#wdm-h"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">wdm.h</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#tdi-fw-c"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">tdi_fw.c</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#框架"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">框架</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#过滤生成请求"><span class="post-toc-number">2.</span> <span class="post-toc-text">过滤生成请求</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#disp-obj-c："><span class="post-toc-number">2.1.</span> <span class="post-toc-text">disp_obj.c：</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#控制请求"><span class="post-toc-number">3.</span> <span class="post-toc-text">控制请求</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#disp-obj-c"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">disp_obj.c</span></a></li></ol></li></ol>
-            </nav>
-            <div class="toc-bar"><div>
-        </aside>
     
 </article>
 
@@ -479,7 +422,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/&title=《基于TDI的防火墙部分实现笔记》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/1919/06/03/信安大赛半决反省/&title=《信安大赛半决反省》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -491,7 +434,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/1919/05/30/基于tdi的防火墙部分实现笔记/&title=《基于TDI的防火墙部分实现笔记》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/1919/06/03/信安大赛半决反省/&title=《信安大赛半决反省》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -503,7 +446,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACuUlEQVR42u3a0W7jMAwEwP7/T+der+jZ2RUlX1CMnoIktTUqYDIkv77i9fqx7r/z9ztXV8i///PTzQsPDw9vvPWrSyc3uPrm/fuT/bw5ejw8PLxjvKuN5o/4JEgkyPxq93vGw8PD+xxenuDmj/LkmPDw8PB+By8vLuRHcx+Q8PDw8D6H1250rUSbf9om6BtqLXh4eHgxL+8ifc7rI/09PDw8vHFXPW+GteGkHQt4LS08PDy8E7y2ILuLNFn14AIeHh7eVl5bhmgT3LaoMWmV/eOaeHh4eAd4axttC6b5keXDXkV5Ag8PD28rL0+R71v1JwJJ2xJ7ExLw8PDwNvEmAaNNjtcS7vZeiz09PDw8vJKXM/Lt5g2zot4cBzM8PDy8c7y2eZ9gJo/+tTT6cj94eHh4B3jtiEA7NDC5QoKsR7jw8PDwxrzkQdyWBtpkOgkA90cT/a/w8PDwNvHyH/9rjf88aW5DUT1SgIeHh7eJ1256HgDysuy8EouHh4d3gpcnrPNybTt0NWmt4eHh4T3PWxspyMcC2hZaOyj27a/w8PDwDvPa8kEeQtbKGW3CjYeHh/ckb3HWIG6VtUl5uy53i4eHh3eAlz9k26GotdJDnnAXyTceHh7eI7x8W7uaYXnZoi6F4OHh4W3l5SWG5JbJMbUFjvxQ8PDw8J7kzR/Tu5peSTgp2Hh4eHjHeG2QSMoQbakiDzBFKQQPDw/vGK9teiUP+rVkfVIOxsPDwzvNe5Ur3/Rak6wd83pzKHh4eHgHeO1IU36zSXLcvt6w8PDw8ErePBjkV8uDyuS+eHh4eM/w2s5RWwJeS8e3xTQ8PDy8/8prk90cuVYgfvM+Hh4e3ofx1kYN8gCQF0Eur4OHh4d3jNe2stqmV5Lx5gdU5M94eHh4B3hrv+iTB/paUy3//rayBR4eHl66kz+kOyIWzHcfnAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACL0lEQVR42u3aS27DMAwFwNz/0um2QGr3kbSLWhqvgiCWNV4w/Oj1iq/3t+vzm8/r896j1Y7WfN1xYWBgPJaRbKi6laO7zr8/WiF5WRgYGDswqsslL6LKHr0IDAwMjDiwTj5jYGBgzBmT+jEJvhgYGBjnjKSITdK+XmGcP/eCWhwDA+OBjLzr/vefb5lvYGBgPIrxHlzJwCAZhc73g4GBsTajGgQTRn7MIh9YJvdiYGCsypiXr71wWT2ucXsVjoGB8Y8ZV7X1q42zJGUs/GNgYGAszbh7GDBvq0X7wcDA2ICRtMOS789/Uz1wVgjcGBgYGzDygJsnjr1GfxWPgYGxAyMfLs4DdL7R6h4wMDDWZuQpWj6wzMNxb6j5w2oYGBhLM6rBtxci8xXyIjl6LgYGxhKM6pCyx6uG9erQFAMDYwfG5GDEpEnX+2XUNcTAwFiIUS1HJ4Fykgg2MRgYGIsy8k0nn6ujgl5yiYGBsTYjCYX5QDEJl0lSmE8nMTAwdmBUf5o/Jk8BJ2MJDAyMHRjJdqvHIwrvr1j6Hq6MgYGxNKN3nGvSjGvW1sluMTAwFmW8i1d09CFO7/IR6S8rY2BgLM2YpGu99K7XYstfAQYGxqqM3sGsvN9VLZWbARcDA2MDRvUx1YHBVf8Dh3dhYGBgBC25q1r8zQIYAwMD4zRNzIvSeVvt4tQQAwPjUYxeEVs9g5aH4CSsF6YcGBgYD2dMSsdeG64XdkfDSwwMjKcyvgDlEsJ4myuRgQAAAABJRU5ErkJggg==" alt="微信分享二维码">
 </div>
 
 
