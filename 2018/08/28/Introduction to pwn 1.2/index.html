@@ -285,12 +285,15 @@ ROPgadget --binary file  --string &apos;/bin/sh&apos;
 <li>exp调试时使用</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh = process([‘./bin‘],env=&#123;&quot;LD_PRELOAD&quot;:&quot;./libc-2.23.so&quot;&#125;)</span><br></pre></td></tr></table></figure>
-<h2 id="需要注意的函数"><a href="#需要注意的函数" class="headerlink" title="需要注意的函数"></a>需要注意的函数</h2><p>read<br>gets</p>
-<p>write<br>puts</p>
+<h2 id="需要注意的函数"><a href="#需要注意的函数" class="headerlink" title="需要注意的函数"></a>需要注意的函数</h2><p>read   读取截至\x00，\n不会自动忽略<br>gets   </p>
+<p>write<br>puts   截止符为\x00，没有截断可以泄露，最后会自动加上\n</p>
 <h2 id="源码级别的调试"><a href="#源码级别的调试" class="headerlink" title="源码级别的调试"></a>源码级别的调试</h2><p>glibc 源码下载：<a href="http://mirrors.ustc.edu.cn/gnu/libc/" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/gnu/libc/</a></p>
 <p>下载源码， tar解压</p>
 <p>进入源码文件，mkdir build ; cd build </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CFLAGS=&quot;-g -g3 -ggdb -gdwarf-4 -Og&quot; CXXFLAGS=&quot;-g -g3 -ggdb -gdwarf-4 -Og&quot; ../configure --prefix=/home/sirius/tools/source/glibc-2.23/64</span><br><span class="line"></span><br><span class="line">make -j8</span><br><span class="line"></span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<p>在程序编译时可以直接更改ld为编译完的libc，这样在调试时可以直接调用编译出来的libc，也就可以直接调试源码。</p>
+<p>调试源码除了使用gdb以外，更方便的方法就是使用linux 下的vscode，可以像windows下一样直接对源码进行调试。</p>
+<p>当然也可以使用gdbtui，但是不是特别的好用，加了pwndbg插件后显示会出现乱码。</p>
 <h2 id="arm-程序运行"><a href="#arm-程序运行" class="headerlink" title="arm 程序运行"></a>arm 程序运行</h2><ol>
 <li><p>安装必要的程序 qemu  gcc for arm 交叉编译 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install qemu gcc-5-arm-linux-gnueabihf gcc-5-multilib-arm-linux-gnueabihf</span><br></pre></td></tr></table></figure>
@@ -326,7 +329,7 @@ ROPgadget --binary file  --string &apos;/bin/sh&apos;
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-05-24T09:30:34.404Z" itemprop="dateUpdated">2019-05-24 17:30:34</time>
+    Last updated: <time datetime="2019-06-07T02:40:10.724Z" itemprop="dateUpdated">2019-06-07 10:40:10</time>
 </span><br>
 
 
