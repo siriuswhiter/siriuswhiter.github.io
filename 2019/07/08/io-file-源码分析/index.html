@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>_IO_FILE 源码分析 | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="pwn,io_file">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>_IO_FILE 源码分析</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">_IO_FILE 源码分析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-07-08T05:33:38.000Z" itemprop="datePublished" class="page-time">
+  2019-07-08
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-io-file-源码分析"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">_IO_FILE 源码分析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-07-08 13:33:38" datetime="2019-07-08T05:33:38.000Z"  itemprop="datePublished">2019-07-08</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/pwn/">pwn</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <p><em>_IO_File 是个比较神奇的东西，而且用起来比较方便，因此花点时间捋一下它的源码，方便后面的精进</em></p>
+<p>这里使用glibc 2.23的源码进行调试，是加了debug symbol的glibc。源码与编译方式如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//gcc -Wl,-dynamic-linker /glibc/glibc-2.23/debug_x64/lib/ld-linux-x86-64.so.2 -o iofile -g iofile.c</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">	FILE*fp1=fopen(&quot;test1&quot;,&quot;wb+&quot;);</span><br><span class="line"></span><br><span class="line">	char data1[20];</span><br><span class="line">	fread(data1,1,20,fp1);</span><br><span class="line">	</span><br><span class="line">    FILE*fp2=fopen(&quot;test2&quot;,&quot;wb&quot;);</span><br><span class="line"></span><br><span class="line">	char data2[20]=&#123;&quot;abcdefghij1234567890&quot;&#125;;</span><br><span class="line">	fwrite(data2,1,20,fp2);</span><br><span class="line"></span><br><span class="line">	fclose(fp1);</span><br><span class="line">    fclose(fp2);</span><br><span class="line">	return 0;	    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="fopen"><a href="#fopen" class="headerlink" title="fopen"></a>fopen</h1><h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><p>malloc为结构体分配内存空间。</p>
+<p>_IO_no_init 对FILE结构体进行初始化。</p>
+<p>_IO_file_init将结构体链接进_IO_list_all链表。</p>
+<p>_IO_file_fopen执行系统调用打开文件。</p>
+<p>返回句柄。</p>
+<h2 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h2><h3 id="fopen-gt-IO-new-fopen"><a href="#fopen-gt-IO-new-fopen" class="headerlink" title="fopen-&gt;_IO_new_fopen"></a>fopen-&gt;_IO_new_fopen</h3><p>跟进去,发现是_IO_new_fopen函数，在libio/iofopen.c中。（这里展示的不是2.23的代码，所以与下面调试时的代码会有所偏差）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FILE *</span><br><span class="line">_IO_new_fopen (const char *filename, const char *mode)</span><br><span class="line">&#123;</span><br><span class="line">  return __fopen_internal (filename, mode, 1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>继续跟进__fopen_internal</p>
+<h4 id="fopen-internal"><a href="#fopen-internal" class="headerlink" title="__fopen_internal"></a>__fopen_internal</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">FILE *</span><br><span class="line">__fopen_internal (const char *filename, const char *mode, int is32)</span><br><span class="line">&#123;</span><br><span class="line">  struct locked_FILE</span><br><span class="line">  &#123;</span><br><span class="line">    struct _IO_FILE_plus fp;</span><br><span class="line">#ifdef _IO_MTSAFE_IO</span><br><span class="line">    _IO_lock_t lock;</span><br><span class="line">#endif</span><br><span class="line">    struct _IO_wide_data wd;</span><br><span class="line">  &#125; *new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));</span><br><span class="line"></span><br><span class="line">  if (new_f == NULL)</span><br><span class="line">    return NULL;</span><br><span class="line">#ifdef _IO_MTSAFE_IO</span><br><span class="line">  new_f-&gt;fp.file._lock = &amp;new_f-&gt;lock;</span><br><span class="line">#endif</span><br><span class="line">  _IO_no_init (&amp;new_f-&gt;fp.file, 0, 0, &amp;new_f-&gt;wd, &amp;_IO_wfile_jumps);    //对file结构体new_f进行初始化。</span><br><span class="line">  _IO_JUMPS (&amp;new_f-&gt;fp) = &amp;_IO_file_jumps;                             // 设置vtable为_IO_file_jumps</span><br><span class="line">  _IO_new_file_init_internal (&amp;new_f-&gt;fp);                              // 将file结构体链接进去_IO_list_all</span><br><span class="line">  if (_IO_file_fopen ((FILE *) new_f, filename, mode, is32) != NULL)</span><br><span class="line">    return __fopen_maybe_mmap (&amp;new_f-&gt;fp.file);</span><br><span class="line"></span><br><span class="line">  _IO_un_link (&amp;new_f-&gt;fp);</span><br><span class="line">  free (new_f);</span><br><span class="line">  return NULL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到先申请了一个locked_FILE 结构体，其内部有三个结构体，分别为<em>fp = _IO_FILE_plus,</em>lock = _IO_lock_t,*wd = _IO_wide_data<br>太大了就不贴出来了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; print new_f</span><br><span class="line">$3 = (struct locked_FILE *) 0x602010</span><br><span class="line">pwndbg&gt; x/20gx 0x602010-0x10</span><br><span class="line">0x602000:	0x0000000000000000	0x0000000000000231</span><br><span class="line">0x602010:	0x0000000000000000	0x0000000000000000</span><br><span class="line">0x602020:	0x0000000000000000	0x0000000000000000</span><br><span class="line">0x602030:	0x0000000000000000	0x0000000000000000</span><br><span class="line">0x602040:	0x0000000000000000	0x0000000000000000</span><br><span class="line">0x602050:	0x0000000000000000	0x0000000000000000</span><br></pre></td></tr></table></figure></p>
+<h5 id="IO-no-init"><a href="#IO-no-init" class="headerlink" title="_IO_no_init"></a>_IO_no_init</h5><p>继续跟进,_IO_no_init 对file结构体进行初始化。这里2.23版本是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T</span><br><span class="line">   _IO_no_init (&amp;new_f-&gt;fp.file, 0, 0, &amp;new_f-&gt;wd, &amp;_IO_wfile_jumps);</span><br><span class="line">#else</span><br><span class="line">   _IO_no_init (&amp;new_f-&gt;fp.file, 1, 0, NULL, NULL);</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<p>进入函数内部，该函数位于/libio/genops.c中，开始时进入_IO_old_init (fp, flags)，对fp结构体部分初始化，绝大多数为空，返回后主要对fp-&gt;_wide_data结构体进行了初始化。</p>
+<p>返回后设置vtable为_IO_file_jumps，</p>
+<h5 id="IO-file-init"><a href="#IO-file-init" class="headerlink" title="_IO_file_init"></a>_IO_file_init</h5><p>继续运行，调用_IO_file_init (&amp;new_f-&gt;fp)，这里位于/libio/fileops.c;</p>
+<p>将前面创建的file结构体放入_IO_list_all中。可以看到主体是调用的_IO_link_in(fp)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">_IO_file_init (struct _IO_FILE_plus *fp)</span><br><span class="line">&#123;</span><br><span class="line">  /* POSIX.1 allows another file handle to be used to change the position</span><br><span class="line">     of our file descriptor.  Hence we actually don&apos;t know the actual</span><br><span class="line">     position before we do the first fseek (and until a following fflush). */</span><br><span class="line">  fp-&gt;file._offset = _IO_pos_BAD;</span><br><span class="line">  fp-&gt;file._flags |= CLOSED_FILEBUF_FLAGS;</span><br><span class="line"></span><br><span class="line">  _IO_link_in (fp);</span><br><span class="line">  fp-&gt;file._fileno = -1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="IO-link-in"><a href="#IO-link-in" class="headerlink" title="_IO_link_in"></a>_IO_link_in</h6><p>跟进该函数,又回到了genops.c中，看到开始检查flag的标志位是否是_IO_LINKED，因为FILE结构体是通过_IO_list_all的单链表进行组织管理的，所以如果不在链表中便对其进行相应的处理，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">_IO_link_in (struct _IO_FILE_plus *fp)</span><br><span class="line">&#123;</span><br><span class="line">  if ((fp-&gt;file._flags &amp; _IO_LINKED) == 0)</span><br><span class="line">    &#123;</span><br><span class="line">      fp-&gt;file._flags |= _IO_LINKED;</span><br><span class="line">#ifdef _IO_MTSAFE_IO</span><br><span class="line">      _IO_cleanup_region_start_noarg (flush_cleanup);</span><br><span class="line">      _IO_lock_lock (list_all_lock);</span><br><span class="line">      run_fp = (FILE *) fp;</span><br><span class="line">      _IO_flockfile ((FILE *) fp);</span><br><span class="line">#endif</span><br><span class="line">      fp-&gt;file._chain = (FILE *) _IO_list_all;</span><br><span class="line">      _IO_list_all = fp;</span><br><span class="line">#ifdef _IO_MTSAFE_IO</span><br><span class="line">      _IO_funlockfile ((FILE *) fp);</span><br><span class="line">      run_fp = NULL;</span><br><span class="line">      _IO_lock_unlock (list_all_lock);</span><br><span class="line">      _IO_cleanup_region_end (0);</span><br><span class="line">#endif</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>查看下_IO_list_all申请的结构体,即前面三个结构体中第一个结构体。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; print *_IO_list_all</span><br><span class="line">$5 = &#123;</span><br><span class="line">  file = &#123;</span><br><span class="line">    _flags = -72538996, </span><br><span class="line">    _IO_read_ptr = 0x0, </span><br><span class="line">    _IO_read_end = 0x0, </span><br><span class="line">    _IO_read_base = 0x0, </span><br><span class="line">    _IO_write_base = 0x0, </span><br><span class="line">    _IO_write_ptr = 0x0, </span><br><span class="line">    _IO_write_end = 0x0, </span><br><span class="line">    _IO_buf_base = 0x0, </span><br><span class="line">    _IO_buf_end = 0x0, </span><br><span class="line">    _IO_save_base = 0x0, </span><br><span class="line">    _IO_backup_base = 0x0, </span><br><span class="line">    _IO_save_end = 0x0, </span><br><span class="line">    _markers = 0x0, </span><br><span class="line">    _chain = 0x7ffff7dd6540 &lt;_IO_2_1_stderr_&gt;, </span><br><span class="line">    _fileno = -1, </span><br><span class="line">    _flags2 = 0, </span><br><span class="line">    _old_offset = 0, </span><br><span class="line">    _cur_column = 0, </span><br><span class="line">    _vtable_offset = 0 &apos;\000&apos;, </span><br><span class="line">    _shortbuf = &quot;&quot;, </span><br><span class="line">    _lock = 0x6020f0, </span><br><span class="line">    _offset = -1, </span><br><span class="line">    _codecvt = 0x0, </span><br><span class="line">    _wide_data = 0x602100, </span><br><span class="line">    _freeres_list = 0x0, </span><br><span class="line">    _freeres_buf = 0x0, </span><br><span class="line">    __pad5 = 0, </span><br><span class="line">    _mode = 0, </span><br><span class="line">    _unused2 = &apos;\000&apos; &lt;repeats 19 times&gt;</span><br><span class="line">  &#125;, </span><br><span class="line">  vtable = 0x7ffff7dd46e0 &lt;__GI__IO_file_jumps&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>函数返回到__fopen_internal中，进入一个判断<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if (_IO_file_fopen ((FILE *) new_f, filename, mode, is32) != NULL)</span><br><span class="line">    return __fopen_maybe_mmap (&amp;new_f-&gt;fp.file);</span><br></pre></td></tr></table></figure></p>
+<h4 id="IO-new-file-fopen"><a href="#IO-new-file-fopen" class="headerlink" title="_IO_new_file_fopen"></a>_IO_new_file_fopen</h4><p>跟进判断函数，跳转到了/libio/fileops.c中的_IO_new_file_fopen函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FILE *</span><br><span class="line">_IO_new_file_fopen (FILE *fp, const char *filename, const char *mode,</span><br><span class="line">		    int is32not64)</span><br></pre></td></tr></table></figure></p>
+<p>前面先检查文件是否打开，之后设置打开模式，最后调用 _IO_file_open</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">result = _IO_file_open (fp, filename, omode|oflags, oprot, read_write,</span><br><span class="line">			  is32not64);</span><br></pre></td></tr></table></figure>
+<h5 id="IO-file-open"><a href="#IO-file-open" class="headerlink" title="_IO_file_open"></a>_IO_file_open</h5><p>跟进_IO_file_open函数，可以看到，调用了系统级函数__open打开文件，之后设置fp-&gt;_fileno为文件描述符，最后再次调用_IO_link_in确保设置进入_IO_list_all。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">FILE *</span><br><span class="line">_IO_file_open (FILE *fp, const char *filename, int posix_mode, int prot,</span><br><span class="line">	       int read_write, int is32not64)</span><br><span class="line">&#123;</span><br><span class="line">  int fdesc;</span><br><span class="line">  if (__glibc_unlikely (fp-&gt;_flags2 &amp; _IO_FLAGS2_NOTCANCEL))</span><br><span class="line">    fdesc = __open_nocancel (filename,</span><br><span class="line">			     posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);</span><br><span class="line">  else</span><br><span class="line">    fdesc = __open (filename, posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);</span><br><span class="line">  if (fdesc &lt; 0)</span><br><span class="line">    return NULL;</span><br><span class="line">  fp-&gt;_fileno = fdesc;</span><br><span class="line">  _IO_mask_flags (fp, read_write,_IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);</span><br><span class="line">  /* For append mode, send the file offset to the end of the file.  Don&apos;t</span><br><span class="line">     update the offset cache though, since the file handle is not active.  */</span><br><span class="line">  if ((read_write &amp; (_IO_IS_APPENDING | _IO_NO_READS))</span><br><span class="line">      == (_IO_IS_APPENDING | _IO_NO_READS))</span><br><span class="line">    &#123;</span><br><span class="line">      off64_t new_pos = _IO_SYSSEEK (fp, 0, _IO_seek_end);</span><br><span class="line">      if (new_pos == _IO_pos_BAD &amp;&amp; errno != ESPIPE)</span><br><span class="line">	&#123;</span><br><span class="line">	  __close_nocancel (fdesc);</span><br><span class="line">	  return NULL;</span><br><span class="line">	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  _IO_link_in ((struct _IO_FILE_plus *) fp);</span><br><span class="line">  return fp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后返回之后调用了__fopen_maybe_mmap，之后将fp指针返回，整个流程就结束了。</p>
+<h1 id="fread"><a href="#fread" class="headerlink" title="fread"></a>fread</h1><h2 id="框架-1"><a href="#框架-1" class="headerlink" title="框架"></a>框架</h2><p>如果_IO_buf_base为空，调用_IO_doallocbuf(fp)初始化指针，建立输入缓冲区</p>
+<p>根据输入缓冲区与目标缓冲区情况分别进行处理，底层调用read的系统调用来进行读取并复制</p>
+<h2 id="细节-1"><a href="#细节-1" class="headerlink" title="细节"></a>细节</h2><p>进入之前再查看下FILE结构体fp指针的内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; print *fp</span><br><span class="line">$6 = &#123;</span><br><span class="line">  _flags = -72539008, </span><br><span class="line">  _IO_read_ptr = 0x0, </span><br><span class="line">  _IO_read_end = 0x0, </span><br><span class="line">  _IO_read_base = 0x0, </span><br><span class="line">  _IO_write_base = 0x0, </span><br><span class="line">  _IO_write_ptr = 0x0, </span><br><span class="line">  _IO_write_end = 0x0, </span><br><span class="line">  _IO_buf_base = 0x0, </span><br><span class="line">  _IO_buf_end = 0x0, </span><br><span class="line">  _IO_save_base = 0x0, </span><br><span class="line">  _IO_backup_base = 0x0, </span><br><span class="line">  _IO_save_end = 0x0, </span><br><span class="line">  _markers = 0x0, </span><br><span class="line">  _chain = 0x7ffff7dd6540 &lt;_IO_2_1_stderr_&gt;, </span><br><span class="line">  _fileno = 3, </span><br><span class="line">  _flags2 = 0, </span><br><span class="line">  _old_offset = 0, </span><br><span class="line">  _cur_column = 0, </span><br><span class="line">  _vtable_offset = 0 &apos;\000&apos;, </span><br><span class="line">  _shortbuf = &quot;&quot;, </span><br><span class="line">  _lock = 0x6020f0, </span><br><span class="line">  _offset = -1, </span><br><span class="line">  _codecvt = 0x0, </span><br><span class="line">  _wide_data = 0x602100, </span><br><span class="line">  _freeres_list = 0x0, </span><br><span class="line">  _freeres_buf = 0x0, </span><br><span class="line">  __pad5 = 0, </span><br><span class="line">  _mode = 0, </span><br><span class="line">  _unused2 = &apos;\000&apos; &lt;repeats 19 times&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="fread-gt-IO-fread"><a href="#fread-gt-IO-fread" class="headerlink" title="fread-&gt;_IO_fread"></a>fread-&gt;_IO_fread</h3><p>跟进fread函数，看到是位于/libio/fread.c中的_IO_fread,看到先计算了请求字节数，之后对fp加锁，执行_IO_sgetn，之后释放锁。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">size_t</span><br><span class="line">_IO_fread (void *buf, size_t size, size_t count, FILE *fp)</span><br><span class="line">&#123;</span><br><span class="line">  size_t bytes_requested = size * count;</span><br><span class="line">  size_t bytes_read;</span><br><span class="line">  CHECK_FILE (fp, 0);</span><br><span class="line">  if (bytes_requested == 0)</span><br><span class="line">    return 0;</span><br><span class="line">  _IO_acquire_lock (fp);</span><br><span class="line">  bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);</span><br><span class="line">  _IO_release_lock (fp);</span><br><span class="line">  return bytes_requested == bytes_read ? count : bytes_read / size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="IO-sgetn-gt-IO-XSGETN"><a href="#IO-sgetn-gt-IO-XSGETN" class="headerlink" title="_IO_sgetn ==&gt; _IO_XSGETN"></a>_IO_sgetn ==&gt; _IO_XSGETN</h4><p>可以看到主体应该是_IO_sgetn函数，跟进该函数,发现主体为_IO_XSGETN函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">size_t</span><br><span class="line">_IO_sgetn (FILE *fp, void *data, size_t n)</span><br><span class="line">&#123;</span><br><span class="line">  /* FIXME handle putback buffer here! */</span><br><span class="line">  return _IO_XSGETN (fp, data, n);</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_def (_IO_sgetn)</span><br></pre></td></tr></table></figure></p>
+<p>查看定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define _IO_XSGETN(FP, DATA, N) JUMP2 (__xsgetn, FP, DATA, N)</span><br></pre></td></tr></table></figure></p>
+<p>继续跟进，进入/libio/fileops.c，该函数较长，做了不少事情。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">size_t</span><br><span class="line">_IO_file_xsgetn (FILE *fp, void *data, size_t n)</span><br></pre></td></tr></table></figure></p>
+<p>如果_IO_buf_base为空，调用_IO_doallocbuf(fp)初始化指针，建立输入缓冲区<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if (fp-&gt;_IO_buf_base == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">      /* Maybe we already have a push back pointer.  */</span><br><span class="line">      if (fp-&gt;_IO_save_base != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">	  free (fp-&gt;_IO_save_base);</span><br><span class="line">	  fp-&gt;_flags &amp;= ~_IO_IN_BACKUP;</span><br><span class="line">	&#125;</span><br><span class="line">      _IO_doallocbuf (fp);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="第一步：-IO-doallocbuf"><a href="#第一步：-IO-doallocbuf" class="headerlink" title="第一步：_IO_doallocbuf"></a>第一步：_IO_doallocbuf</h5><p>跟进_IO_doallocbuf,进入/libio/genops.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">_IO_doallocbuf (FILE *fp)</span><br><span class="line">&#123;</span><br><span class="line">  if (fp-&gt;_IO_buf_base)</span><br><span class="line">    return;</span><br><span class="line">  if (!(fp-&gt;_flags &amp; _IO_UNBUFFERED) || fp-&gt;_mode &gt; 0)</span><br><span class="line">    if (_IO_DOALLOCATE (fp) != EOF)</span><br><span class="line">      return;</span><br><span class="line">  _IO_setb (fp, fp-&gt;_shortbuf, fp-&gt;_shortbuf+1, 0);</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_def (_IO_doallocbuf)</span><br></pre></td></tr></table></figure></p>
+<p>这里重新回顾下开始时的结构体状态，这些变量未被初始化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">_IO_read_ptr = 0x0, </span><br><span class="line">_IO_read_end = 0x0, </span><br><span class="line">_IO_read_base = 0x0, </span><br><span class="line">_IO_buf_base = 0x0, </span><br><span class="line">_IO_buf_end = 0x0,</span><br></pre></td></tr></table></figure></p>
+<h6 id="IO-file-doallocate"><a href="#IO-file-doallocate" class="headerlink" title="_IO_file_doallocate"></a>_IO_file_doallocate</h6><p>因此开始检验是否被初始化，如果已经初始化就返回。检查标志位之后调用vtable中的_IO_file_doallocate，由注释可以看到这个函数主要用来分配输入缓冲区。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">/* Allocate a file buffer, or switch to unbuffered I/O.  Streams for</span><br><span class="line">   TTY devices default to line buffered.  */</span><br><span class="line">int</span><br><span class="line">_IO_file_doallocate (FILE *fp)</span><br><span class="line">&#123;</span><br><span class="line">  size_t size;</span><br><span class="line">  char *p;</span><br><span class="line">  struct stat64 st;</span><br><span class="line"></span><br><span class="line">  size = BUFSIZ;</span><br><span class="line">  if (fp-&gt;_fileno &gt;= 0 &amp;&amp; __builtin_expect (_IO_SYSSTAT (fp, &amp;st), 0) &gt;= 0)</span><br><span class="line">    &#123;</span><br><span class="line">      if (S_ISCHR (st.st_mode))</span><br><span class="line">	&#123;</span><br><span class="line">	  /* Possibly a tty.  */</span><br><span class="line">	  if (</span><br><span class="line">#ifdef DEV_TTY_P</span><br><span class="line">	      DEV_TTY_P (&amp;st) ||</span><br><span class="line">#endif</span><br><span class="line">	      local_isatty (fp-&gt;_fileno))</span><br><span class="line">	    fp-&gt;_flags |= _IO_LINE_BUF;</span><br><span class="line">	&#125;</span><br><span class="line">#if defined _STATBUF_ST_BLKSIZE</span><br><span class="line">      if (st.st_blksize &gt; 0 &amp;&amp; st.st_blksize &lt; BUFSIZ)</span><br><span class="line">	size = st.st_blksize;</span><br><span class="line">#endif</span><br><span class="line">    &#125;</span><br><span class="line">  p = malloc (size);</span><br><span class="line">  if (__glibc_unlikely (p == NULL))</span><br><span class="line">    return EOF;</span><br><span class="line">  _IO_setb (fp, p, p + size, 1);</span><br><span class="line">  return 1;</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_def (_IO_file_doallocate)</span><br></pre></td></tr></table></figure></p>
+<p>首先调用_IO_SYSSTAT去获取文件信息，_IO_SYSSTAT函数是vtable中的 __stat函数，获取文件信息，这里是通过_fxstat64来获取，其内部是通过系统调用来实现，之后对size进行设置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int</span><br><span class="line">_IO_file_stat (_IO_FILE *fp, void *st)</span><br><span class="line">&#123; </span><br><span class="line">    return __fxstat64 (_STAT_VER, fp-&gt;_fileno, (struct stat64 *) st);</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_def (_IO_file_stat)</span><br></pre></td></tr></table></figure></p>
+<p>再之后通过malloc得到分配的缓冲区，再调用<code>_IO_setb</code>设置FILE缓冲区<br>跟进_IO_setb,设置了_IO_buf_base和_IO_buf_end，还有_flags<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">_IO_setb (FILE *f, char *b, char *eb, int a)</span><br><span class="line">&#123;</span><br><span class="line">  if (f-&gt;_IO_buf_base &amp;&amp; !(f-&gt;_flags &amp; _IO_USER_BUF))</span><br><span class="line">    free (f-&gt;_IO_buf_base);</span><br><span class="line">  f-&gt;_IO_buf_base = b;</span><br><span class="line">  f-&gt;_IO_buf_end = eb;</span><br><span class="line">  if (a)</span><br><span class="line">    f-&gt;_flags &amp;= ~_IO_USER_BUF;</span><br><span class="line">  else</span><br><span class="line">    f-&gt;_flags |= _IO_USER_BUF;</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_def (_IO_setb)</span><br></pre></td></tr></table></figure></p>
+<p>之后逐步返回到_IO_file_xsgetn</p>
+<p>可以看到_IO_buf_base与_IO_buf_end都被设置了，大小为0x1000<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_IO_buf_base = 0x602240 &quot;&quot;, </span><br><span class="line">_IO_buf_end = 0x603240 &quot;&quot;,</span><br></pre></td></tr></table></figure></p>
+<h5 id="第二步："><a href="#第二步：" class="headerlink" title="第二步："></a>第二步：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">while (want &gt; 0)    </span><br><span class="line">    &#123;</span><br><span class="line">      have = fp-&gt;_IO_read_end - fp-&gt;_IO_read_ptr;</span><br><span class="line">      if (want &lt;= have)                                  //如果缓冲区里有足够的字符，就直接将缓冲区里的字符复制到目标区</span><br><span class="line">	&#123;</span><br><span class="line">	  memcpy (s, fp-&gt;_IO_read_ptr, want);</span><br><span class="line">	  fp-&gt;_IO_read_ptr += want;</span><br><span class="line">	  want = 0;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="第三步："><a href="#第三步：" class="headerlink" title="第三步："></a>第三步：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">   else</span><br><span class="line">&#123;</span><br><span class="line">  if (have &gt; 0)                                       //如果缓冲区字符不够，就将其先复制到目标区</span><br><span class="line">    &#123;</span><br><span class="line">      s = __mempcpy (s, fp-&gt;_IO_read_ptr, have);</span><br><span class="line">      want -= have;</span><br><span class="line">      fp-&gt;_IO_read_ptr += have;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="第四步：-underflow"><a href="#第四步：-underflow" class="headerlink" title="第四步：__underflow"></a>第四步：__underflow</h5><p>因为是第一次读取数据，此时的fp-&gt;_IO_read_end以及fp-&gt;_IO_read_ptr都是0，因此会进入到__underflow<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/* If we now want less than a buffer, underflow and repeat</span><br><span class="line">	     the copy.  Otherwise, _IO_SYSREAD directly to</span><br><span class="line">	     the user buffer. */</span><br><span class="line">	  if (fp-&gt;_IO_buf_base</span><br><span class="line">	      &amp;&amp; want &lt; (size_t) (fp-&gt;_IO_buf_end - fp-&gt;_IO_buf_base))       //输入缓冲区不能满足需求，调用__underflow读入数据</span><br><span class="line">	    &#123;</span><br><span class="line">	      if (__underflow (fp) == EOF)</span><br><span class="line">		break;</span><br><span class="line"></span><br><span class="line">	      continue;</span><br><span class="line">	    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>进入__underflow函数，位于/libio/genops.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">int</span><br><span class="line">__underflow (FILE *fp)</span><br><span class="line">&#123;</span><br><span class="line">  if (_IO_vtable_offset (fp) == 0 &amp;&amp; _IO_fwide (fp, -1) != -1)</span><br><span class="line">    return EOF;</span><br><span class="line"></span><br><span class="line">  if (fp-&gt;_mode == 0)</span><br><span class="line">    _IO_fwide (fp, -1);</span><br><span class="line">  if (_IO_in_put_mode (fp))</span><br><span class="line">    if (_IO_switch_to_get_mode (fp) == EOF)</span><br><span class="line">      return EOF;</span><br><span class="line">  if (fp-&gt;_IO_read_ptr &lt; fp-&gt;_IO_read_end)</span><br><span class="line">    return *(unsigned char *) fp-&gt;_IO_read_ptr;</span><br><span class="line">  if (_IO_in_backup (fp))</span><br><span class="line">    &#123;</span><br><span class="line">      _IO_switch_to_main_get_area (fp);</span><br><span class="line">      if (fp-&gt;_IO_read_ptr &lt; fp-&gt;_IO_read_end)</span><br><span class="line">	return *(unsigned char *) fp-&gt;_IO_read_ptr;</span><br><span class="line">    &#125;</span><br><span class="line">  if (_IO_have_markers (fp))</span><br><span class="line">    &#123;</span><br><span class="line">      if (save_for_backup (fp, fp-&gt;_IO_read_end))</span><br><span class="line">	return EOF;</span><br><span class="line">    &#125;</span><br><span class="line">  else if (_IO_have_backup (fp))</span><br><span class="line">    _IO_free_backup_area (fp);</span><br><span class="line">  return _IO_UNDERFLOW (fp);</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_def (__underflow)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到经过一些检查之后会调用_IO_UNDERFLOW,跟进，调用了/libio/fileops.c中的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int</span><br><span class="line">_IO_new_file_underflow (FILE *fp)</span><br></pre></td></tr></table></figure></p>
+<p>检查FILE结构体的_flag标志位是否包含_IO_NO_READS，如果存在这个标志位则直接返回EOF，其中_IO_NO_READS标志位的定义是#define _IO_NO_READS 4 /<em> Reading not allowed </em>/。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if (fp-&gt;_flags &amp; _IO_NO_READS)</span><br><span class="line">    &#123;</span><br><span class="line">      fp-&gt;_flags |= _IO_ERR_SEEN;</span><br><span class="line">      __set_errno (EBADF);</span><br><span class="line">      return EOF;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果fp-&gt;_IO_buf_base为null，则调用_IO_doallocbuf分配输入缓冲区。和前面一样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">if (fp-&gt;_IO_read_ptr &lt; fp-&gt;_IO_read_end)</span><br><span class="line">    return *(unsigned char *) fp-&gt;_IO_read_ptr;</span><br><span class="line"></span><br><span class="line">  if (fp-&gt;_IO_buf_base == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">      /* Maybe we already have a push back pointer.  */</span><br><span class="line">      if (fp-&gt;_IO_save_base != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">	  free (fp-&gt;_IO_save_base);</span><br><span class="line">	  fp-&gt;_flags &amp;= ~_IO_IN_BACKUP;</span><br><span class="line">	&#125;</span><br><span class="line">      _IO_doallocbuf (fp);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>接着初始化设置FILE结构体指针，将他们都设置成fp-&gt;_IO_buf_base<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fp-&gt;_IO_read_base = fp-&gt;_IO_read_ptr = fp-&gt;_IO_buf_base;</span><br><span class="line">fp-&gt;_IO_read_end = fp-&gt;_IO_buf_base;</span><br><span class="line">fp-&gt;_IO_write_base = fp-&gt;_IO_write_ptr = fp-&gt;_IO_write_end</span><br><span class="line">  = fp-&gt;_IO_buf_base;</span><br></pre></td></tr></table></figure></p>
+<p>调用_IO_SYSREAD（vtable中的_IO_file_read函数），该函数最终执行系统调用read，读取文件数据，<br>数据读入到fp-&gt;_IO_buf_base中，读入大小为输入缓冲区的大小fp-&gt;_IO_buf_end - fp-&gt;_IO_buf_base。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">count = _IO_SYSREAD (fp, fp-&gt;_IO_buf_base,</span><br><span class="line">       fp-&gt;_IO_buf_end - fp-&gt;_IO_buf_base);</span><br></pre></td></tr></table></figure></p>
+<p>设置输入缓冲区已有数据的size，即设置fp-&gt;_IO_read_end为fp-&gt;_IO_read_end += count。<br>设置完之后通过while循环进入第二部分将输入缓冲区拷贝至目标缓冲区，流程结束，返回。</p>
+<ul>
+<li>ray-cp大佬解释了下为什么最后在_IO_UNDERFLOW中又一次检查调用了_IO_doallocbuf分配输入缓冲区。因为虽然一般的输入底层都在调用__underflow函数，但是并非全部,scanf函数调用的是_u_flow函数，其内部并未提前分配缓冲区，之后也调用了_IO_UNDERFLOW函数，因此需要在这里进行缓冲区的分配。</li>
+</ul>
+<h1 id="fwrite"><a href="#fwrite" class="headerlink" title="fwrite"></a>fwrite</h1><h2 id="框架-2"><a href="#框架-2" class="headerlink" title="框架"></a>框架</h2><p>主体是_IO_new_file_xsputn函数，该函数调用_IO_new_file_overflow建立刷新缓冲区，<br>其中_IO_file_doallocate负责缓冲区的申请建立<br>最后调用_IO_default_xsputn将剩余输出至输出缓冲区</p>
+<h2 id="细节-2"><a href="#细节-2" class="headerlink" title="细节"></a>细节</h2><h3 id="fwrite-gt-IO-fwrite"><a href="#fwrite-gt-IO-fwrite" class="headerlink" title="fwrite-&gt;_IO_fwrite"></a>fwrite-&gt;_IO_fwrite</h3><p>跟进，进入_IO_fwrite函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">size_t</span><br><span class="line">_IO_fwrite (const void *buf, size_t size, size_t count, FILE *fp)</span><br><span class="line">&#123;</span><br><span class="line">  size_t request = size * count;</span><br><span class="line">  size_t written = 0;</span><br><span class="line">  CHECK_FILE (fp, 0);</span><br><span class="line">  if (request == 0)</span><br><span class="line">    return 0;</span><br><span class="line">  _IO_acquire_lock (fp);</span><br><span class="line">  if (_IO_vtable_offset (fp) != 0 || _IO_fwide (fp, -1) == -1)</span><br><span class="line">    written = _IO_sputn (fp, (const char *) buf, request);</span><br><span class="line">  _IO_release_lock (fp);</span><br><span class="line">  /* We have written all of the input in case the return value indicates</span><br><span class="line">     this or EOF is returned.  The latter is a special case where we</span><br><span class="line">     simply did not manage to flush the buffer.  But the data is in the</span><br><span class="line">     buffer and therefore written as far as fwrite is concerned.  */</span><br><span class="line">  if (written == request || written == EOF)</span><br><span class="line">    return count;</span><br><span class="line">  else</span><br><span class="line">    return written / size;</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_def (_IO_fwrite)</span><br></pre></td></tr></table></figure>
+<h3 id="IO-sputn-gt-IO-new-file-xsputn"><a href="#IO-sputn-gt-IO-new-file-xsputn" class="headerlink" title="_IO_sputn-&gt;_IO_new_file_xsputn"></a>_IO_sputn-&gt;_IO_new_file_xsputn</h3><p>可以看到前面的流程和fread相似，之后调用了主体函数_IO_sputn，跟进，进入了/libio/fileops.c中的_IO_new_file_xsputn<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">size_t</span><br><span class="line">_IO_new_file_xsputn (FILE *f, const void *data, size_t n)</span><br><span class="line">...</span><br><span class="line">/* First figure out how much space is available in the buffer. */</span><br><span class="line">  if ((f-&gt;_flags &amp; _IO_LINE_BUF) &amp;&amp; (f-&gt;_flags &amp; _IO_CURRENTLY_PUTTING))</span><br><span class="line">    &#123;</span><br><span class="line">      count = f-&gt;_IO_buf_end - f-&gt;_IO_write_ptr;</span><br><span class="line">      if (count &gt;= n)</span><br><span class="line">	&#123;</span><br><span class="line">	  const char *p;</span><br><span class="line">	  for (p = s + n; p &gt; s; )</span><br><span class="line">	    &#123;</span><br><span class="line">	      if (*--p == &apos;\n&apos;)</span><br><span class="line">		&#123;</span><br><span class="line">		  count = p - s + 1;</span><br><span class="line">		  must_flush = 1;</span><br><span class="line">		  break;</span><br><span class="line">		&#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  else if (f-&gt;_IO_write_end &gt; f-&gt;_IO_write_ptr)</span><br><span class="line">    count = f-&gt;_IO_write_end - f-&gt;_IO_write_ptr; /* Space available. */</span><br></pre></td></tr></table></figure></p>
+<p>这一段判断了缓冲区剩余的空间，存在了count中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* Then fill the buffer. */</span><br><span class="line"> if (count &gt; 0)</span><br><span class="line">   &#123;</span><br><span class="line">     if (count &gt; to_do)</span><br><span class="line">count = to_do;</span><br><span class="line">     f-&gt;_IO_write_ptr = __mempcpy (f-&gt;_IO_write_ptr, s, count);</span><br><span class="line">     s += count;</span><br><span class="line">     to_do -= count;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果缓冲区还有剩余，则将数据拷贝至输出缓冲区。并计算是否还有目标输出剩余<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> if (to_do + must_flush &gt; 0)</span><br><span class="line">   &#123;</span><br><span class="line">     size_t block_size, do_write;</span><br><span class="line">     /* Next flush the (full) buffer. */</span><br><span class="line">     if (_IO_OVERFLOW (f, EOF) == EOF)</span><br><span class="line">/* If nothing else has to be written we must not signal the</span><br><span class="line">   caller that everything has been written.  */</span><br><span class="line">return to_do == 0 ? EOF : n - to_do;</span><br></pre></td></tr></table></figure></p>
+<h3 id="IO-OVERFLOW-gt-IO-new-file-overflow"><a href="#IO-OVERFLOW-gt-IO-new-file-overflow" class="headerlink" title="_IO_OVERFLOW-&gt;_IO_new_file_overflow"></a>_IO_OVERFLOW-&gt;_IO_new_file_overflow</h3><p>如果还有剩余，则说明缓冲区未建立或已经满了，需要使用_IO_OVERFLOW刷新缓冲区。跟进该函数，是位于fileops.c中的_IO_new_file_overflow<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int</span><br><span class="line">_IO_new_file_overflow (_IO_FILE *f, int ch)</span><br></pre></td></tr></table></figure></p>
+<p>继续跟进，先检查是否有_IO_NO_WRITE标志位<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if (f-&gt;_flags &amp; _IO_NO_WRITES) /* SET ERROR */</span><br><span class="line">  &#123;</span><br><span class="line">    f-&gt;_flags |= _IO_ERR_SEEN;</span><br><span class="line">    __set_errno (EBADF);</span><br><span class="line">    return EOF;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>检查_IO_write_base是否为空，若为空则分配输出缓冲区。这里调用的是_IO_doallocbuf来分配，与fread中相同。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> if ((f-&gt;_flags &amp; _IO_CURRENTLY_PUTTING) == 0 || f-&gt;_IO_write_base == NULL)</span><br><span class="line">   &#123;</span><br><span class="line">     /* Allocate a buffer if needed. */</span><br><span class="line">     if (f-&gt;_IO_write_base == NULL)</span><br><span class="line">&#123;</span><br><span class="line">  _IO_doallocbuf (f);</span><br><span class="line">  _IO_setg (f, f-&gt;_IO_buf_base, f-&gt;_IO_buf_base, f-&gt;_IO_buf_base);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>跟进_IO_setg，是一句宏，将与read相关的三个指针赋值为_IO_buf_base<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define _IO_setg(fp, eb, g, eg)  ((fp)-&gt;_IO_read_base = (eb),\</span><br><span class="line">	(fp)-&gt;_IO_read_ptr = (g), (fp)-&gt;_IO_read_end = (eg))</span><br></pre></td></tr></table></figure></p>
+<p>可以看下修改结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">_IO_read_ptr = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_read_end = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_read_base = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_write_base = 0x0, </span><br><span class="line">_IO_write_ptr = 0x0, </span><br><span class="line">_IO_write_end = 0x0, </span><br><span class="line">_IO_buf_base = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_buf_end = 0x604480 &quot;&quot;,</span><br></pre></td></tr></table></figure></p>
+<p>再之后就是相关指针的设置，对读写相关的指针与flags等进行了赋值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">_flags = -72536956,   --&gt; 0xfbad2c84</span><br><span class="line">_IO_read_ptr = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_read_end = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_read_base = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_write_base = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_write_ptr = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_write_end = 0x604480 &quot;&quot;, </span><br><span class="line">_IO_buf_base = 0x603480 &quot;&quot;, </span><br><span class="line">_IO_buf_end = 0x604480 &quot;&quot;,</span><br></pre></td></tr></table></figure></p>
+<p>赋值之后就要开始调用_IO_do_write函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ((f-&gt;_flags &amp; _IO_UNBUFFERED)</span><br><span class="line">      || ((f-&gt;_flags &amp; _IO_LINE_BUF) &amp;&amp; ch == &apos;\n&apos;))</span><br><span class="line">    if (_IO_do_write (f, f-&gt;_IO_write_base,</span><br><span class="line">		      f-&gt;_IO_write_ptr - f-&gt;_IO_write_base) == EOF)</span><br><span class="line">      return EOF;</span><br></pre></td></tr></table></figure></p>
+<h3 id="IO-do-write-gt-IO-new-do-write"><a href="#IO-do-write-gt-IO-new-do-write" class="headerlink" title="_IO_do_write-&gt;_IO_new_do_write"></a>_IO_do_write-&gt;_IO_new_do_write</h3><p>跟进调用了fileops.c中的_IO_new_do_write<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int</span><br><span class="line">_IO_new_do_write (FILE *fp, const char *data, size_t to_do)</span><br><span class="line">&#123;</span><br><span class="line">  return (to_do == 0</span><br><span class="line">	  || (size_t) new_do_write (fp, data, to_do) == to_do) ? 0 : EOF;</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_ver (_IO_new_do_write, _IO_do_write)</span><br></pre></td></tr></table></figure></p>
+<h3 id="new-do-write"><a href="#new-do-write" class="headerlink" title="new_do_write"></a>new_do_write</h3><p>看到主要调用了new_do_write函数，位于该函数下方。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">static size_t</span><br><span class="line">new_do_write (FILE *fp, const char *data, size_t to_do)</span><br></pre></td></tr></table></figure></p>
+<p>看到刚开始进行了标志位的判断，然后看read_end与write_base是否存在偏移，有则调用_IO_SYSSEEK校正指针位置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> if (fp-&gt;_flags &amp; _IO_IS_APPENDING)</span><br><span class="line">   /* On a system without a proper O_APPEND implementation,</span><br><span class="line">      you would need to sys_seek(0, SEEK_END) here, but is</span><br><span class="line">      not needed nor desirable for Unix- or Posix-like systems.</span><br><span class="line">      Instead, just indicate that offset (before and after) is</span><br><span class="line">      unpredictable. */</span><br><span class="line">   fp-&gt;_offset = _IO_pos_BAD;</span><br><span class="line"> else if (fp-&gt;_IO_read_end != fp-&gt;_IO_write_base)</span><br><span class="line">   &#123;</span><br><span class="line">     off64_t new_pos</span><br><span class="line">= _IO_SYSSEEK (fp, fp-&gt;_IO_write_base - fp-&gt;_IO_read_end, 1);</span><br><span class="line">     if (new_pos == _IO_pos_BAD)</span><br><span class="line">return 0;</span><br><span class="line">     fp-&gt;_offset = new_pos;</span><br><span class="line">   &#125;</span><br><span class="line"> if (fp-&gt;_cur_column &amp;&amp; count)</span><br><span class="line">     fp-&gt;_cur_column = _IO_adjust_column (fp-&gt;_cur_column - 1, data, count) + 1;</span><br></pre></td></tr></table></figure></p>
+<p>之后调用_IO_SYSWRITE输出输出缓冲区的内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">count = _IO_SYSWRITE (fp, data, to_do);</span><br></pre></td></tr></table></figure></p>
+<h3 id="IO-SYSWRITE-gt-IO-new-file-write"><a href="#IO-SYSWRITE-gt-IO-new-file-write" class="headerlink" title="_IO_SYSWRITE-&gt;_IO_new_file_write"></a>_IO_SYSWRITE-&gt;_IO_new_file_write</h3><p>跟进_IO_SYSWRITE查看输出缓冲区的内容是怎样被输出的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">ssize_t</span><br><span class="line">_IO_new_file_write (FILE *f, const void *data, ssize_t n)</span><br><span class="line">&#123;</span><br><span class="line">  ssize_t to_do = n;</span><br><span class="line">  while (to_do &gt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">      ssize_t count = (__builtin_expect (f-&gt;_flags2</span><br><span class="line">                                         &amp; _IO_FLAGS2_NOTCANCEL, 0)</span><br><span class="line">			   ? __write_nocancel (f-&gt;_fileno, data, to_do)</span><br><span class="line">			   : __write (f-&gt;_fileno, data, to_do));</span><br><span class="line">      if (count &lt; 0)</span><br><span class="line">	&#123;</span><br><span class="line">	  f-&gt;_flags |= _IO_ERR_SEEN;</span><br><span class="line">	  break;</span><br><span class="line">	&#125;</span><br><span class="line">      to_do -= count;</span><br><span class="line">      data = (void *) ((char *) data + count);</span><br><span class="line">    &#125;</span><br><span class="line">  n -= to_do;</span><br><span class="line">  if (f-&gt;_offset &gt;= 0)</span><br><span class="line">    f-&gt;_offset += n;</span><br><span class="line">  return n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到执行了系统调用__write来将其输出。</p>
+<p>返回之后调用_IO_setg刷新缓冲区指针并返回。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> _IO_setg (fp, fp-&gt;_IO_buf_base, fp-&gt;_IO_buf_base, fp-&gt;_IO_buf_base);</span><br><span class="line">  fp-&gt;_IO_write_base = fp-&gt;_IO_write_ptr = fp-&gt;_IO_buf_base;</span><br><span class="line">  fp-&gt;_IO_write_end = (fp-&gt;_mode &lt;= 0</span><br><span class="line">		       &amp;&amp; (fp-&gt;_flags &amp; (_IO_LINE_BUF | _IO_UNBUFFERED))</span><br><span class="line">		       ? fp-&gt;_IO_buf_base : fp-&gt;_IO_buf_end);</span><br><span class="line">  return count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回到_IO_new_file_xsputn中继续往后走，计算了buf是否为比较大的block（0x1000），如果是则直接调用new_do_write进行输出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">     /* Try to maintain alignment: write a whole number of blocks.  */</span><br><span class="line">     block_size = f-&gt;_IO_buf_end - f-&gt;_IO_buf_base;</span><br><span class="line">     do_write = to_do - (block_size &gt;= 128 ? to_do % block_size : 0);</span><br><span class="line"></span><br><span class="line">     if (do_write)</span><br><span class="line">&#123;</span><br><span class="line">  count = new_do_write (f, s, do_write);</span><br><span class="line">  to_do -= count;</span><br><span class="line">  if (count &lt; do_write)</span><br><span class="line">    return n - to_do;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后处理缓冲区剩余数据，将剩余数据输出至输出缓冲区<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">     /* Now write out the remainder.  Normally, this will fit in the</span><br><span class="line"> buffer, but it&apos;s somewhat messier for line-buffered files,</span><br><span class="line"> so we let _IO_default_xsputn handle the general case. */</span><br><span class="line">     if (to_do)</span><br><span class="line">to_do -= _IO_default_xsputn (f, s+do_write, to_do);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>关于这里只将数据输出到输出缓冲区而没有将其写至文件，其实是主函数会调用相关函数来清空缓冲区，将其写进去。</p>
+<h3 id="IO-default-xsputn"><a href="#IO-default-xsputn" class="headerlink" title="_IO_default_xsputn"></a>_IO_default_xsputn</h3><p>这里调用的是_IO_default_xsputn，跟进该函数，跳转到genops.c中的_IO_default_xsputn<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">for (;;)</span><br><span class="line">    &#123;</span><br><span class="line">      /* Space available. */</span><br><span class="line">      if (f-&gt;_IO_write_ptr &lt; f-&gt;_IO_write_end)</span><br><span class="line">	&#123;</span><br><span class="line">	  size_t count = f-&gt;_IO_write_end - f-&gt;_IO_write_ptr;</span><br><span class="line">	  if (count &gt; more)</span><br><span class="line">	    count = more;</span><br><span class="line">	  if (count &gt; 20)</span><br><span class="line">	    &#123;</span><br><span class="line">	      f-&gt;_IO_write_ptr = __mempcpy (f-&gt;_IO_write_ptr, s, count);</span><br><span class="line">	      s += count;</span><br><span class="line">	    &#125;</span><br><span class="line">	  else if (count)</span><br><span class="line">	    &#123;</span><br><span class="line">	      char *p = f-&gt;_IO_write_ptr;</span><br><span class="line">	      ssize_t i;</span><br><span class="line">	      for (i = count; --i &gt;= 0; )</span><br><span class="line">		*p++ = *s++;</span><br><span class="line">	      f-&gt;_IO_write_ptr = p;</span><br><span class="line">	    &#125;</span><br><span class="line">	  more -= count;</span><br><span class="line">	&#125;</span><br><span class="line">      if (more == 0 || _IO_OVERFLOW (f, (unsigned char) *s++) == EOF)</span><br><span class="line">	break;</span><br><span class="line">      more--;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里对剩余大小不同进行了分别处理，如果大于20则调用__memcpy,否则使用for循环直接赋值。最后如果输出缓冲区为0，则直接调用_IO_OVERFLOW输出，之后返回，这个流程基本就结束了。最后看下此时的fp，bcede…是data2中的数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">_IO_read_ptr = 0x603480 &quot;bcdefghij1234567890&quot;, </span><br><span class="line">_IO_read_end = 0x603480 &quot;bcdefghij1234567890&quot;, </span><br><span class="line">_IO_read_base = 0x603480 &quot;bcdefghij1234567890&quot;, </span><br><span class="line">_IO_write_base = 0x603480 &quot;bcdefghij1234567890&quot;, </span><br><span class="line">_IO_write_ptr = 0x603494 &quot;&quot;, </span><br><span class="line">_IO_write_end = 0x604480 &quot;&quot;, </span><br><span class="line">_IO_buf_base = 0x603480 &quot;bcdefghij1234567890&quot;, </span><br><span class="line">_IO_buf_end = 0x604480 &quot;&quot;,</span><br></pre></td></tr></table></figure></p>
+<h1 id="fclose"><a href="#fclose" class="headerlink" title="fclose"></a>fclose</h1><h2 id="框架-3"><a href="#框架-3" class="headerlink" title="框架"></a>框架</h2><p>主要是对链接入_IO_list_all中的FILE结构体，还有fread，fwrite建立的输入输出缓冲区进行释放处理。</p>
+<h2 id="细节-3"><a href="#细节-3" class="headerlink" title="细节"></a>细节</h2><h3 id="fclose-gt-IO-new-fclose"><a href="#fclose-gt-IO-new-fclose" class="headerlink" title="fclose-&gt;_IO_new_fclose"></a>fclose-&gt;_IO_new_fclose</h3><p>跟进fclose，进入了iofclose.c中的_IO_new_fclose函数，开始先对fp进行了检查<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CHECK_FILE(fp, EOF);</span><br></pre></td></tr></table></figure></p>
+<p>之后第一步：unlink，将fp从_IO_list_all中脱下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">  /* First unlink the stream.  */</span><br><span class="line">if (fp-&gt;_IO_file_flags &amp; _IO_IS_FILEBUF)</span><br><span class="line">    _IO_un_link ((struct _IO_FILE_plus *) fp);</span><br></pre></td></tr></table></figure></p>
+<h4 id="IO-un-link"><a href="#IO-un-link" class="headerlink" title="_IO_un_link"></a>_IO_un_link</h4><p>跟进该函数，是位于genops.c中的_IO_un_link<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">_IO_un_link (struct _IO_FILE_plus *fp)</span><br><span class="line">&#123;</span><br><span class="line">  if (fp-&gt;file._flags &amp; _IO_LINKED)</span><br><span class="line">    &#123;</span><br><span class="line">      FILE **f;</span><br><span class="line">#ifdef _IO_MTSAFE_IO</span><br><span class="line">      _IO_cleanup_region_start_noarg (flush_cleanup);</span><br><span class="line">      _IO_lock_lock (list_all_lock);</span><br><span class="line">      run_fp = (FILE *) fp;</span><br><span class="line">      _IO_flockfile ((FILE *) fp);</span><br><span class="line">#endif</span><br><span class="line">      if (_IO_list_all == NULL)</span><br><span class="line">	;</span><br><span class="line">      else if (fp == _IO_list_all)</span><br><span class="line">	_IO_list_all = (struct _IO_FILE_plus *) _IO_list_all-&gt;file._chain;</span><br><span class="line">      else</span><br><span class="line">	for (f = &amp;_IO_list_all-&gt;file._chain; *f; f = &amp;(*f)-&gt;_chain)</span><br><span class="line">	  if (*f == (FILE *) fp)</span><br><span class="line">	    &#123;</span><br><span class="line">	      *f = fp-&gt;file._chain;</span><br><span class="line">	      break;</span><br><span class="line">	    &#125;</span><br><span class="line">      fp-&gt;file._flags &amp;= ~_IO_LINKED;</span><br><span class="line">#ifdef _IO_MTSAFE_IO</span><br><span class="line">      _IO_funlockfile ((FILE *) fp);</span><br><span class="line">      run_fp = NULL;</span><br><span class="line">      _IO_lock_unlock (list_all_lock);</span><br><span class="line">      _IO_cleanup_region_end (0);</span><br><span class="line">#endif</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_def (_IO_un_link)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，开始时先检查标志位_flags，之后判断_IO_list_all是否为空，不为空看是否在表头，若不再表头则遍历_IO_list_all单链表进行寻找。最后对其标志位_flags进行修改，该标志位表明了是否位于_IO_list_all链表中。</p>
+<p>返回之后，调用_IO_file_close_it函数关闭释放缓冲区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if (fp-&gt;_flags &amp; _IO_IS_FILEBUF)</span><br><span class="line">    status = _IO_file_close_it (fp);</span><br><span class="line">  else</span><br><span class="line">    status = fp-&gt;_flags &amp; _IO_ERR_SEEN ? -1 : 0;</span><br></pre></td></tr></table></figure>
+<h4 id="IO-file-close-it"><a href="#IO-file-close-it" class="headerlink" title="_IO_file_close_it"></a>_IO_file_close_it</h4><p>跟进该函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">int</span><br><span class="line">_IO_new_file_close_it (FILE *fp)</span><br><span class="line">&#123;</span><br><span class="line">  int write_status;</span><br><span class="line">  if (!_IO_file_is_open (fp))</span><br><span class="line">    return EOF;</span><br><span class="line"></span><br><span class="line">  if ((fp-&gt;_flags &amp; _IO_NO_WRITES) == 0</span><br><span class="line">      &amp;&amp; (fp-&gt;_flags &amp; _IO_CURRENTLY_PUTTING) != 0)</span><br><span class="line">    write_status = _IO_do_flush (fp);</span><br><span class="line">  else</span><br><span class="line">    write_status = 0;</span><br><span class="line"></span><br><span class="line">  _IO_unsave_markers (fp);</span><br><span class="line"></span><br><span class="line">  int close_status = ((fp-&gt;_flags2 &amp; _IO_FLAGS2_NOCLOSE) == 0</span><br><span class="line">		      ? _IO_SYSCLOSE (fp) : 0);</span><br><span class="line"></span><br><span class="line">  /* Free buffer. */</span><br><span class="line">  if (fp-&gt;_mode &gt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">      if (_IO_have_wbackup (fp))</span><br><span class="line">	_IO_free_wbackup_area (fp);</span><br><span class="line">      _IO_wsetb (fp, NULL, NULL, 0);</span><br><span class="line">      _IO_wsetg (fp, NULL, NULL, NULL);</span><br><span class="line">      _IO_wsetp (fp, NULL, NULL);</span><br><span class="line">    &#125;</span><br><span class="line">  _IO_setb (fp, NULL, NULL, 0);</span><br><span class="line">  _IO_setg (fp, NULL, NULL, NULL);</span><br><span class="line">  _IO_setp (fp, NULL, NULL);</span><br><span class="line"></span><br><span class="line">  _IO_un_link ((struct _IO_FILE_plus *) fp);</span><br><span class="line">  fp-&gt;_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;</span><br><span class="line">  fp-&gt;_fileno = -1;</span><br><span class="line">  fp-&gt;_offset = _IO_pos_BAD;</span><br><span class="line"></span><br><span class="line">  return close_status ? close_status : write_status;</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_ver (_IO_new_file_close_it, _IO_file_close_it)</span><br></pre></td></tr></table></figure></p>
+<p>首先通过标志位_fileno 判断了文件是否打开，然后对其标志位进行了判断，目的是判断是否为输出缓冲区，是则调用_IO_do_flush刷新缓冲区。查看_IO_do_flush，发现是宏定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#define _IO_do_flush(_f) \</span><br><span class="line">  ((_f)-&gt;_mode &lt;= 0							      \</span><br><span class="line">   ? _IO_do_write(_f, (_f)-&gt;_IO_write_base,				      \</span><br><span class="line">		  (_f)-&gt;_IO_write_ptr-(_f)-&gt;_IO_write_base)		      \</span><br><span class="line">   : _IO_wdo_write(_f, (_f)-&gt;_wide_data-&gt;_IO_write_base,		      \</span><br><span class="line">		   ((_f)-&gt;_wide_data-&gt;_IO_write_ptr			      \</span><br><span class="line">		    - (_f)-&gt;_wide_data-&gt;_IO_write_base)))</span><br></pre></td></tr></table></figure></p>
+<p>可以看到主要调用_IO_do_write将输出缓冲区输出。此时原先在输出缓冲区中的值才会被写入文件，所以一般程序运行中没有close的话打开文件可能会发现还没有写进去就是这个原因。再之后对_markers标志位进行了处理。然后可以看到后面调用了_IO_SYSCLOSE函数，看到是fileops.c中的_IO_file_close</p>
+<h4 id="IO-SYSCLOSE-gt-IO-file-close"><a href="#IO-SYSCLOSE-gt-IO-file-close" class="headerlink" title="_IO_SYSCLOSE-&gt;_IO_file_close"></a>_IO_SYSCLOSE-&gt;_IO_file_close</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int</span><br><span class="line">_IO_file_close (FILE *fp)</span><br><span class="line">&#123;</span><br><span class="line">  /* Cancelling close should be avoided if possible since it leaves an</span><br><span class="line">     unrecoverable state behind.  */</span><br><span class="line">  return close_not_cancel (fp-&gt;_fileno);</span><br><span class="line">&#125;</span><br><span class="line">libc_hidden_def (_IO_file_close)</span><br><span class="line">``` </span><br><span class="line">看到主要调用了close_not_cancel，而它本身是个宏定义，</span><br></pre></td></tr></table></figure>
+<p>#define close_not_cancel(fd) \<br>    __close (fd)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">实际就是通过系统调用__close关闭</span><br><span class="line"></span><br><span class="line">返回之后,调用_IO_setb/_IO_setg/_IO_setp，其中_IO_setb是设置结构体的buf指针， _IO_setg是设置read相关的指针，_IO_setp是设置write相关的指针</span><br></pre></td></tr></table></figure></p>
+<p>  _IO_setb (fp, NULL, NULL, 0);<br>  _IO_setg (fp, NULL, NULL, NULL);<br>  _IO_setp (fp, NULL, NULL);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">##### _IO_setb</span><br><span class="line">进入_IO_setb，可以看到释放了缓冲区</span><br></pre></td></tr></table></figure></p>
+<p>void<br>_IO_setb (_IO_FILE <em>f, char </em>b, char *eb, int a)<br>{<br>  if (f-&gt;_IO_buf_base &amp;&amp; !(f-&gt;_flags &amp; _IO_USER_BUF))<br>    free (f-&gt;_IO_buf_base);<br>  f-&gt;_IO_buf_base = b;<br>  f-&gt;_IO_buf_end = eb;<br>  if (a)<br>    f-&gt;_flags &amp;= ~_IO_USER_BUF;<br>  else<br>    f-&gt;_flags |= _IO_USER_BUF;<br>}<br>libc_hidden_def (_IO_setb)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">返回之后，再次调用了_IO_un_link</span><br></pre></td></tr></table></figure></p>
+<p>  _IO_un_link ((struct _IO_FILE_plus *) fp);<br>  fp-&gt;_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;<br>  fp-&gt;_fileno = -1;<br>  fp-&gt;_offset = _IO_pos_BAD;</p>
+<p>  return close_status ? close_status : write_status;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">返回到_IO_new_close函数，最后调用_IO_FINISH，进入到fileopsc.c中的_IO_new_file_finish</span><br><span class="line"></span><br><span class="line">#### _IO_FINISH-&gt;_IO_new_file_finish  </span><br><span class="line"></span><br><span class="line">看到先检查文件是否仍打开，如果打开就刷新缓冲区并关闭，不过之前已经关闭过了，这里会直接进入genops.c中的_IO_default_finish</span><br></pre></td></tr></table></figure></p>
+<p>void<br>_IO_new_file_finish (FILE *fp, int dummy)<br>{<br>  if (_IO_file_is_open (fp))<br>    {<br>      _IO_do_flush (fp);<br>      if (!(fp-&gt;_flags &amp; _IO_DELETE_DONT_CLOSE))<br>    _IO_SYSCLOSE (fp);<br>    }<br>  _IO_default_finish (fp, 0);<br>}<br>libc_hidden_ver (_IO_new_file_finish, _IO_file_finish)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">##### _IO_default_finish</span><br><span class="line">可以看到还是对缓冲区的释放，指针的释放等等</span><br></pre></td></tr></table></figure></p>
+<p>void<br>_IO_default_finish (FILE <em>fp, int dummy)<br>{<br>  struct _IO_marker </em>mark;<br>  if (fp-&gt;_IO_buf_base &amp;&amp; !(fp-&gt;_flags &amp; _IO_USER_BUF))<br>    {<br>      free (fp-&gt;_IO_buf_base);<br>      fp-&gt;_IO_buf_base = fp-&gt;_IO_buf_end = NULL;<br>    }</p>
+<p>  for (mark = fp-&gt;_markers; mark != NULL; mark = mark-&gt;_next)<br>    mark-&gt;_sbuf = NULL;</p>
+<p>  if (fp-&gt;_IO_save_base)<br>    {<br>      free (fp-&gt;_IO_save_base);<br>      fp-&gt;_IO_save_base = NULL;<br>    }</p>
+<p>  _IO_un_link ((struct _IO_FILE_plus *) fp);</p>
+<p>#ifdef _IO_MTSAFE_IO<br>  if (fp-&gt;_lock != NULL)<br>    _IO_lock_fini (*fp-&gt;_lock);</p>
+<p>#endif<br>}<br>libc_hidden_def (_IO_default_finish)<br><code>`</code><br>最后返回后对fp指针进行了free，就结束了。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最後更新時間：<time datetime="2019-07-09T03:40:28.982Z" itemprop="dateUpdated">2019-07-09 11:40:28</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/07/08/io-file-源码分析/" target="_blank" rel="external">http://siriuswhiter.tk/2019/07/08/io-file-源码分析/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/io-file/">io_file</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/07/08/io-file-源码分析/&title=《_IO_FILE 源码分析》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/07/08/io-file-源码分析/&title=《_IO_FILE 源码分析》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/07/06/problem-solve-tricks/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Problem Solve Tricks</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#fopen"><span class="post-toc-number">1.</span> <span class="post-toc-text">fopen</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#框架"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">框架</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#细节"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">细节</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#fopen-gt-IO-new-fopen"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">fopen-&gt;_IO_new_fopen</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#fopen-internal"><span class="post-toc-number">1.2.1.1.</span> <span class="post-toc-text">__fopen_internal</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#IO-new-file-fopen"><span class="post-toc-number">1.2.1.2.</span> <span class="post-toc-text">_IO_new_file_fopen</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#fread"><span class="post-toc-number">2.</span> <span class="post-toc-text">fread</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#框架-1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">框架</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#细节-1"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">细节</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#fread-gt-IO-fread"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">fread-&gt;_IO_fread</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#IO-sgetn-gt-IO-XSGETN"><span class="post-toc-number">2.2.1.1.</span> <span class="post-toc-text">_IO_sgetn ==&gt; _IO_XSGETN</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#fwrite"><span class="post-toc-number">3.</span> <span class="post-toc-text">fwrite</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#框架-2"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">框架</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#细节-2"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">细节</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#fwrite-gt-IO-fwrite"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">fwrite-&gt;_IO_fwrite</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#IO-sputn-gt-IO-new-file-xsputn"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">_IO_sputn-&gt;_IO_new_file_xsputn</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#IO-OVERFLOW-gt-IO-new-file-overflow"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">_IO_OVERFLOW-&gt;_IO_new_file_overflow</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#IO-do-write-gt-IO-new-do-write"><span class="post-toc-number">3.2.4.</span> <span class="post-toc-text">_IO_do_write-&gt;_IO_new_do_write</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#new-do-write"><span class="post-toc-number">3.2.5.</span> <span class="post-toc-text">new_do_write</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#IO-SYSWRITE-gt-IO-new-file-write"><span class="post-toc-number">3.2.6.</span> <span class="post-toc-text">_IO_SYSWRITE-&gt;_IO_new_file_write</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#IO-default-xsputn"><span class="post-toc-number">3.2.7.</span> <span class="post-toc-text">_IO_default_xsputn</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#fclose"><span class="post-toc-number">4.</span> <span class="post-toc-text">fclose</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#框架-3"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">框架</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#细节-3"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">细节</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#fclose-gt-IO-new-fclose"><span class="post-toc-number">4.2.1.</span> <span class="post-toc-text">fclose-&gt;_IO_new_fclose</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#IO-un-link"><span class="post-toc-number">4.2.1.1.</span> <span class="post-toc-text">_IO_un_link</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#IO-file-close-it"><span class="post-toc-number">4.2.1.2.</span> <span class="post-toc-text">_IO_file_close_it</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#IO-SYSCLOSE-gt-IO-file-close"><span class="post-toc-number">4.2.1.3.</span> <span class="post-toc-text">_IO_SYSCLOSE-&gt;_IO_file_close</span></a></li></ol></li></ol></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/07/08/io-file-源码分析/&title=《_IO_FILE 源码分析》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/07/08/io-file-源码分析/&title=《_IO_FILE 源码分析》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJ0lEQVR42u3aO3LDMAwFQN//0kqbJtQDIGdG5LLK2ArFdYHBh59PvK5fa/1M/nzvLaOFgYHxWsa1XOtn1odY75DsnJwNAwPjHEYSQJOIl3+y/jnys2FgYGAkzyThcr3negcMDAyM7wXcNbhKxcDAwEhCZ7X1loTpvG33WC2OgYHxQkbedf//v78y38DAwHgV4yquCS8/XPlUGBgYWzOqBWp12FktjHMwBgbGaYxk02oIzgvOHuzPPTEwMLZj9MrI+UGT61+FdBMDA+MAxiTkJZ9XBwDl0QIGBsbWjN4Astpuq5bECT5q3mFgYGzBSErE5NvqUapvv9kTAwPjAEbygvyi2GTY2RwtYGBgbM14tpWW7PbsYAADA+MERt6gz9PE6lg0TwFvLoRhYGBszeglhfnljDw1LN8QwcDAOIBR5fW+7V2z6IExMDD2Y+RlarW8rB6917zDwMA4gZEnXtXrF5NitRe4MTAw9mb02vr563uhdv18oazFwMDYgvHsGGB+8SKvuW+mHBgYGNsxnkrdJq3/cl8wiesYGBgbMSYpWo6fDCZv3oKBgbEp4yqupN1fDdzVcUKhw4eBgbEFoxfsevc45qXyKHHEwMB4OWOS6hXaYUHDbhRwMTAwDmD0WmZ5AJ0XvVGei4GBgdFK8qqNvOZAAgMDAyNulvUGAPNmHAYGxgmM6tXS9f/m44E84D7WbsPAwHgho1o6JpcwJgOGaqKJgYGxNeMHxHi8Kk7Ybh8AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>
