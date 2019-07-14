@@ -294,42 +294,14 @@ ROPgadget --binary file  --string &apos;/bin/sh&apos;
 <p>在程序编译时可以直接更改ld为编译完的libc，这样在调试时可以直接调用编译出来的libc，也就可以直接调试源码。</p>
 <p>调试源码除了使用gdb以外，更方便的方法就是使用linux 下的vscode，可以像windows下一样直接对源码进行调试。</p>
 <p>当然也可以使用gdbtui，但是不是特别的好用，加了pwndbg插件后显示会出现乱码。</p>
-<h2 id="arm-程序运行"><a href="#arm-程序运行" class="headerlink" title="arm 程序运行"></a>arm 程序运行</h2><ol>
-<li><p>安装必要的程序 qemu  gcc for arm 交叉编译 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install qemu gcc-5-arm-linux-gnueabihf gcc-5-multilib-arm-linux-gnueabihf</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>运行arm文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-arm ./filename</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>提示找不到库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/lib/ld-linux-armhf.so.3: No such file or directory</span><br></pre></td></tr></table></figure></p>
-<p>查找并建立软连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find / -name ld-linux-armhf.so.3</span><br><span class="line"></span><br><span class="line">sudo ln -s /usr/arm-linux-gnueabihf/lib/ld-linux-armhf.so.3 /lib/ld-linux-armhf.so.3</span><br></pre></td></tr></table></figure></p>
-<p>再运行找不到libc.so.6<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export LD_LIBRARY_PATH=/usr/arm-linux-gnueabihf/lib/:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure></p>
-<p>方便起见写入自启动脚本（一般还是不要写的好。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;export LD_LIBRARY_PATH=/usr/arm-linux-gnueabihf/lib/:$LD_LIBRARY_PATH&quot; &gt;&gt; ~/.bashrc</span><br></pre></td></tr></table></figure></p>
-<h2 id="arm-gdb"><a href="#arm-gdb" class="headerlink" title="arm-gdb"></a>arm-gdb</h2><p>gdb源码下载：<a href="http://www.gnu.org/software/gdb/download/" target="_blank" rel="noopener">http://www.gnu.org/software/gdb/download/</a></p>
-<p>gdb 版本不要太高，这里选择和本机一个版本的gdb</p>
-<p>解压：tar xvf gdb-7.11.1.tar.xz</p>
-<p>安装可能需要的库</p>
-<p>sudo apt-get install  texinfo libncurses5-dev m4 flex bison</p>
-<ul>
-<li>编译arm-linux-gdb </li>
-</ul>
-<p>进入源码目录： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --target=arm-linux --prefix=/home/sirius/tools/gdb/arm-gdb</span><br><span class="line">make -j8</span><br><span class="line">sudo make install -j8</span><br></pre></td></tr></table></figure>
-<p>arm-gdb/bin 下可以看到 arm-linux-gdb arm-linux-run</p>
-<p>将其加入环境变量：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br><span class="line">export PATH=$PATH:/home/sirius/tools/gdb/arm-gdb/bin</span><br></pre></td></tr></table></figure>
-<ul>
-<li>编译gdb client</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cd gdb/gdbserver</span><br><span class="line">export PATH=$PATH:/home/sirius/tools/gdb/arm-gdb/bin</span><br><span class="line">./configure --target=arm-linux --host=arm-linux</span><br><span class="line"></span><br><span class="line">vi config.h</span><br><span class="line">#define HAVA_SYS_REG_H  将此句注释</span><br><span class="line"></span><br><span class="line">make CC=arm-linux-gnueabi-gcc  -j8  // make的时候前面对config.h的修改又变回来了，导致编译过不了</span><br></pre></td></tr></table></figure>
+
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-06-07T02:40:10.724Z" itemprop="dateUpdated">2019-06-07 10:40:10</time>
+    Last updated: <time datetime="2019-07-13T03:02:29.167Z" itemprop="dateUpdated">2019-07-13 11:02:29</time>
 </span><br>
 
 
@@ -424,7 +396,7 @@ ROPgadget --binary file  --string &apos;/bin/sh&apos;
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#静态链接"><span class="post-toc-number">1.</span> <span class="post-toc-text">静态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2text-amp-ret2shellcode"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ret2text &amp; ret2shellcode</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2syscall"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">ret2syscall</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#动态链接"><span class="post-toc-number">2.</span> <span class="post-toc-text">动态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2libc"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">ret2libc</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#利用过程："><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">利用过程：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#延迟绑定"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">延迟绑定</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#给文件加载目标libc的方法："><span class="post-toc-number">2.2.</span> <span class="post-toc-text">给文件加载目标libc的方法：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#需要注意的函数"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">需要注意的函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#源码级别的调试"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">源码级别的调试</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#arm-程序运行"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">arm 程序运行</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#arm-gdb"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">arm-gdb</span></a></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#静态链接"><span class="post-toc-number">1.</span> <span class="post-toc-text">静态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2text-amp-ret2shellcode"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ret2text &amp; ret2shellcode</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2syscall"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">ret2syscall</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#动态链接"><span class="post-toc-number">2.</span> <span class="post-toc-text">动态链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ret2libc"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">ret2libc</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#利用过程："><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">利用过程：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#延迟绑定"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">延迟绑定</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#给文件加载目标libc的方法："><span class="post-toc-number">2.2.</span> <span class="post-toc-text">给文件加载目标libc的方法：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#需要注意的函数"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">需要注意的函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#源码级别的调试"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">源码级别的调试</span></a></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
