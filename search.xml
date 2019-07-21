@@ -3,6 +3,27 @@
   
     
     <entry>
+      <title>Pwn patch method</title>
+      <link href="/2019/07/20/pwn-patch-method/"/>
+      <url>/2019/07/20/pwn-patch-method/</url>
+      <content type="html"><![CDATA[<p><em>国赛半决赛的时候需要fix，因为没有做太多准备，第一天直接用的ida，第二天用的keypatch插件，但是效果都不是太好，感觉很水，所以单独学习一下</em></p><h1 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h1><h2 id="keypatch"><a href="#keypatch" class="headerlink" title="keypatch"></a>keypatch</h2><p>说到patch容易看到的一款ida的插件了，用法倒是很简单，<br><a href="https://github.com/keystone-engine/keypatch" target="_blank" rel="noopener">https://github.com/keystone-engine/keypatch</a> 下载完毕后放到ida的插件目录下重启ida就ok了</p><h2 id="lief"><a href="#lief" class="headerlink" title="lief"></a>lief</h2><p>刚发现的一款神器，可以对elf，pe等多种格式的文件进行修改<br>python 使用直接pip安装即可</p><h1 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h1><p>这里主要使用lief</p><h2 id="直接修改库的函数"><a href="#直接修改库的函数" class="headerlink" title="直接修改库的函数"></a>直接修改库的函数</h2><p>如果程序使用了system来getshell，如果是已经动态链接的话，实际上是可以将它给改为其他函数的</p><p>测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char** argv) &#123;</span><br><span class="line">    system(&quot;/bin/sh&quot;);</span><br><span class="line">    return EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>如果是正常的程序，运行就可以直接拿到shell</p><p>我们编写一份patch.py，就是简单的将system换为puts</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">import lief</span><br><span class="line"></span><br><span class="line">bin = lief.parse(&apos;main&apos;)</span><br><span class="line">system_off = filter(lambda e:e.name == &quot;system&quot;,bin.imported_symbols)[0]</span><br><span class="line">system_off.name = &quot;puts&quot;</span><br><span class="line">bin.write(&quot;main_patch&quot;)</span><br></pre></td></tr></table></figure><p>效果展示：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sirius@ubuntu:~/tikool/test/test2$ ./main</span><br><span class="line">$ ls</span><br><span class="line">main  main.c  main_patch  patch.py </span><br><span class="line">$ </span><br><span class="line">sirius@ubuntu:~/tikool/test/test2$ python patch.py </span><br><span class="line">done</span><br><span class="line">sirius@ubuntu:~/tikool/test/test2$ ./main_patch </span><br><span class="line">/bin/sh</span><br><span class="line">sirius@ubuntu:~/tikool/test/test2$</span><br></pre></td></tr></table></figure><h2 id="修改导入库的函数"><a href="#修改导入库的函数" class="headerlink" title="修改导入库的函数"></a>修改导入库的函数</h2><p>这里就跟着lief的官方文档来进行实验</p><p>主程序，会调用exp函数求e的n次幂<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//gcc main.c -o main -lm</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;math.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main(int argc, char **argv) &#123;</span><br><span class="line">    if (argc != 2) &#123;</span><br><span class="line">        printf(&quot;Usage: %s &lt;a&gt; \n&quot;, argv[0]);</span><br><span class="line">        exit(-1);</span><br><span class="line">    &#125;</span><br><span class="line">    double a = atoi(argv[1]);</span><br><span class="line">    printf(&quot;exp(%lf) = %lf\n&quot;, a, exp(a));</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>因为该函数是在libm.so.6中，我们将其复制到当前目录，编写hook，生成库</p><p>这里hook函数用来计算平方值。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//gcc -Os -nostdlib -nodefaultlibs -fPIC -Wl,-shared hook.c -o hook</span><br><span class="line">double hook(double x)&#123;</span><br><span class="line">        return x*x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>编写patch.py，这里是在libm中新添加了一个段来添加后面新加的exp函数，最后将其写入libm.so.6</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import lief</span><br><span class="line"></span><br><span class="line">main = lief.parse(&apos;main&apos;)</span><br><span class="line">libm = lief.parse(&apos;libm.so.6&apos;)</span><br><span class="line">hook = lief.parse(&apos;hook&apos;)</span><br><span class="line"></span><br><span class="line">segment_add = libm.add(hook.segments[0])</span><br><span class="line">print &quot;hook inserted at VA: 0x&#123;:06x&#125;&quot;.format(segment_add.virtual_address)</span><br><span class="line"></span><br><span class="line">exp_symbol = libm.get_symbol(&quot;exp&quot;)</span><br><span class="line">hook_symbol = hook.get_symbol(&quot;hook&quot;)</span><br><span class="line">exp_symbol.value = segment_add.virtual_address + hook_symbol.value</span><br><span class="line"></span><br><span class="line">libm.write(&quot;libm.so.6&quot;)</span><br></pre></td></tr></table></figure><p>查看效果，因为默认使用的是系统库，所以正常，优先使用当前目录的库时，原来的exp变为平方</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sirius@ubuntu:~/tikool/test/test3$ ldd main</span><br><span class="line">linux-vdso.so.1 =&gt;  (0x00007ffff7ffa000)</span><br><span class="line">libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007ffff7ace000)</span><br><span class="line">libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007ffff7704000)</span><br><span class="line">/lib64/ld-linux-x86-64.so.2 (0x00007ffff7dd7000)</span><br><span class="line">sirius@ubuntu:~/tikool/test/test3$ ./main  2</span><br><span class="line">expl(2.000000) = 7.389056</span><br><span class="line">sirius@ubuntu:~/tikool/test/test3$ LD_LIBRARY_PATH=. ldd main</span><br><span class="line">linux-vdso.so.1 =&gt;  (0x00007ffff7ffa000)</span><br><span class="line">libm.so.6 =&gt; ./libm.so.6 (0x00007fffb7cbb000)</span><br><span class="line">libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007fffb78f1000)</span><br><span class="line">/lib64/ld-linux-x86-64.so.2 (0x00007ffff7dd7000)</span><br><span class="line">sirius@ubuntu:~/tikool/test/test3$ LD_LIBRARY_PATH=. ./main 2</span><br><span class="line">expl(2.000000) = 4.000000</span><br></pre></td></tr></table></figure><h2 id="特定地址函数patch"><a href="#特定地址函数patch" class="headerlink" title="特定地址函数patch"></a>特定地址函数patch</h2><p>例如UAF漏洞经常会结合其他漏洞一块存在，如果可以对free进行修补则可以在一定程度上对其进行维护</p><p>这里使用别的函数进行演示</p><p>主程序，就是两次输出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">int main(int argc, char** argv) &#123;</span><br><span class="line">        int a=2;</span><br><span class="line">        printf(&quot;%d\n&quot;,a);</span><br><span class="line">        printf(&quot;%d\n&quot;,a);</span><br><span class="line">        return EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>目标是将第一个printf修改成我们自己写的比如说write函数，将其使用汇编进行编写为hook</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//gcc -Os -nostdlib -nodefaultlibs -fPIC -Wl,-shared hook.c -o hook</span><br><span class="line">void myprintf(char *a,int b)&#123;</span><br><span class="line">        asm(</span><br><span class="line">                &quot;mov %rdi,%rsi\n&quot;</span><br><span class="line">                &quot;mov $0,%rdi\n&quot;</span><br><span class="line">                &quot;mov $0x20,%rdx\n&quot;</span><br><span class="line">                &quot;mov $0x1,%rax\n&quot;</span><br><span class="line">                &quot;syscall\n&quot;</span><br><span class="line">                );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>反汇编查看第一次printf的调用地址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">40053f:89 c6                mov    esi,eax</span><br><span class="line">400541:bf f4 05 40 00       mov    edi,0x4005f4</span><br><span class="line">400546:b8 00 00 00 00       mov    eax,0x0</span><br><span class="line">40054b:e8 b0 fe ff ff       call   400400 &lt;printf@plt&gt;</span><br><span class="line">400550:8b 45 fc             mov    eax,DWORD PTR [rbp-0x4]</span><br><span class="line">400553:89 c6                mov    esi,eax</span><br><span class="line">400555:bf f4 05 40 00       mov    edi,0x4005f4</span><br><span class="line">40055a:b8 00 00 00 00       mov    eax,0x0</span><br><span class="line">40055f:e8 9c fe ff ff       call   400400 &lt;printf@plt&gt;</span><br></pre></td></tr></table></figure></p><p>编写patch.py 这里是先将myprintf添加到main程序中，再修改函数调用部分为我们的myprintf_addr</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">import lief</span><br><span class="line"></span><br><span class="line">def patch_call(file,where,end,arch=&apos;amd64&apos;):</span><br><span class="line">    length = p32((end-(where+5))&amp;0xffffffff)</span><br><span class="line">    order = &apos;\xe8&apos;+length</span><br><span class="line">    print disasm(order,arch=arch)</span><br><span class="line">    file.patch_address(where,[ord(i) for i in order])</span><br><span class="line">    file.write(&quot;main_patch&quot;)</span><br><span class="line"></span><br><span class="line">binary = lief.parse(&apos;main&apos;)</span><br><span class="line">hook = lief.parse(&apos;hook&apos;)</span><br><span class="line">segment_add = binary.add(hook.segments[0])</span><br><span class="line"></span><br><span class="line">myprintf = hook.get_symbol(&quot;myprintf&quot;)</span><br><span class="line">myprintf_addr =  myprintf.value + segment_add.virtual_address</span><br><span class="line"></span><br><span class="line">patch_addr = 0x400584</span><br><span class="line">patch_call(binary,patch_addr,myprintf_addr)</span><br><span class="line">binary.write(&quot;main_patch&quot;)</span><br></pre></td></tr></table></figure><p>测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sirius@ubuntu:~/tikool/test/test1$ ./main</span><br><span class="line">2</span><br><span class="line">2</span><br><span class="line">sirius@ubuntu:~/tikool/test/test1$ python patch.py </span><br><span class="line">0x802000</span><br><span class="line">   0:   e8 8a 1d 40 00          call   0x401d8f</span><br><span class="line">sirius@ubuntu:~/tikool/test/test1$ ./main_patch </span><br><span class="line">%d</span><br><span class="line">;4�����8���P2</span><br></pre></td></tr></table></figure></p><p>效果很明显，但是看不出来第二个printf是否被影响了，查看反汇编确定修改成功</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">40053f:89 c6                mov    esi,eax</span><br><span class="line">400541:bf f4 05 40 00       mov    edi,0x4005f4</span><br><span class="line">400546:b8 00 00 00 00       mov    eax,0x0</span><br><span class="line">40054b:e8 8a 1d 40 00       call   8022da &lt;_end+0x20129a&gt;</span><br><span class="line">400550:8b 45 fc             mov    eax,DWORD PTR [rbp-0x4]</span><br><span class="line">400553:89 c6                mov    esi,eax</span><br><span class="line">400555:bf f4 05 40 00       mov    edi,0x4005f4</span><br><span class="line">40055a:b8 00 00 00 00       mov    eax,0x0</span><br><span class="line">40055f:e8 9c fe ff ff       call   400400 &lt;printf@plt&gt;</span><br></pre></td></tr></table></figure><h2 id="直接修改got表"><a href="#直接修改got表" class="headerlink" title="直接修改got表"></a>直接修改got表</h2><p>这里我还不太确定其内部实际上与第一种是否相同</p><p>仍然使用第三次的程序，直接上patch.py</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">import lief</span><br><span class="line"></span><br><span class="line">binary = lief.parse(&apos;main&apos;)</span><br><span class="line">hook = lief.parse(&apos;hook&apos;)</span><br><span class="line">segment_add = binary.add(hook.segments[0])</span><br><span class="line"></span><br><span class="line">myprintf = hook.get_symbol(&quot;myprintf&quot;)</span><br><span class="line">myprintf_addr =  myprintf.value + segment_add.virtual_address</span><br><span class="line">binary.patch_pltgot(&apos;printf&apos;,myprintf_addr)</span><br><span class="line"></span><br><span class="line">binary.write(&quot;main_patch&quot;)</span><br></pre></td></tr></table></figure><p>这里就是对printf的调用修改成了自定义的myprintf</p><p>测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sirius@ubuntu:~/tikool/test/test1$ ./main_patch </span><br><span class="line">%d</span><br><span class="line">;4�����8���P%d</span><br><span class="line">;4�����8���P</span><br></pre></td></tr></table></figure></p><p>查看反汇编发现与修改前一致，应该是直接对got表进行了修改</p><h1 id="Notice"><a href="#Notice" class="headerlink" title="Notice"></a>Notice</h1><p>这个lief比较好用，就写了个小工具来方便patch，现在只有一个简单点指定地址长度的nop与针对UAF漏洞的free函数的patch2<br>如果需要的话看这里<a href="https://github.com/siriuswhiter/ELF-Patcher" target="_blank" rel="noopener">https://github.com/siriuswhiter/ELF-Patcher</a></p><p>需要提醒的是UAF的patch2是不能直接将其patch完成的，因为函数调用的姿势经常不尽相同，需要根据call free之前参数的传递方式来进行修改判断是否需要迁移代码。<br>如果运气比较好像这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.text:0000000000000E64                 lea     rdx, ds:0[rax*8]</span><br><span class="line">.text:0000000000000E6C                 lea     rax, unk_202060</span><br><span class="line">.text:0000000000000E73                 mov     rax, [rdx+rax]</span><br><span class="line">.text:0000000000000E77                 mov     rax, [rax]</span><br><span class="line">.text:0000000000000E7A                 mov     rdi, rax        ; ptr</span><br><span class="line">.text:0000000000000E7D                 call    _free</span><br></pre></td></tr></table></figure></p><p>就完全不需要迁移，将0xE77 nop 掉就可以将指向ptr的指针传参进去了</p><p>而像下面这种，就需要进行部分迁移了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.text:000000000040094A                 push    rbp</span><br><span class="line">.text:000000000040094B                 mov     rbp, rsp</span><br><span class="line">.text:000000000040094E                 mov     rax, cs:buf</span><br><span class="line">.text:0000000000400955                 mov     rdi, rax        ; ptr</span><br><span class="line">.text:0000000000400958                 call    _free</span><br><span class="line">.text:000000000040095D                 lea     rdi, aDone      ; &quot;Done!&quot;</span><br></pre></td></tr></table></figure></p><p>在使用时选择migration，指定起始地址为0x400955，结束地址为0x40095d，就可以将这两行进行迁移，<br>之后在IDA中将 mov  rax, cs:buf 改为 lea  rax, cs:buf 取地址即可</p>]]></content>
+      
+      <categories>
+          
+          <category> pwn </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> pwn </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>Arm-pwn 环境搭建及示例</title>
       <link href="/2019/07/13/arm-pwn-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%A4%BA%E4%BE%8B/"/>
       <url>/2019/07/13/arm-pwn-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%A4%BA%E4%BE%8B/</url>
@@ -141,9 +162,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -166,9 +187,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -223,9 +244,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -271,9 +292,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -476,9 +497,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -547,9 +568,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -595,9 +616,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -641,9 +662,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -735,9 +756,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -829,9 +850,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -986,9 +1007,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
