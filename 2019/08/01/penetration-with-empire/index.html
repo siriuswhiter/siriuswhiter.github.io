@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>Penetration with Empire | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="渗透">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>Penetration with Empire</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">Penetration with Empire</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-08-01T10:32:14.000Z" itemprop="datePublished" class="page-time">
+  2019-08-01
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/渗透/">渗透</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-penetration-with-empire"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Penetration with Empire</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-08-01 18:32:14" datetime="2019-08-01T10:32:14.000Z"  itemprop="datePublished">2019-08-01</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/渗透/">渗透</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>前些天看到这么一个类MSF的渗透测试的框架，但是二者的应用场景稍微有些不一样，遂来学习学习。</p>
+<p>这个框架比较特殊的是主要使用powershell，比较容易绕过杀软</p>
+<p>(官网)[<a href="http://www.powershellempire.com]看这里" target="_blank" rel="noopener">http://www.powershellempire.com]看这里</a><br>(github)[<a href="https://github.com/EmpireProject/Empire]看这里" target="_blank" rel="noopener">https://github.com/EmpireProject/Empire]看这里</a></p>
+<p>使用的话直接git clone 下来然后进入setup文件夹管理员权限运行install.sh，</p>
+<p>不出意外的话会缺少很多python的模块，大部分pip就行，部分特殊的稍微搜寻下也能解决；</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>需要注意的是进去之前要切换成管理员权限，不然就会提示写入只读数据库然后失败</p>
+<p>然后我们可以输入help看下它提供的命令</p>
+<figure class="image-box">
+                <a rel=Penetration with Empire href="/2019/08/01/penetration-with-empire/func.png" class="swipebox" title=undefined><img src="/2019/08/01/penetration-with-empire/func.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>主要有四大模块：listeners,stagers,modules,agents</p>
+<p>我们使用的话，一般就是先设置listeners，之后选择不同的stager，开始通过与agent进行交互后选择不同的module来实现想要的功能</p>
+<h2 id="Listeners"><a href="#Listeners" class="headerlink" title="Listeners"></a>Listeners</h2><p>首先第一步当然是配置listeners;</p>
+<p>输入Listeners，根据help看下相关的设置，可以看到主要是关于建立后的相关操作，当然也有相关的设置</p>
+<p>输入uselistener 加两下tab，看下相关选项</p>
+<figure class="image-box">
+                <a rel=Penetration with Empire href="/2019/08/01/penetration-with-empire/uselistener.png" class="swipebox" title=undefined><img src="/2019/08/01/penetration-with-empire/uselistener.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>可以看到五个http相关的，应该是根据客户端的不同来进行不同的配置，还有个msf的meterpreter，一个dropbox的dbx，还有其他两个</p>
+<p>这里我们直接使用http，输入uselistener http，输入info查看参数<br>设置好Name,Port,Host，输入execute启动监听器即可</p>
+<h2 id="stagers"><a href="#stagers" class="headerlink" title="stagers"></a>stagers</h2><p>之后我们需要一个stager，实际上就是一个powershell的脚本；<br>我们输入back可以返回界面，使用usestager 加两下tab看看选项</p>
+<figure class="image-box">
+                <a rel=Penetration with Empire href="/2019/08/01/penetration-with-empire/usestager.png" class="swipebox" title=undefined><img src="/2019/08/01/penetration-with-empire/usestager.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>可以看到有一些选择，其中osx是mac下的，windows不用多说，multi是面向多平台的</p>
+<p>这里我们选择multi/launcher，输入options查看需要设置的选项</p>
+<p>这里主要设置下Listener为我们前面的listener，然后需要注意的一点是SafeChecks选项，用来检测运行环境是否合适，这里默认的是开启，要求写的也是开启，但是开启的话是可能会没有反应，所以这里顺便把设置为False了。</p>
+<p>还有点要注意是这样生成的脚本指令有可能会被杀软给拦截掉，原因的话看<a href="https://www.mike-gualtieri.com/posts/modifying-empire-to-evade-windows-defender" target="_blank" rel="noopener">这里</a>，也就是windows defender检测到了脚本中的Invoke-Empire，所以只需要将相关脚本（Empire/data/agent/stagers/http.ps1 与 Empire/data/agent/agent.ps1）中的Invoke-Empire修改为一个其他的名称就行</p>
+<p>配置完成输入execute即可生成一串powershell的指令，可以将其写入到bat脚本里面；置入目标主机运行即可</p>
+<figure class="image-box">
+                <a rel=Penetration with Empire href="/2019/08/01/penetration-with-empire/stager.png" class="swipebox" title=undefined><img src="/2019/08/01/penetration-with-empire/stager.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>这里尝试使用windows下的那几个stagers，均会被windows defender直接检测并删除，甚至都没有报毒提示…</p>
+<h2 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h2><p>然后等待主机即可，主机上线后我们这边会直接有响应</p>
+<p>输入agents即可查看主机，也可以输入list查看，list stale可以查看已经不在线的主机，如果想要删除主机使用remove 加主机名即可，只是这样仍然会收到目标主机反弹的shell</p>
+<p>一般的话就先rename 主机名为一些好记的名字，之后interact 加主机名与其交互</p>
+<figure class="image-box">
+                <a rel=Penetration with Empire href="/2019/08/01/penetration-with-empire/agents.png" class="swipebox" title=undefined><img src="/2019/08/01/penetration-with-empire/agents.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>可以看到又一些选项比如说sc可以截屏，mimikatz可以拿用户密码但是需要高权限，bypassuac可以尝试提权，shell加命令可以执行一些常见的操作。</p>
+<p>需要注意的是这里提供的并非交互性的shell，所以会有短暂的延迟；大概是使用前面的http请求，因此隐蔽性较好</p>
+<h2 id="Module"><a href="#Module" class="headerlink" title="Module"></a>Module</h2><p>使用usemodule 可以查看可以使用的模块，比如说关于代码执行的code_execution模块，还有关于后门persistence模块来实现持续的渗透</p>
+<p>关于模块的描述可以看<a href="https://www.anquanke.com/post/id/87333#h2-4" target="_blank" rel="noopener">这篇文章</a></p>
+<p>这里我们选择用户域的注册表后门</p>
+<p>查看选项<br><figure class="image-box">
+                <a rel=Penetration with Empire href="/2019/08/01/penetration-with-empire/registry.png" class="swipebox" title=undefined><img src="/2019/08/01/penetration-with-empire/registry.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure></p>
+<p>我们可以设置监听的主机，使用的监听器，注册表的位置及键的名字等<br>设置为执行execute即可将其置入目标主机，这个在目标主机的注册表是可以看到的。</p>
+<figure class="image-box">
+                <a rel=Penetration with Empire href="/2019/08/01/penetration-with-empire/reg.png" class="swipebox" title=undefined><img src="/2019/08/01/penetration-with-empire/reg.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>需要注意的是，这里的后门因为是开机启动，所以在用户重启后开机是会弹出小黑窗的，这个需要想办法来解决。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-08-02T13:16:41.266Z" itemprop="dateUpdated">2019-08-02 21:16:41</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/08/01/penetration-with-empire/" target="_blank" rel="external">http://siriuswhiter.tk/2019/08/01/penetration-with-empire/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/渗透/">渗透</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/08/01/penetration-with-empire/&title=《Penetration with Empire》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/08/01/penetration-with-empire/&title=《Penetration with Empire》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/07/30/Kioptrix靶机渗透/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Kioptrix靶机渗透</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Listeners"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Listeners</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#stagers"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">stagers</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Agent"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Agent</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Module"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">Module</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/08/01/penetration-with-empire/&title=《Penetration with Empire》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/08/01/penetration-with-empire/&title=《Penetration with Empire》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNElEQVR42u3awW4CMQxFUf7/p6ebLpDohPtsihTnZoUqJuTMwrVjPx54XU/r9e/8++tnyVOtJUOGjG0Z13Ld/cDdN/nOZDfyrAwZMs5hrAMiD4LkECTs8rPJkCFDBv8xkgjy4CtDhgwZnwq4/BD8V2TIkCGjU8SmoZO/mq/W4jJkyNiQUStNv/P5X/obMmTI2IpxhYu0HtPrts55fneTIUPGaAYPcGlrMw3c6bCFDBkyTmPwQ/fzMX5Vtz4uSh9lyJAxiMGt/BoubXamoRz935AhQ8YIRrFZ2Ghk1srXN4mmDBkyRjPS9KvW1KwNVZDQLEOGjNMYtWAa18dh1Rlc58mQIWMoIz1iP+CSAJoGbhkyZJzDqI1ZkKGKdVGaNg9ur9tkyJAxmpEehZe4tcOloV+GDBmzGelVWuc6jH8uTojIkCFjKIM3Cwk7Hbb4WGtBhgwZoxlpc5EMQ/BD83DfynNlyJCxOSMtI2tXb/wVkHTwjx1kyJAxmkFGHPhIRCcRXIf7YORChgwZoxm1xgBvBqT7xGNkMmTIOIDRbzT2r/7TJmicS8qQIWNzBh/eqo1/8aZpsVMpQ4aMoYwrXHw8q9ZCiAtXGTJkHMBIRyv4GAS/7u+knjFMhgwZ2zL6I1lpaVpLAd88K0OGjAMYvMisXeXz18RLXxkyZMjgRWZn/KsTmmXIkCFjvSkvYnkSmZa+wbCFDBkyRjBqY2FpJOTIdLxMhgwZsxm1o/RTwH6QlSFDxgGMH+W+0T85UZJPAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>

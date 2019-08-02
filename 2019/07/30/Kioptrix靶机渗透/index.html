@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>Kioptrix靶机渗透 | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="渗透">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>Kioptrix靶机渗透</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">Kioptrix靶机渗透</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-07-30T10:52:48.000Z" itemprop="datePublished" class="page-time">
+  2019-07-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/渗透/">渗透</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-Kioptrix靶机渗透"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">Kioptrix靶机渗透</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-07-30 18:52:48" datetime="2019-07-30T10:52:48.000Z"  itemprop="datePublished">2019-07-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/渗透/">渗透</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <p><em>Kioptrix是vulhub上一个比较简单的靶机系列，下下来玩一玩</em></p>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>要对靶机进行一下网络的设置，开机进入高级选项，选择root进入<br>使用<code>ifconfig -a</code>看下网卡名称，修改<code>/etc/network/interfaces</code>，将最后两行的网卡名称修改为前面看到的</p>
+<p>这里可能会出现即使是root也提示权限不足的问题，<code>mount -rw -o remount /</code>重新挂载根目录，重启即可。</p>
+<h1 id="渗透"><a href="#渗透" class="headerlink" title="渗透"></a>渗透</h1><h2 id="Level1"><a href="#Level1" class="headerlink" title="Level1"></a>Level1</h2><p>开局Nmap 先扫一下本地<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap 10.10.10.131/24</span><br></pre></td></tr></table></figure></p>
+<p>发现有一个ip 10.10.10.129开了22和80端口，应该就是我们的靶机了<br>再特定的扫一下(-sV 用来探测端口服务)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sV -T4 -p- 10.10.10.129</span><br></pre></td></tr></table></figure></p>
+<p>发现<br><figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level1\scan.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level1\scan.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))</span><br></pre></td></tr></table></figure></p>
+<p>尝试在网页上进一下，看到了一个登陆界面<br>不过既然有搭建网站，那么就先用御剑扫一下后台目录<br><figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level1\back.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level1\back.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure></p>
+<p>发现有个robots.txt，看一下有没有什么有意思的东西，</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level1\robots.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level1\robots.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>打开发现里面有个flag目录，进入得到第一个flag</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level1\flag1.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level1\flag1.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>顺便看看别的目录有没有什么东西，基本上都不存在，就是admin_area这个目录写了个the admin area not work……</p>
+<p>看下源码，结果就得到了第二个flag（好蠢）</p>
+<p>同时也得到了用户名＋密码，回到主页登陆上去</p>
+<p>看到一个上传界面，直接上马，竟然就这么上传成功了…毫无过滤，猜测应该在之前看到的uploaded_files目录中</p>
+<p>打开网页验证，没有报不存在了，上蚁剑直接连接即可，</p>
+<p>连上去看下有没有什么好东西，在html目录下发现有flag.txt和hint.txt，flag.txt可能是权限不够或者啥的，hint.txt找到了第三个flag</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level1\flag3.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level1\flag3.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>同时告诉我们在一个隐藏的文件中可以找到technawi的密码来读取flag.txt</p>
+<p>为了方便查找，在蚁剑中打开终端，使用grep搜索，(r递归搜索，n显示行数，s去掉错误信息)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -rns technawi /etc</span><br></pre></td></tr></table></figure>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level1\search.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level1\search.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>credentials.txt 看着很有可能，打开查看</p>
+<p>得到了用户名密码，顺便得到了flag4 </p>
+<p><a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level1\flag4.png" class="swipebox" title=<img src="/2019/07/30/Kioptrix靶机渗透/Level1\flag4.png" alt="">><img src="/2019/07/30/Kioptrix靶机渗透/Level1\flag4.png" alt=""></a></p>
+<p>顺手切换用户，结果报错</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level1\chuser.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level1\chuser.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>然后没有找到什么好办法能够解决这个问题</p>
+<p>回过头看，想起来还有个ssh的端口开着，就试着拿ssh登陆下，直接上去了</p>
+<p>直接取查看flag.txt ，得到第五个也是最后一个flag</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level1\flag5.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level1\flag5.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>到这里基本上就算是完成了，比较简单，所以整个逻辑都还是挺清晰的</p>
+<p>最后，因为前面看到/home下有个.sudo_as_admin_successful文件，可以直接输入<code>sudo su</code>将technawi提权为root用户</p>
+<h2 id="Level2"><a href="#Level2" class="headerlink" title="Level2"></a>Level2</h2><p>网络配置不好，待定//</p>
+<h2 id="Level3"><a href="#Level3" class="headerlink" title="Level3"></a>Level3</h2><p>开局正常nmap扫ip，得到ip地址为10.10.10.132，开放端口22,80</p>
+<p>又有web服务，打开网页登陆，没有看到什么很有价值的东西，倒是有个登陆界面</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level3\login.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level3\login.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>先放一放，御剑扫下后台目录，发现有phpmyadmin，还有个update.php权限不够</p>
+<p>回过头看登陆界面有个lotusCMS，可能能从这个地方下手，</p>
+<p>打开msf搜索下这个CMS，运气比较好，有个RCE hhh</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level3\vuln.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level3\vuln.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>既然有RCE那当然要直接上，配置好直接exploit拿下webshell</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level3\shell.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level3\shell.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>但是权限很小</p>
+<p>到这里有点卡住了，主要是对于web的东西不是特别熟悉</p>
+<p>看到说是搜索一波mysql的账户密码，直接grep -rns mysql_username /home</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level3\find.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level3\find.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>看到gconfig.php那里可能有，去看下，找到了用户名密码（口吐芬芳的密码）</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level3\namepass.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level3\namepass.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>回到前面找到的phpmyadmin，就可以直接登上去了</p>
+<p>看到gallery下有个dev_accounts，但是密码都进行了md5，尝试去破解，结果可以直接破解成功</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level3\2user.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level3\2user.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>破解结果为：</p>
+<p>dreg/Mast3r<br>loneferret/starwars</p>
+<p>尝试发现longferret比较有用，ssh连接上去，看到目录下有个CompanyPolicy.README，然后里面的意思大概是这是CEO给我发的文件，需要我输入sudo ht，但是可能是因为终端不一样，使用ht会报错……</p>
+<p>查了下这个ht大概是个编辑器，然后其他的vim nano什么的也打不开，应该是设置了可用命令</p>
+<p>查下这个问题的解决方案，大概是改变下默认的TERM即可，输入<code>export TERM=xterm-color</code>即可</p>
+<p>然后sudo ht，f1大概看下操作方式，（坑爹的快捷键冲突退不出来，每次写完保存好就只能重新登一下）</p>
+<p>可以使用其来修改/etc/passwd中的文件来改变longferret的权限为root，</p>
+<p>关于/etc/passwd可以看<a href="https://blog.csdn.net/yexiangCSDN/article/details/89963698" target="_blank" rel="noopener">这里</a></p>
+<p>当然也可以在/etc/sudoers中添加比如说/bin/sh来拿权限</p>
+<p><a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level3\root.png" class="swipebox" title=<img src="/2019/07/30/Kioptrix靶机渗透/Level3\root.png" alt="">><img src="/2019/07/30/Kioptrix靶机渗透/Level3\root.png" alt=""></a></p>
+<p>可以看到拿到了root权限</p>
+<p>回过头看看别人还有什么别的思路，发现有在扫目录的时候就发现了/gallery。。。可能因为我的字典太小了，根本没有扫到，</p>
+<p>尝试使用kali自带的dirb来扫一波，确实扫的比御剑的字典多//</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-08-01T01:46:48.236Z" itemprop="dateUpdated">2019-08-01 09:46:48</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/07/30/Kioptrix靶机渗透/" target="_blank" rel="external">http://siriuswhiter.tk/2019/07/30/Kioptrix靶机渗透/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/渗透/">渗透</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/07/30/Kioptrix靶机渗透/&title=《Kioptrix靶机渗透》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/07/30/Kioptrix靶机渗透/&title=《Kioptrix靶机渗透》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/08/01/penetration-with-empire/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Penetration with Empire</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/07/30/ciscn-2019-决赛pwn/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">ciscn 2019 决赛pwn</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#配置"><span class="post-toc-number">1.</span> <span class="post-toc-text">配置</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#渗透"><span class="post-toc-number">2.</span> <span class="post-toc-text">渗透</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Level1</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level2"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Level2</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level3"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Level3</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2019/07/30/Kioptrix靶机渗透/&title=《Kioptrix靶机渗透》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2019/07/30/Kioptrix靶机渗透/&title=《Kioptrix靶机渗透》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACL0lEQVR42u3aQW7DMAxE0dz/0i7QbWDjDym3EPW1KhzU0stiQon6fPC4fsf3E/787tPrZnzeGDJkyNiWcT2ObwaZJl3W87yIKkOGjAMYzyH7RpZ35pUhQ4aMu9fxIOZhzYNehgwZMjrB91y0cca//W7IkCFjEwYJvlqB+PxffN5le3EZMmRsyEiX8pd/v9jfkCFDxiaMqzE6xR/ZJAcrkSFDxmhGrezjR2Z86emnH3KPQ4YMGSMYaQiuLTTT4L59gwwZMg5gdKK21qQkORk0BmTIkHEAg59idUirrrGi3w0ZMmQMYqwt1HhLkpeMQfNShgwZQxlptKWx228SoK21DBkyjmHE/QQ8Jd8wk9llyJBxGiMt8njxV3vCG6uoKytDhowRDH5JotaYXBvHqIUpQ4aMcQx+QM+P+0l01tqc8ZcrQ4aMQQwedp0ysX9RY0UGy5AhYwKDH9lzEnk/bzmgyxYyZMgYxEhrRl4U8iP+BYWpDBkyRjNqLcl0O5riSTTHN91kyJCxOSO9BsF5/M1p67S4F5chQ8bmDN5W5If1neyPG5wyZMgYzUgX9N6R3IJrFjJkyBjHuMLBS7raBjW9eIFut8mQIWNzRr8lsCqma3PJkCHjHAYJWbIdJVGYHsDJkCFDRif4ahc1ahtX1ECVIUOGjHYZR2I33cqi80IZMmQcxqg94Zc2OFKGDBlnMtLWI/kKeAtzQQEqQ4aM0YxaY4AvhSNJlHe2wTJkyNiQ8QMOHSy6aKlNPQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>
