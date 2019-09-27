@@ -284,6 +284,7 @@
 <p>就完全不需要迁移，将0xE77 nop 掉就可以将指向ptr的指针传参进去了</p>
 <p>而像下面这种，就需要进行部分迁移了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.text:000000000040094A                 push    rbp</span><br><span class="line">.text:000000000040094B                 mov     rbp, rsp</span><br><span class="line">.text:000000000040094E                 mov     rax, cs:buf</span><br><span class="line">.text:0000000000400955                 mov     rdi, rax        ; ptr</span><br><span class="line">.text:0000000000400958                 call    _free</span><br><span class="line">.text:000000000040095D                 lea     rdi, aDone      ; &quot;Done!&quot;</span><br></pre></td></tr></table></figure></p>
 <p>在使用时选择migration，指定起始地址为0x400955，结束地址为0x40095d，就可以将这两行进行迁移，<br>之后在IDA中将 mov  rax, cs:buf 改为 lea  rax, cs:buf 取地址即可</p>
+<p><em>ps: 然后最后在比赛的时候完全没用着，14k的文件添加一个free的patch后会到达25k，然后因为过大而判定失败……，所以像国赛这样的patch可能就与LIEF无缘了</em></p>
 
         </div>
         
@@ -291,7 +292,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-07-21T12:56:00.747Z" itemprop="dateUpdated">2019-07-21 20:56:00</time>
+    Last updated: <time datetime="2019-08-22T00:50:31.933Z" itemprop="dateUpdated">2019-08-22 08:50:31</time>
 </span><br>
 
 

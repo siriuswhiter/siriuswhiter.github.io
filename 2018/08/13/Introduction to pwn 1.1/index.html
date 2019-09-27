@@ -271,6 +271,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
 </code></pre><h3 id="编译tips"><a href="#编译tips" class="headerlink" title="编译tips"></a>编译tips</h3><p>64位机上编译上面程序需要强制32位编译，用gcc -m32 、as –32选项</p>
 <p>AT&amp;T：<br>as easy.s  -o easy.o –32<br>ld easy.o -o easy -m elf_i386</p>
 <p>INTEL:<br>nasm srop.asm -f elf64<br>ld -m elf_x86_64 srop.o -o srop</p>
+<p>在尝试编译c++时，发现5.4 的gcc只加pie或者fpie都无法启动pie，只有当两个都加上时才能开启程序的pie，比较神奇hhh</p>
 
         </div>
         
@@ -278,7 +279,7 @@ Run Shellcode: gcc test.c -o test -m32 -zexexstack
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-05-24T10:06:34.624Z" itemprop="dateUpdated">2019-05-24 18:06:34</time>
+    Last updated: <time datetime="2019-09-11T04:53:55.266Z" itemprop="dateUpdated">2019-09-11 12:53:55</time>
 </span><br>
 
 

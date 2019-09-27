@@ -243,7 +243,8 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             
             <p><em>Kioptrix是vulhub上一个比较简单的靶机系列，下下来玩一玩</em></p>
-<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>要对靶机进行一下网络的设置，开机进入高级选项，选择root进入<br>使用<code>ifconfig -a</code>看下网卡名称，修改<code>/etc/network/interfaces</code>，将最后两行的网卡名称修改为前面看到的</p>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>方便起见，在这里<a href="https://www.vulnhub.com/?q=kioptrix&amp;sort=date-asc#" target="_blank" rel="noopener">下载</a></p>
+<p>要对靶机进行一下网络的设置，开机进入高级选项，选择root进入<br>使用<code>ifconfig -a</code>看下网卡名称，修改<code>/etc/network/interfaces</code>，将最后两行的网卡名称修改为前面看到的</p>
 <p>这里可能会出现即使是root也提示权限不足的问题，<code>mount -rw -o remount /</code>重新挂载根目录，重启即可。</p>
 <h1 id="渗透"><a href="#渗透" class="headerlink" title="渗透"></a>渗透</h1><h2 id="Level1"><a href="#Level1" class="headerlink" title="Level1"></a>Level1</h2><p>开局Nmap 先扫一下本地<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap 10.10.10.131/24</span><br></pre></td></tr></table></figure></p>
 <p>发现有一个ip 10.10.10.129开了22和80端口，应该就是我们的靶机了<br>再特定的扫一下(-sV 用来探测端口服务)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sV -T4 -p- 10.10.10.129</span><br></pre></td></tr></table></figure></p>
@@ -349,6 +350,15 @@
 <p>可以看到拿到了root权限</p>
 <p>回过头看看别人还有什么别的思路，发现有在扫目录的时候就发现了/gallery。。。可能因为我的字典太小了，根本没有扫到，</p>
 <p>尝试使用kali自带的dirb来扫一波，确实扫的比御剑的字典多//</p>
+<h2 id="Level4"><a href="#Level4" class="headerlink" title="Level4"></a>Level4</h2><p>下载下来是个vmdx 硬盘格式，需要在vmware中新建一个虚拟机，不使用镜像，均选择其他，然后删除硬盘，将该硬盘添加进去即可。</p>
+<p>打开是个LigGoat Security Server的登陆界面</p>
+<p>前面还是常规操作，找ip，查服务</p>
+<figure class="image-box">
+                <a rel=Kioptrix靶机渗透 href="/2019/07/30/Kioptrix靶机渗透/Level4\service.png" class="swipebox" title=undefined><img src="/2019/07/30/Kioptrix靶机渗透/Level4\service.png" alt="" title="" class=""></a>
+                <p></p>
+            </figure>
+<p>可以看到仍然开启了ssh，http服务，同时多开了139与445端口，开启了不知道是啥的服务</p>
+<p>打开网页，看到是个Member Login系统，后台目录扫一波，只多看到个images</p>
 
         </div>
         
@@ -356,7 +366,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-08-01T01:46:48.236Z" itemprop="dateUpdated">2019-08-01 09:46:48</time>
+    Last updated: <time datetime="2019-08-12T05:24:03.461Z" itemprop="dateUpdated">2019-08-12 13:24:03</time>
 </span><br>
 
 
@@ -451,7 +461,7 @@
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#配置"><span class="post-toc-number">1.</span> <span class="post-toc-text">配置</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#渗透"><span class="post-toc-number">2.</span> <span class="post-toc-text">渗透</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Level1</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level2"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Level2</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level3"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Level3</span></a></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#配置"><span class="post-toc-number">1.</span> <span class="post-toc-text">配置</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#渗透"><span class="post-toc-number">2.</span> <span class="post-toc-text">渗透</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Level1</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level2"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Level2</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level3"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Level3</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Level4"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">Level4</span></a></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>

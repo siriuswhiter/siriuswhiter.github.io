@@ -253,6 +253,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http://http.debian.net/debian jessie-backports main</span><br></pre></td></tr></table></figure>
 <p>更新源并安装即可</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get update   </span><br><span class="line">apt-get install docker.io</span><br></pre></td></tr></table></figure>
+<p>ubuntu：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span><br><span class="line">sudo echo -e &quot;&#123;\n </span><br><span class="line">  \&quot;registry-mirrors\&quot;: [\&quot;https://docker.mirrors.ustc.edu.cn/\&quot;]</span><br><span class="line">&#125;&quot; &gt;/etc/docker/daemon.json </span><br><span class="line"></span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure></p>
 <h2 id="配置docker环境"><a href="#配置docker环境" class="headerlink" title="配置docker环境"></a>配置docker环境</h2><ul>
 <li>将bin文件放置到bin目录下</li>
 <li>修改flag内容</li>
@@ -317,7 +318,7 @@ SIZE：镜像大小
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2018-11-10T08:34:21.443Z" itemprop="dateUpdated">2018-11-10 16:34:21</time>
+    Last updated: <time datetime="2019-09-20T12:51:47.563Z" itemprop="dateUpdated">2019-09-20 20:51:47</time>
 </span><br>
 
 
