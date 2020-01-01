@@ -3,6 +3,48 @@
   
     
     <entry>
+      <title>web practice</title>
+      <link href="/2019/10/27/web-practice/"/>
+      <url>/2019/10/27/web-practice/</url>
+      <content type="html"><![CDATA[<h1 id="Cat"><a href="#Cat" class="headerlink" title="Cat"></a>Cat</h1><p>攻防世界web进阶题</p><p>进去可以输入域名，然后会自动ping ， 直接输入域名比如说百度就会提示Invalid URL，但是直接输IP就会开始ping</p><p>根据经验先尝试看是否为命令注入，输入127.0.0.1;ls 或 127.0.0.1 | ls 或127.0.0.1 &amp; ls 均提示无效</p>]]></content>
+      
+      <categories>
+          
+          <category> web </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> web </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Windows编程小记</title>
+      <link href="/2019/10/25/windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0/"/>
+      <url>/2019/10/25/windows%E7%BC%96%E7%A8%8B%E5%B0%8F%E8%AE%B0/</url>
+      <content type="html"><![CDATA[<h1 id="dll函数的导出"><a href="#dll函数的导出" class="headerlink" title="dll函数的导出"></a>dll函数的导出</h1><ol><li>_declspec(dllexport)  导出的函数名会被改变</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_declspec(dllexport)   bool HookStart(void);</span><br><span class="line">_declspec(dllexport)   void HookStop(void);</span><br></pre></td></tr></table></figure><p>使用vs的工具-&gt;命令行-&gt;开发者命令提示  使用命令 dumpbin /exports *.dll 查看dll的导出函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ordinal hint RVA      name</span><br><span class="line"></span><br><span class="line">      1    0 0001136B ?HookStart@KeyHook@@QEAA_NXZ = @ILT+870(?HookStart@KeyHook@@QEAA_NXZ)</span><br><span class="line">      2    1 00011294 ?HookStop@KeyHook@@QEAAXXZ = @ILT+655(?HookStop@KeyHook@@QEAAXXZ)</span><br></pre></td></tr></table></figure></p><ul><li>解决办法：</li></ul><p>在前面加上这个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#pragma comment(linker, &quot;/EXPORT:HookStart=?HookStart@KeyHook@@QEAA_NXZ&quot;)</span><br><span class="line">#pragma comment(linker, &quot;/EXPORT:HookStop=?HookStop@KeyHook@@QEAAXXZ&quot;)</span><br></pre></td></tr></table></figure></p><p>编译器就会按照我们指定的函数名导出函数了</p><ol start="2"><li>因为版本问题，导出函数前面如果加上 extern “C”  可能会出现不符合编译链接规范</li></ol><p>解决办法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#ifdef _cplusplus</span><br><span class="line">extern &quot;C&quot;&#123;</span><br><span class="line">#endif</span><br><span class="line">_declspec(dllexport)   bool HookStart(void);</span><br><span class="line">_declspec(dllexport)   void HookStop(void);</span><br><span class="line">#ifdef _cplusplus</span><br><span class="line">extern &quot;C&quot; &#125;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></p><p>可以兼容c/c++</p><h1 id="无法解析的外部符号"><a href="#无法解析的外部符号" class="headerlink" title="无法解析的外部符号"></a>无法解析的外部符号</h1><ul><li><p>问题：<br>_ImmGetContext@4 / _ImmGetCompositionStringA@16 等API调用出错</p></li><li><p>解决：</p></li></ul><p>项目-&gt;属性-&gt;链接器-&gt;输入-&gt;附加依赖项<br>添加 imm32.lib / winmm.lib</p><h1 id="直接将控制台程序转变为win32程序"><a href="#直接将控制台程序转变为win32程序" class="headerlink" title="直接将控制台程序转变为win32程序"></a>直接将控制台程序转变为win32程序</h1><p>项目-&gt;属性</p><p>1)c/c++ —&gt; 预处理 —&gt;预处理定义 :</p><p>_CONSOLE改为:_WINDOWS           </p><p>2)连接器 —&gt; 系统 —&gt;子系统:</p><p>控制台 (/SUBSYSTEM:CONSOLE)改为：窗口 (/SUBSYSTEM:WINDOWS)</p><h1 id="字符集"><a href="#字符集" class="headerlink" title="字符集"></a>字符集</h1><p>可选字符集为宽字符与unicode字符集，如果使用unicode字符集，如SetWindowsHook 会自动扩展到SetWindowsHookExW ,尽量不要为了简便将所有类似的函数直接指定为FunctionA。 </p>]]></content>
+      
+      <categories>
+          
+          <category> windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> windows </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>巅峰极客-2019</title>
       <link href="/2019/10/19/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2-2019/"/>
       <url>/2019/10/19/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2-2019/</url>
@@ -260,9 +302,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -285,9 +327,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -354,9 +396,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -402,9 +444,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -607,9 +649,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -678,9 +720,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -726,9 +768,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -772,9 +814,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -866,9 +908,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -960,9 +1002,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
@@ -1117,9 +1159,9 @@
             
             <tag> pwn </tag>
             
-            <tag> heap </tag>
-            
             <tag> stack </tag>
+            
+            <tag> heap </tag>
             
         </tags>
       
