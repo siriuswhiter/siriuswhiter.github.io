@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>BUUCTF-Re | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="RE">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>BUUCTF-Re</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">BUUCTF-Re</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-02-05T06:44:11.000Z" itemprop="datePublished" class="page-time">
+  2020-02-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">RE</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-buuctf-re"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">BUUCTF-Re</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-02-05 14:44:11" datetime="2020-02-05T06:44:11.000Z"  itemprop="datePublished">2020-02-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/re/">RE</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="firmware"><a href="#firmware" class="headerlink" title="firmware"></a>firmware</h1><p>一个关于路由器固件的逆向</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>UE打开看到文件开头的TP-LINK technologies等字样，应该是路由器相关的。binwalk查看bin文件，经过相关查询，发现最后的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1180160       0x120200        Squashfs filesystem, little endian, version 4.0, compression:lzma, size: 2774624 bytes, 519 inodes, blocksize: 131072 bytes, created: 2015-04-13 09:35:04</span><br></pre></td></tr></table></figure></p>
+<p>为一个文件系统，将其分离出来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=firmware.bin skip=1180160 of=router-fs.squashfs bs=1</span><br></pre></td></tr></table></figure></p>
+<p>file得到文件大小后，再加上大小分离<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=firmware.bin skip=1180160 of=fs.squashfs bs=1 count=2774624</span><br></pre></td></tr></table></figure></p>
+<p>尝试使用unsquashfs解包，报错。查询相关问题，确认是版本不对，查询到相关解压缩工具<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">su apt-get install build-essential zlib1g-dev liblzma-dev python-magic</span><br><span class="line">git clone https://github.com/mirror/firmware-mod-kit.git</span><br><span class="line">cd firmware-mod-kit/src &amp;&amp; ./configure &amp;&amp; make</span><br></pre></td></tr></table></figure></p>
+<p>之后使用unsquashfs_all.sh尝试解包得到squashfs_root，</p>
+<p>原以为按题目提示是在/home/ctf/flag.txt中，但是又说了是后门网站及端口，<br>寻找到backor文件解upx在字符串中即可找到网站再通过交叉引用即可发现端口。</p>
+<h1 id="crackME"><a href="#crackME" class="headerlink" title="crackME"></a>crackME</h1><p>有反调试手段的程序</p>
+<h2 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h2><p>需要输入用户名及密码来进行校验，用户名已知。<br>开始时根据用户名建了个表，在函数fn_401090处。<br>之后进行check。</p>
+<p>先将输入的密码每两个字节转化为一个字节存储<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">while ( i &lt; strlen(pass) )</span><br><span class="line"> &#123;</span><br><span class="line">   if ( isdigit(pass[i]) )</span><br><span class="line">   &#123;</span><br><span class="line">     v9 = pass[i] - &apos;0&apos;;</span><br><span class="line">   &#125;</span><br><span class="line">   else if ( isxdigit(pass[i]) )               // a-f</span><br><span class="line">   &#123;</span><br><span class="line">     if ( *(_DWORD *)(*(_DWORD *)(__readfsdword(0x30u) + 24) + 12) != 2 ) //debug check</span><br><span class="line">       pass[i] = 0x22;</span><br><span class="line">     v9 = (pass[i] | 0x20) - 0x57;</span><br><span class="line">   &#125;</span><br><span class="line">   else</span><br><span class="line">   &#123;</span><br><span class="line">     v9 = ((pass[i] | 0x20) - &apos;a&apos;) % 6 + 10;</span><br><span class="line">   &#125;</span><br><span class="line">   v10 = v9 + 0x10 * v10;                      // 每两个字节的输入转化为一个字节并将其存入V15中,eg:12abyz=&gt;[0x12,0xab,0xab]</span><br><span class="line">   if ( !((signed int)(i + 1) % 2) )</span><br><span class="line">   &#123;</span><br><span class="line">     v15[idx++] = v10;</span><br><span class="line">     len = idx;</span><br><span class="line">     v10 = 0;</span><br><span class="line">   &#125;</span><br><span class="line">   ++i;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后将其与用户名建的表异或<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">while ( i_ &lt; 8 )</span><br><span class="line">  &#123;</span><br><span class="line">    v11 += user_rela[++j];</span><br><span class="line">    v13 = user_rela[j];</span><br><span class="line">    v8 = user_rela[v11];</span><br><span class="line">    user_rela[v11] = v13;</span><br><span class="line">    user_rela[j] = v8;</span><br><span class="line"></span><br><span class="line">    if ( *(_DWORD *)(__readfsdword(0x30u) + 0x68) &amp; 0x70 )// debug check</span><br><span class="line">      v13 = v11 + j;</span><br><span class="line">    *(&amp;v16 + i_) = user_rela[(unsigned __int8)(v8 + v13)] ^ v15[v5];</span><br><span class="line">    if ( *(_DWORD *)(__readfsdword(0x30u) + 2) &amp; 0xFF )// debug check</span><br><span class="line">    &#123;</span><br><span class="line">      v11 = 0xADu;</span><br><span class="line">      j = 0x2B;</span><br><span class="line">    &#125;</span><br><span class="line">    sub_401710((int)&amp;v16, (const char *)user, i_++);</span><br><span class="line">    v5 = i_;</span><br><span class="line">    if ( i_ &gt;= (unsigned int)(&amp;v15[strlen(v15) + 1] - &amp;v15[1]) )</span><br><span class="line">      v5 = 0;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后检测得到的结果是否为’dbappsec’</p>
+<p>调试写脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">re = &apos;dbappsec&apos;</span><br><span class="line">li = [0x2a,0xd7,0x92,0xe9,0x53,0xe2,0xc4,0xcd]</span><br><span class="line"></span><br><span class="line">flag = [0 for _ in range(8)]</span><br><span class="line">for i in range(8):</span><br><span class="line">    flag[i] = hex(ord(re[i])^li[i]).replace(&apos;0x&apos;,&apos;&apos;)</span><br><span class="line">pwd = &apos;&apos;.join(flag)</span><br><span class="line"></span><br><span class="line">import md5</span><br><span class="line">print md5.new(pwd).hexdigest()</span><br></pre></td></tr></table></figure></p>
+<h2 id="反调试手段"><a href="#反调试手段" class="headerlink" title="反调试手段"></a>反调试手段</h2><p>该程序使用的均为PEB结构的检查，通过FS:[30h]处得到PEB结构的基址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _PEB &#123;</span><br><span class="line">  BYTE                          Reserved1[2];</span><br><span class="line">  BYTE                          BeingDebugged;</span><br><span class="line">  BYTE                          Reserved2[1];</span><br><span class="line">  PVOID                         Reserved3[2];</span><br><span class="line">  PPEB_LDR_DATA                 Ldr;</span><br><span class="line">  PRTL_USER_PROCESS_PARAMETERS  ProcessParameters;</span><br><span class="line">  PVOID                         Reserved4[3];</span><br><span class="line">  PVOID                         AtlThunkSListPtr;</span><br><span class="line">  PVOID                         Reserved5;</span><br><span class="line">  ULONG                         Reserved6;</span><br><span class="line">  PVOID                         Reserved7;</span><br><span class="line">  ULONG                         Reserved8;</span><br><span class="line">  ULONG                         AtlThunkSListPtr32;</span><br><span class="line">  PVOID                         Reserved9[45];</span><br><span class="line">  BYTE                          Reserved10[96];</span><br><span class="line">  PPS_POST_PROCESS_INIT_ROUTINE PostProcessInitRoutine;</span><br><span class="line">  BYTE                          Reserved11[128];</span><br><span class="line">  PVOID                         Reserved12[1];</span><br><span class="line">  ULONG                         SessionId;</span><br><span class="line">&#125; PEB, *PPEB;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>检测BeingDebugged</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.text:00401B4D                 mov     eax, large fs:30h</span><br><span class="line">.text:00401B55                 mov     eax, [eax+2]</span><br><span class="line">.text:00401B5C                 test    eax, eax</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检测ProcessHeap属性<br>PEB结构的0X18处，被设置为加载器为进程分配的第一个堆的位置，第一个堆头有一个属性字段用来告诉这个堆是否在调试器中创建（ForceFlags和Flags）<br>在XP中ForceFlags位于堆头部偏移量0x10处，在win7他在0x44处<br>同理在XP中偏移量0x0C或者win7系统中偏离量0x40中查看Flags属性</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.text:00401985                 mov     eax, large fs:30h</span><br><span class="line">.text:0040198B                 mov     eax, [eax+18h]</span><br><span class="line">.text:0040198E                 mov     eax, [eax+0Ch]</span><br><span class="line">.text:00401991                 cmp     eax, 2</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>检测NTGlobalFlag</li>
+</ol>
+<p>PEB结构0x68处标志位，看是否为0x70<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.text:00401ADA                 mov     eax, large fs:30h </span><br><span class="line">.text:00401AE0                 mov     eax, [eax+68h]</span><br><span class="line">.text:00401AE3                 and     eax, 70h</span><br><span class="line">.text:00401AE6                 test    eax, eax</span><br></pre></td></tr></table></figure></p>
+<h1 id="equation"><a href="#equation" class="headerlink" title="equation"></a>equation</h1><p>jsfuck相关</p>
+<h2 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h2><p>拿到脚本可以看到全是jsfuck来判断flag，看到里面有不少==判断，拿到在线解jsfuck的网站上对几个进行测试，可以确定是对flag中的值进行加减之后来校验，问题是太多了不可能一个个手动复制过去得到原等式。</p>
+<p>查询看下别人的脚本，是将判断的那些先提取出到一个文件中，再对每一个’l[…]’(原先的…为正常的jsfuck的下标)，修改为”l[‘+(…)+’]”，相当于对所有jsfuck表示的数字用”‘+(…)+””给包括住</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;cstdio&gt;</span><br><span class="line">#include&lt;cstring&gt;</span><br><span class="line">#include&lt;cstdlib&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">typedef long long LL;</span><br><span class="line">#define foru(i,a,b) for(int i=a;i&lt;=b;i++)</span><br><span class="line">#define ford(i,a,b) for(int i=a;i&gt;=b;i--)</span><br><span class="line">char s[100000],a[100000];</span><br><span class="line">int cnt;</span><br><span class="line">int main()&#123;</span><br><span class="line">    freopen(&quot;raw.js&quot;,&quot;r&quot;,stdin);</span><br><span class="line">    freopen(&quot;out.js&quot;,&quot;w&quot;,stut);</span><br><span class="line">    scanf(&quot;%s&quot;,s);</span><br><span class="line">    int n=strlen(s);</span><br><span class="line">    printf(&quot;s=&apos;%c&quot;,s[0]);</span><br><span class="line">    foru(i,1,n-1)&#123;</span><br><span class="line">        if(s[i]==&apos;[&apos;)</span><br><span class="line">            if(s[i-1]==&apos;l&apos;)&#123;</span><br><span class="line">                a[++cnt]=&apos;l&apos;;</span><br><span class="line">                printf(&quot;[&apos;+(&quot;);</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                a[++cnt]=&apos;[&apos;;</span><br><span class="line">                printf(&quot;[&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        else if(s[i]==&apos;]&apos;)&#123;</span><br><span class="line">            if(a[cnt]==&apos;l&apos;) printf(&quot;)+&apos;]&quot;);</span><br><span class="line">            else printf(&quot;]&quot;);</span><br><span class="line">            cnt--;</span><br><span class="line">        &#125;</span><br><span class="line">        else if(s[i-1]==&apos;=&apos;&amp;&amp;s[i-2]==&apos;=&apos;)printf(&quot;&apos;+(%c&quot;,s[i]);</span><br><span class="line">        else if(s[i+1]==&apos;&amp;&apos;&amp;&amp;s[i+2]==&apos;&amp;&apos;)printf(&quot;%c)+&apos;&quot;,s[i]);</span><br><span class="line">        else printf(&quot;%c&quot;,s[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;);\nconsole.log(s);&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之后将等式在浏览器控制台运行即可得到等式</p>
+<p>将其复制出来加入z3的Solver，得到flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from z3 import *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s = Solver()</span><br><span class="line">l = [Int(&apos;l[%d]&apos;%i) for i in range(0x2a)]</span><br><span class="line"></span><br><span class="line">s.add(...)</span><br><span class="line"></span><br><span class="line">s.check()</span><br><span class="line">print s.model()</span><br></pre></td></tr></table></figure>
+<h1 id="signin"><a href="#signin" class="headerlink" title="signin"></a>signin</h1><p>RSA相关逆向？</p>
+<h2 id="思路-3"><a href="#思路-3" class="headerlink" title="思路"></a>思路</h2><p>可以直观的看到是个离散对数问题，反正是不可能硬解的。<br>然后是按rsa的思路来，模数是两个大素数的积，直接在factordb上分解得到pq，然后计算(p-1)*(q-1)</p>
+<p>使用python计算的时候用下gmpy2库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt-get install libgmp-dev</span><br><span class="line">apt-get install libmpfr-dev</span><br><span class="line">apt-get install libmpc-dev</span><br><span class="line">pip install gmpy2</span><br></pre></td></tr></table></figure></p>
+<p>写下解密脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">n = 103461035900816914121390101299049044413950405173712170434161686539878160984549</span><br><span class="line">p = 282164587459512124844245113950593348271</span><br><span class="line">q = 366669102002966856876605669837014229419</span><br><span class="line"></span><br><span class="line">c= 0xad939ff59f6e70bcbfad406f2494993757eee98b91bc244184a377520d06fc35</span><br><span class="line">e = 65537</span><br><span class="line"></span><br><span class="line">phin = (p-1)*(q-1)</span><br><span class="line"></span><br><span class="line">import gmpy2</span><br><span class="line">d= gmpy2.invert(e,phin)</span><br><span class="line">m = pow(c,d,n)</span><br><span class="line">flag = &apos;&apos;</span><br><span class="line">m = hex(m)[2:]</span><br><span class="line">print m</span><br><span class="line">for i in range(len(m)/2):</span><br><span class="line">    flag += chr(int(&apos;0x&apos;+m[2*i:2*(i+1)],16))</span><br><span class="line">print flag</span><br></pre></td></tr></table></figure></p>
+<h1 id="GWCTF-2019-re3"><a href="#GWCTF-2019-re3" class="headerlink" title="[GWCTF 2019] re3"></a>[GWCTF 2019] re3</h1><p>SMC程序的逆向</p>
+<h2 id="思路-4"><a href="#思路-4" class="headerlink" title="思路"></a>思路</h2><p>输入之后判断长度，然后对402219为起始地址处开始每个字节异或0x99，之后运行该函数。<br>这里需要写个IDC脚本来帮忙<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;idc.idc&gt;</span><br><span class="line"></span><br><span class="line">static main()</span><br><span class="line">&#123;</span><br><span class="line">    auto addr = 0x402219; </span><br><span class="line">    auto i = 0;</span><br><span class="line">    for(i=0;i&lt;=223;i++)   </span><br><span class="line">    &#123;</span><br><span class="line">        PatchByte(addr+i,Byte(addr+i)^0x99);   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后f5将其转化为伪代码，发现内部函数不少，怀疑其为加密算法，后面发现有AES的S盒，推测为AES，找到生成的密钥<br>写个脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from Crypto.Cipher import AES</span><br><span class="line"></span><br><span class="line">k=&apos;cb8d493521b47a4cc1ae7e62229266ce&apos;.decode(&apos;hex&apos;)</span><br><span class="line"></span><br><span class="line">c=&apos;BC0AADC0147C5ECCE0B140BC9C51D52B46B2B9434DE5324BAD7FB4B39CDB4B5B&apos;.decode(&apos;hex&apos;)</span><br><span class="line">aes=AES.new(k)</span><br><span class="line">mess = aes.decrypt(c)</span><br><span class="line">print mess</span><br></pre></td></tr></table></figure></p>
+<h1 id="maze-behind-junk"><a href="#maze-behind-junk" class="headerlink" title="maze_behind_junk"></a>maze_behind_junk</h1><p>又一道迷宫</p>
+<h2 id="思路-5"><a href="#思路-5" class="headerlink" title="思路"></a>思路</h2><p>查壳发现upx壳直接脱壳，之后可能因为中间掺杂了数据不能看伪代码，不过汇编也不长可以直接看</p>
+<p>可以分析出来就是正常的迷宫switch，上下和左右分别控制两个变量，给了两张表，如果拿到里面是4的话就直接去最后的检查</p>
+<p>分析出来是wasd控制上下左右，因为最后对两个变量进行检查，所以控制下次数就ok了，不过flag肯定不唯一，就不用交了</p>
+<h1 id="BJD-hamburger-competition"><a href="#BJD-hamburger-competition" class="headerlink" title="BJD hamburger competition"></a>BJD hamburger competition</h1><p>unity 逆向</p>
+<h2 id="思路-6"><a href="#思路-6" class="headerlink" title="思路"></a>思路</h2><p>第一次碰到unity逆向，还是老八的小汉堡…，像是B站某个up做的…。看着程序挺正常。<br>使用dnspy逆向BJD hamburger competition_Data\Managed\Assembly-CSharp.dll,能够找到后门的关键函数（不太清楚是不是unity的关键函数都在这个dll里）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">string name = this.toSpawn.name;</span><br><span class="line">			if (name == &quot;汉堡底&quot; &amp;&amp; Init.spawnCount == 0)</span><br><span class="line">			&#123;</span><br><span class="line">				Init.secret += 997;</span><br><span class="line">			&#125;</span><br><span class="line">			else if (name == &quot;鸭屁股&quot;)</span><br><span class="line">			&#123;</span><br><span class="line">				Init.secret -= 127;</span><br><span class="line">			&#125;</span><br><span class="line">			else if (name == &quot;胡罗贝&quot;)</span><br><span class="line">			&#123;</span><br><span class="line">				Init.secret *= 3;</span><br><span class="line">			&#125;</span><br><span class="line">			else if (name == &quot;臭豆腐&quot;)</span><br><span class="line">			&#123;</span><br><span class="line">				Init.secret ^= 18;</span><br><span class="line">			&#125;</span><br><span class="line">			else if (name == &quot;俘虏&quot;)</span><br><span class="line">			&#123;</span><br><span class="line">				Init.secret += 29;</span><br><span class="line">			&#125;</span><br><span class="line">			else if (name == &quot;白拆&quot;)</span><br><span class="line">			&#123;</span><br><span class="line">				Init.secret -= 47;</span><br><span class="line">			&#125;</span><br><span class="line">			else if (name == &quot;美汁汁&quot;)</span><br><span class="line">			&#123;</span><br><span class="line">				Init.secret *= 5;</span><br><span class="line">			&#125;</span><br><span class="line">			else if (name == &quot;柠檬&quot;)</span><br><span class="line">			&#123;</span><br><span class="line">				Init.secret ^= 87;</span><br><span class="line">			&#125;</span><br><span class="line">			else if (name == &quot;汉堡顶&quot; &amp;&amp; Init.spawnCount == 5)</span><br><span class="line">			&#123;</span><br><span class="line">				Init.secret ^= 127;</span><br><span class="line">				string str = Init.secret.ToString();</span><br><span class="line">				if (ButtonSpawnFruit.Sha1(str) == &quot;DD01903921EA24941C26A48F2CEC24E0BB0E8CC7&quot;)</span><br><span class="line">				&#123;</span><br><span class="line">					this.result = &quot;BJDCTF&#123;&quot; + ButtonSpawnFruit.Md5(str) + &quot;&#125;&quot;;</span><br><span class="line">					Debug.Log(this.result);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br></pre></td></tr></table></figure></p>
+<p>选择不同的配料会对secret进行处理，最后对其sha1值进行比对，若相同，则计算其md5值即可得到flag，这里完全可以在线破解得到secret为1001。查了下出题人意思是除了写脚本得到选择的配料以外，还可以按老八原视频的顺序加…，魔鬼出题人无疑。</p>
+<h1 id="RoarCTF2019-polyre"><a href="#RoarCTF2019-polyre" class="headerlink" title="[RoarCTF2019]polyre"></a>[RoarCTF2019]polyre</h1><p>控制流平坦化的一道逆向</p>
+<h2 id="思路-7"><a href="#思路-7" class="headerlink" title="思路"></a>思路</h2><p>几百行的while(1)，人都看傻了。肯定不能就这么看，找到个基于angr的去控制流平坦化的脚本（<a href="https://github.com/cq674350529/deflat），效果还行，处理完分析程序流程。" target="_blank" rel="noopener">https://github.com/cq674350529/deflat），效果还行，处理完分析程序流程。</a><br>程序里面还残留着不少相同的while(…)和if(…)，看的时候基本上可以直接忽略掉，重点函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">for ( i = 0; ; ++i )                          // i=0;i&lt;6;i++</span><br><span class="line"> &#123;</span><br><span class="line">   </span><br><span class="line">   v18 = i;</span><br><span class="line">   v19 = v18 &lt; 6;</span><br><span class="line">   </span><br><span class="line">   if ( !v19 )</span><br><span class="line">     break;</span><br><span class="line">   v20 = s;</span><br><span class="line">   v4 = *(_QWORD *)&amp;v20[8 * i];</span><br><span class="line">   v7 = 0;</span><br><span class="line">   while ( 1 )</span><br><span class="line">   &#123;</span><br><span class="line">     v21 = v7;</span><br><span class="line">     v22 = v21 &lt; 64;                         // 64次</span><br><span class="line">     if ( !v22 )</span><br><span class="line">       break;</span><br><span class="line">     v23 = v4;</span><br><span class="line">     v24 = v4 &lt; 0;</span><br><span class="line">     if ( v4 &gt;= 0 )                            // 乘2</span><br><span class="line">     &#123;</span><br><span class="line">       v27 = v4;</span><br><span class="line">       v28 = 2 * v27;</span><br><span class="line">       v4 = v28;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">       v25 = 2 * v4;</span><br><span class="line">       v26 = v25;</span><br><span class="line">       v4 = v26 ^ 0xB0004B7679FA26B3LL;</span><br><span class="line">     &#125;</span><br><span class="line">     v29 = v7;</span><br><span class="line">     v7 = v29 + 1;</span><br><span class="line">     </span><br><span class="line">   &#125;</span><br><span class="line">   v30 = 8 * i;</span><br><span class="line">   v31 = &amp;s1[8 * i];</span><br><span class="line"></span><br><span class="line">     *(_QWORD *)v31 = v4;</span><br><span class="line">   *(_QWORD *)v31 = v4;</span><br><span class="line"></span><br><span class="line">   i_ = i + 1;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>把那些多余的去掉，剩下这些基本上可以看出来在干啥，基本上就是取出来八个字节一组然后进行64次循环，里面会通过对大小进行判断然后做处理。</p>
+<p>这些处理完之后最后应该是与data段的一块数据做对比，所以逆向流程写脚本就可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">re = [0x96, 0x62, 0x53, 0x43, 0x6D, 0xF2, 0x8F, 0xBC, 0x16, 0xEE, </span><br><span class="line">  0x30, 0x05, 0x78, 0x00, 0x01, 0x52, 0xEC, 0x08, 0x5F, 0x93, </span><br><span class="line">  0xEA, 0xB5, 0xC0, 0x4D, 0x50, 0xF4, 0x53, 0xD8, 0xAF, 0x90, </span><br><span class="line">  0x2B, 0x34, 0x81, 0x36, 0x2C, 0xAA, 0xBC, 0x0E, 0x25, 0x8B, </span><br><span class="line">  0xE4, 0x8A, 0xC6, 0xA2, 0x81, 0x9F, 0x75, 0x55]</span><br><span class="line"></span><br><span class="line">flag = &apos;&apos;</span><br><span class="line">for i in range(0,48,8):</span><br><span class="line">    num = (re[i+7]&lt;&lt;56) | (re[i+6] &lt;&lt;48) | re[i+5]&lt;&lt;40 | re[i+4]&lt;&lt;32 | re[i+3]&lt;&lt;24 | re[i+2]&lt;&lt;16 | re[i+1]&lt;&lt;8 | re[i]</span><br><span class="line">    for _ in range(64):</span><br><span class="line">        if num&amp;1:</span><br><span class="line">            num = (num ^ 0xB0004B7679FA26B3)//2</span><br><span class="line">            num += 0x8000000000000000</span><br><span class="line">        else:</span><br><span class="line">            num = num//2</span><br><span class="line">    meta = hex(num)[2:]</span><br><span class="line">    for j in range(len(meta)//2-1,-1,-1):  #小端序表示，需要倒序输出</span><br><span class="line">        flag += chr(int(&apos;0x&apos;+meta[j*2:(j+1)*2],16))</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure></p>
+<h1 id="xxor"><a href="#xxor" class="headerlink" title="xxor"></a>xxor</h1><h2 id="思路-8"><a href="#思路-8" class="headerlink" title="思路"></a>思路</h2><p>本来挺简单的，但是因为python数据一般不会自动控制大小，所以写的时候麻烦了点。前面用z3解下后面的结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from z3 import *</span><br><span class="line"></span><br><span class="line">s = Solver()</span><br><span class="line"></span><br><span class="line">re = [Int(&apos;re[%d]&apos;%i) for i in range(6)]</span><br><span class="line"></span><br><span class="line">s.add(re[0] == 0xDF48EF7E, re[5] == 0x84F30420 , re[1] == 0x20CAACF4)</span><br><span class="line">s.add(re[2] - re[3] == 0x84A236FF , re[3] + re[4] == 0xFA6CB703 , re[2] - re[4] == 0x42D731A8)</span><br><span class="line">s.check()</span><br><span class="line">print(s.model())</span><br></pre></td></tr></table></figure>
+<p>拿到之后对处理函数反过来写一下，主要是在中间每一步运算之后就要将其控制成四个字节，然后最后尝试使用了下libnum的n2s直接转化十六进制为字符串。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">re = [0 for _ in range(6)]</span><br><span class="line">re[2] = 3774025685</span><br><span class="line">re[3] = 1548802262</span><br><span class="line">re[4] = 2652626477</span><br><span class="line">re[1] = 550153460</span><br><span class="line">re[5] = 2230518816</span><br><span class="line">re[0] = 3746099070</span><br><span class="line"></span><br><span class="line">v5 = 0</span><br><span class="line">for i in range(64):</span><br><span class="line">    v5 += 0x458BCD42</span><br><span class="line">    v5 %= 0x100000000</span><br><span class="line"></span><br><span class="line">print(hex(v5)) #0x62F35080</span><br><span class="line"></span><br><span class="line">import libnum</span><br><span class="line"></span><br><span class="line">flag = &apos;&apos;</span><br><span class="line">a = [0 for _ in range(2)]</span><br><span class="line">for i in range(3):</span><br><span class="line">    v3 = re[i*2]</span><br><span class="line">    v4 = re[i*2+1]</span><br><span class="line">    v5 = 0x62F35080</span><br><span class="line">    for j in range(64):</span><br><span class="line">        v4 -= ((v3 + v5 + 20) ^ ((v3 &lt;&lt; 6) + 3) ^ ((v3 &gt;&gt; 9) + 4) ^ 0x10)%0x100000000</span><br><span class="line">        v4 %= 0x100000000</span><br><span class="line">        v3 -= ((v4 + v5 + 11) ^ ((v4 &lt;&lt; 6) + 2) ^ ((v4 &gt;&gt; 9) + 2) ^ 0x20)%0x100000000</span><br><span class="line">        v3 %= 0x100000000</span><br><span class="line">        v5 -= 0x458BCD42</span><br><span class="line">        v5 %= 0x100000000</span><br><span class="line">        </span><br><span class="line">    </span><br><span class="line">    flag += libnum.n2s(v3) </span><br><span class="line">    flag += libnum.n2s(v4)</span><br><span class="line">    </span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure></p>
+<h1 id="FlareOn5-Ultimate-Minesweeper"><a href="#FlareOn5-Ultimate-Minesweeper" class="headerlink" title="[FlareOn5]Ultimate Minesweeper"></a>[FlareOn5]Ultimate Minesweeper</h1><p>挺有意思的.NET 逆向</p>
+<h2 id="思路-9"><a href="#思路-9" class="headerlink" title="思路"></a>思路</h2><p>打开是个扫雷程序，随便点了几次全都是雷…。查壳没有，dnspy打开，基本上没做混淆，看了下几个函数，发现主要都在MainForm里面，注意到了有个GetKey函数，看着有随机数，寻找下调用，发现上面的函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private void SquareRevealedCallback(uint column, uint row)</span><br><span class="line">&#123;</span><br><span class="line">  if (this.MineField.BombRevealed)</span><br><span class="line">  &#123;</span><br><span class="line">    this.stopwatch.Stop();</span><br><span class="line">    Application.DoEvents();</span><br><span class="line">    Thread.Sleep(1000);</span><br><span class="line">    new FailurePopup().ShowDialog();</span><br><span class="line">    Application.Exit();</span><br><span class="line">  &#125;</span><br><span class="line">  this.RevealedCells.Add(row * MainForm.VALLOC_NODE_LIMIT + column);</span><br><span class="line">  if (this.MineField.TotalUnrevealedEmptySquares == 0)</span><br><span class="line">  &#123;</span><br><span class="line">    this.stopwatch.Stop();</span><br><span class="line">    Application.DoEvents();</span><br><span class="line">    Thread.Sleep(1000);</span><br><span class="line">    new SuccessPopup(this.GetKey(this.RevealedCells)).ShowDialog();</span><br><span class="line">    Application.Exit();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里就是检测有没有碰到雷的函数，可以看到就是成功的时候会调用GetKey应该就可以拿到flag。也可以看到计算位置的时候就是row*30+column。寻找下初始化扫雷方块的函数，找到了分配内存的函数，可以发现大多数都是直接为true，应该就是为地雷，而特殊的有专门得到flag为false的地方<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">private void AllocateMemory(MineField mf)</span><br><span class="line">&#123;</span><br><span class="line">  for (uint num = 0u; num &lt; MainForm.VALLOC_NODE_LIMIT; num += 1u)</span><br><span class="line">  &#123;</span><br><span class="line">    for (uint num2 = 0u; num2 &lt; MainForm.VALLOC_NODE_LIMIT; num2 += 1u)</span><br><span class="line">    &#123;</span><br><span class="line">      bool flag = true;</span><br><span class="line">      uint r = num + 1u;</span><br><span class="line">      uint c = num2 + 1u;</span><br><span class="line">      if (this.VALLOC_TYPES.Contains(this.DeriveVallocType(r, c)))  //here</span><br><span class="line">      &#123;</span><br><span class="line">        flag = false;</span><br><span class="line">      &#125;</span><br><span class="line">      mf.GarbageCollect[(int)num2, (int)num] = flag;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>查看下跟这句话有关的地方<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">private uint DeriveVallocType(uint r, uint c)</span><br><span class="line">&#123;</span><br><span class="line">  return ~(r * MainForm.VALLOC_NODE_LIMIT + c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">private static uint VALLOC_TYPE_HEADER_PAGE = 4294966400u;</span><br><span class="line">private static uint VALLOC_TYPE_HEADER_POOL = 4294966657u;</span><br><span class="line">private static uint VALLOC_TYPE_HEADER_RESERVED = 4294967026u;</span><br><span class="line"></span><br><span class="line">private uint[] VALLOC_TYPES = new uint[]</span><br><span class="line">&#123;</span><br><span class="line">  MainForm.VALLOC_TYPE_HEADER_PAGE,</span><br><span class="line">  MainForm.VALLOC_TYPE_HEADER_POOL,</span><br><span class="line">  MainForm.VALLOC_TYPE_HEADER_RESERVED</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>也就是当计算的值为这几个时就为false，反过来计算下就行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">def getrc(num):</span><br><span class="line">    num = ~num &amp; 0xffffffff</span><br><span class="line">    c = num % 30</span><br><span class="line">    r = num // 30</span><br><span class="line">    return r,c</span><br><span class="line"></span><br><span class="line">print(map(getrc,[4294966400,4294966657,4294967026]))</span><br><span class="line">#[(29, 25), (21, 8), (8, 29)]</span><br></pre></td></tr></table></figure></p>
+<p>点击这三个方块即可拿到flag</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-02-20T09:10:17.390Z" itemprop="dateUpdated">2020-02-20 17:10:17</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/02/05/buuctf-re/" target="_blank" rel="external">http://siriuswhiter.tk/2020/02/05/buuctf-re/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/re/">RE</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/02/05/buuctf-re/&title=《BUUCTF-Re》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/02/05/buuctf-re/&title=《BUUCTF-Re》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2020/03/13/c-stl-源码分析/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">c++ STL 源码分析</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/10/27/web-practice/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">web practice</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#firmware"><span class="post-toc-number">1.</span> <span class="post-toc-text">firmware</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">思路</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#crackME"><span class="post-toc-number">2.</span> <span class="post-toc-text">crackME</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">思路</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#反调试手段"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">反调试手段</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#equation"><span class="post-toc-number">3.</span> <span class="post-toc-text">equation</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-2"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">思路</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#signin"><span class="post-toc-number">4.</span> <span class="post-toc-text">signin</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-3"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">思路</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#GWCTF-2019-re3"><span class="post-toc-number">5.</span> <span class="post-toc-text">[GWCTF 2019] re3</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-4"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">思路</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#maze-behind-junk"><span class="post-toc-number">6.</span> <span class="post-toc-text">maze_behind_junk</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-5"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">思路</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#BJD-hamburger-competition"><span class="post-toc-number">7.</span> <span class="post-toc-text">BJD hamburger competition</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-6"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">思路</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#RoarCTF2019-polyre"><span class="post-toc-number">8.</span> <span class="post-toc-text">[RoarCTF2019]polyre</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-7"><span class="post-toc-number">8.1.</span> <span class="post-toc-text">思路</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#xxor"><span class="post-toc-number">9.</span> <span class="post-toc-text">xxor</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-8"><span class="post-toc-number">9.1.</span> <span class="post-toc-text">思路</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#FlareOn5-Ultimate-Minesweeper"><span class="post-toc-number">10.</span> <span class="post-toc-text">[FlareOn5]Ultimate Minesweeper</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-9"><span class="post-toc-number">10.1.</span> <span class="post-toc-text">思路</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/02/05/buuctf-re/&title=《BUUCTF-Re》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/02/05/buuctf-re/&title=《BUUCTF-Re》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIUlEQVR42u3aS27DMAxF0ex/0+60QGH5PtIpIPFqVCR2rOMCBD/6fPC6fq2/n/Pr1/eSu1pLhgwZ2zKu5SKMNWb9lLtv+d5kyJAxh0E2wTe0Dqk8iJO9yZAhQwZ5PAm7aWiWIUOGjA6DF7oklUxDtgwZMiYzagkfb8Cl6eYXa3EZMmRsyOBd9///+yvzDRkyZGzFuMKVDgnScHmVlgwZMs5mvFugdlLD9LCFDBky5jD6YTQtht+C3f4fZMiQMYCRDgzSR9YOhD38jgwZMgYwagE0HSSQsFsM1jJkyBjD6DfO+FZqKeltHihDhowBjNrPrRO7txp26C4ZMmQczeCXpgySLPIEFLXnZMiQcSijk7TxWNcP2Q9PlCFDxkgGOe7QaZalAfoBLEOGjKMZtSSPh0KeDqYhPnijMmTIOILBS83O4S0+VCimmzJkyBjA4CPJdKjJU0nyymTIkDGZ0QmypJXPy+Nie06GDBljGLW2fjowqCWIwckRGTJkDGDwLaZdvc748wEjQ4aMAYxasFsD0jEDTyhbtbgMGTK2ZdRIaZlaex1onClDhoxDGVe4asfCajw+ZpAhQ8bZDL7S4xSkQE3L41qKKUOGjDMY6bGJzgCgU74+3CtDhowBjLTg5Pj0kxdqcRkyZMhol7h8hBA33WTIkCEDFLQEST5Jj2jIkCFjAoMnebz1lm4xTRBlyJAxh5GWjulRsM41b7FlyJCxLeMH8sFgvq7c3G4AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>

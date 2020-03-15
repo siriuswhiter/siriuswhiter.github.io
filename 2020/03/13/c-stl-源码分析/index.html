@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>c++ STL 源码分析 | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="c++,STL">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>c++ STL 源码分析</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">c++ STL 源码分析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-13T05:49:30.000Z" itemprop="datePublished" class="page-time">
+  2020-03-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/stl/">STL</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-c-stl-源码分析"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">c++ STL 源码分析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-13 13:49:30" datetime="2020-03-13T05:49:30.000Z"  itemprop="datePublished">2020-03-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/stl/">STL</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="Prepare"><a href="#Prepare" class="headerlink" title="Prepare"></a>Prepare</h1><ul>
+<li>后面发现好像按最初的vscode中的设置引用devc++中的include就有源码可以直接进行调试。且使用c++11的标准。</li>
+</ul>
+<p>首先下载源码：<a href="https://sourceforge.net/projects/stlport/" target="_blank" rel="noopener">https://sourceforge.net/projects/stlport/</a><br>为了简便起见，就不进行编译了</p>
+<p>需要修改的地方</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">文件：.\stlport\stl\config\user_config.h</span><br><span class="line">内容：#define _STLP_NO_IOSTREAMS 1</span><br><span class="line">方式：取消注释</span><br></pre></td></tr></table></figure>
+<p>之后在编译器的头文件包含中将./stlport放在首位即可。<br>vscode中即修改c_cpp_properties.json中”configuration”下的”includePath”</p>
+<h1 id="Base"><a href="#Base" class="headerlink" title="Base"></a>Base</h1><p>基本上所有的stl容器都有个allocator，用来为容器分配空间，因为较为复杂，所以决定最后再看。</p>
+<h1 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h1><p>主要代码位于 stl_vector.h<br>较为简单，本身就是个动态数组。结构较为简单<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">struct _Vector_base</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    struct _Vector_impl : public _Tp_alloc_type</span><br><span class="line">    &#123;</span><br><span class="line">	pointer _M_start;</span><br><span class="line">	pointer _M_finish;</span><br><span class="line">	pointer _M_end_of_storage;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为是连续地址空间，所以迭代器直接就是正常的指针，分别表示目前使用的头，为与可用的尾。为了降低空间配置的成本，vector配置的空间一般会大于所需的空间，实际上就是在分配大于当前容量时，会分配当前容量二倍的空间，这个可以通过代码来试一下，后面也会调试源码来看到。</p>
+<h2 id="Constructors"><a href="#Constructors" class="headerlink" title="Constructors"></a>Constructors</h2><ol>
+<li>指定空间大小及初值。such as: vector<int> v(3,0); <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vector(size_type __n, const value_type&amp; __value,</span><br><span class="line">    const allocator_type&amp; __a = allocator_type())</span><br><span class="line">: _Base(__n, __a)</span><br><span class="line">&#123; _M_fill_initialize(__n, __value); &#125;</span><br></pre></td></tr></table></figure>
+</int></li>
+</ol>
+<p>_Base(<strong>n,</strong>a) 会分配空间并设置好迭代器的位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">_Vector_base(size_t __n, const allocator_type&amp; __a)</span><br><span class="line">: _M_impl(__a)</span><br><span class="line">&#123; _M_create_storage(__n); &#125;</span><br></pre></td></tr></table></figure></p>
+<p>_M_fill_initialize(<strong>n, </strong>value) 会将初值填充进去并调整迭代器位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">_M_fill_initialize(size_type __n, const value_type&amp; __value)</span><br><span class="line">&#123;</span><br><span class="line">std::__uninitialized_fill_n_a(this-&gt;_M_impl._M_start, __n, __value, </span><br><span class="line">                _M_get_Tp_allocator());</span><br><span class="line">this-&gt;_M_impl._M_finish = this-&gt;_M_impl._M_end_of_storage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li>当有初值进行初始化时。such as: vector<int> v = {1，2};<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vector(initializer_list&lt;value_type&gt; __l,</span><br><span class="line">    const allocator_type&amp; __a = allocator_type())</span><br><span class="line">: _Base(__a)</span><br><span class="line">&#123;</span><br><span class="line">_M_range_initialize(__l.begin(), __l.end(),</span><br><span class="line">        random_access_iterator_tag());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</int></li>
+</ol>
+<p>将初值复制进分配的空间中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _ForwardIterator&gt;</span><br><span class="line">void</span><br><span class="line">_M_range_initialize(_ForwardIterator __first,</span><br><span class="line">        _ForwardIterator __last, std::forward_iterator_tag)</span><br><span class="line">&#123;</span><br><span class="line">    const size_type __n = std::distance(__first, __last);</span><br><span class="line">    this-&gt;_M_impl._M_start = this-&gt;_M_allocate(__n);</span><br><span class="line">    this-&gt;_M_impl._M_end_of_storage = this-&gt;_M_impl._M_start + __n;</span><br><span class="line">    this-&gt;_M_impl._M_finish =</span><br><span class="line">    std::__uninitialized_copy_a(__first, __last,</span><br><span class="line">                this-&gt;_M_impl._M_start,</span><br><span class="line">                _M_get_Tp_allocator());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="push-back-amp-amp-pop-back"><a href="#push-back-amp-amp-pop-back" class="headerlink" title="push_back &amp;&amp; pop_back"></a>push_back &amp;&amp; pop_back</h2><ol>
+<li>push_back<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">push_back(value_type&amp;&amp; __x)</span><br><span class="line">&#123; emplace_back(std::move(__x)); &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>进入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">template&lt;typename... _Args&gt;</span><br><span class="line">    void</span><br><span class="line">    vector&lt;_Tp, _Alloc&gt;::</span><br><span class="line">    emplace_back(_Args&amp;&amp;... __args)</span><br><span class="line">    &#123;</span><br><span class="line">if (this-&gt;_M_impl._M_finish != this-&gt;_M_impl._M_end_of_storage)</span><br><span class="line">    &#123;</span><br><span class="line">    _Alloc_traits::construct(this-&gt;_M_impl, this-&gt;_M_impl._M_finish,</span><br><span class="line">                    std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">    ++this-&gt;_M_impl._M_finish;</span><br><span class="line">    &#125;</span><br><span class="line">else</span><br><span class="line">    _M_emplace_back_aux(std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>就是检测下是否到达容量。如果还有剩余，则调用construct将元素置入并将尾迭代器向后，否则调用_M_emplace_back_aux<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">template&lt;typename... _Args&gt;</span><br><span class="line">    void</span><br><span class="line">    vector&lt;_Tp, _Alloc&gt;::</span><br><span class="line">    _M_emplace_back_aux(_Args&amp;&amp;... __args)</span><br><span class="line">    &#123;</span><br><span class="line">const size_type __len =</span><br><span class="line">    _M_check_len(size_type(1), &quot;vector::_M_emplace_back_aux&quot;); //计算新空间所需大小</span><br><span class="line"></span><br><span class="line">//暂时使用的指向新vector的迭代器</span><br><span class="line">pointer __new_start(this-&gt;_M_allocate(__len));</span><br><span class="line">pointer __new_finish(__new_start);</span><br><span class="line">__try</span><br><span class="line">    &#123;</span><br><span class="line">    //将原vector的内容拷贝到新的vector</span><br><span class="line">    _Alloc_traits::construct(this-&gt;_M_impl, __new_start + size(),</span><br><span class="line">                    std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">    __new_finish = 0;</span><br><span class="line"></span><br><span class="line">    __new_finish</span><br><span class="line">        = std::__uninitialized_move_if_noexcept_a</span><br><span class="line">        (this-&gt;_M_impl._M_start, this-&gt;_M_impl._M_finish,</span><br><span class="line">        __new_start, _M_get_Tp_allocator());</span><br><span class="line"></span><br><span class="line">    ++__new_finish;</span><br><span class="line">    &#125;</span><br><span class="line">__catch(...)</span><br><span class="line">    &#123;</span><br><span class="line">    if (!__new_finish)</span><br><span class="line">        _Alloc_traits::destroy(this-&gt;_M_impl, __new_start + size());</span><br><span class="line">    else</span><br><span class="line">        std::_Destroy(__new_start, __new_finish, _M_get_Tp_allocator());</span><br><span class="line">    _M_deallocate(__new_start, __len);</span><br><span class="line">    __throw_exception_again;</span><br><span class="line">    &#125;</span><br><span class="line">//释放原vector</span><br><span class="line">std::_Destroy(this-&gt;_M_impl._M_start, this-&gt;_M_impl._M_finish,</span><br><span class="line">            _M_get_Tp_allocator());</span><br><span class="line">_M_deallocate(this-&gt;_M_impl._M_start,</span><br><span class="line">            this-&gt;_M_impl._M_end_of_storage</span><br><span class="line">            - this-&gt;_M_impl._M_start);</span><br><span class="line">//更新迭代器</span><br><span class="line">this-&gt;_M_impl._M_start = __new_start;</span><br><span class="line">this-&gt;_M_impl._M_finish = __new_finish;</span><br><span class="line">this-&gt;_M_impl._M_end_of_storage = __new_start + __len;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>这里学习到的一点是： vector 迭代器的更新（空间重配置，迭代器便需要更新）。</li>
+</ul>
+<ol start="2">
+<li>pop_back<br>就是单纯的移动迭代器指针之后撤销元素<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">pop_back() _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">--this-&gt;_M_impl._M_finish;</span><br><span class="line">_Alloc_traits::destroy(this-&gt;_M_impl, this-&gt;_M_impl._M_finish);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h2><p>接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iterator</span><br><span class="line">insert(const_iterator __position, value_type&amp;&amp; __x)</span><br><span class="line">&#123; return emplace(__position, std::move(__x)); &#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">typename vector&lt;_Tp, _Alloc&gt;::iterator</span><br><span class="line">vector&lt;_Tp, _Alloc&gt;::</span><br><span class="line">emplace(const_iterator __position, _Args&amp;&amp;... __args)</span><br><span class="line">&#123;</span><br><span class="line">    //若留有空间且插入为末尾，则直接按push_back中的操作进行</span><br><span class="line">const size_type __n = __position - begin();</span><br><span class="line">if (this-&gt;_M_impl._M_finish != this-&gt;_M_impl._M_end_of_storage</span><br><span class="line">&amp;&amp; __position == end())</span><br><span class="line">&#123;</span><br><span class="line">_Alloc_traits::construct(this-&gt;_M_impl, this-&gt;_M_impl._M_finish,</span><br><span class="line">                std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">++this-&gt;_M_impl._M_finish;</span><br><span class="line">&#125;</span><br><span class="line">else</span><br><span class="line">_M_insert_aux(begin() + (__position - cbegin()),</span><br><span class="line">    std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">return iterator(this-&gt;_M_impl._M_start + __n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>否则进入细节的插入函数_M_insert_aux</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">vector&lt;_Tp, _Alloc&gt;::</span><br><span class="line">_M_insert_aux(iterator __position, const _Tp&amp; __x)</span><br><span class="line">&#123;</span><br><span class="line">    //若还有空间</span><br><span class="line">    if (this-&gt;_M_impl._M_finish != this-&gt;_M_impl._M_end_of_storage)</span><br><span class="line">&#123;</span><br><span class="line">    _Alloc_traits::construct(this-&gt;_M_impl, this-&gt;_M_impl._M_finish,</span><br><span class="line">                    _GLIBCXX_MOVE(*(this-&gt;_M_impl._M_finish</span><br><span class="line">                                - 1)));</span><br><span class="line">    ++this-&gt;_M_impl._M_finish;</span><br><span class="line">    _GLIBCXX_MOVE_BACKWARD3(__position.base(),</span><br><span class="line">                this-&gt;_M_impl._M_finish - 2,</span><br><span class="line">                this-&gt;_M_impl._M_finish - 1);</span><br><span class="line">    *__position = _Tp(std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">&#125;</span><br><span class="line">    else</span><br><span class="line">&#123;</span><br><span class="line">    const size_type __len =</span><br><span class="line">    _M_check_len(size_type(1), &quot;vector::_M_insert_aux&quot;); //新长度</span><br><span class="line">    const size_type __elems_before = __position - begin();</span><br><span class="line">    //临时新迭代器</span><br><span class="line">    pointer __new_start(this-&gt;_M_allocate(__len));</span><br><span class="line">    pointer __new_finish(__new_start);</span><br><span class="line">    __try</span><br><span class="line">    &#123;</span><br><span class="line">        //将添加的元素置入位置</span><br><span class="line">        _Alloc_traits::construct(this-&gt;_M_impl,</span><br><span class="line">                            __new_start + __elems_before,</span><br><span class="line">                    std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">        __new_finish = 0;</span><br><span class="line">        //原先前半部分的元素</span><br><span class="line">        __new_finish</span><br><span class="line">    = std::__uninitialized_move_if_noexcept_a</span><br><span class="line">    (this-&gt;_M_impl._M_start, __position.base(),</span><br><span class="line">        __new_start, _M_get_Tp_allocator());</span><br><span class="line"></span><br><span class="line">        ++__new_finish;</span><br><span class="line">        //原先后半部分的元素</span><br><span class="line">        __new_finish</span><br><span class="line">    = std::__uninitialized_move_if_noexcept_a</span><br><span class="line">    (__position.base(), this-&gt;_M_impl._M_finish,</span><br><span class="line">        __new_finish, _M_get_Tp_allocator());</span><br><span class="line">    &#125;</span><br><span class="line">        __catch(...)</span><br><span class="line">    &#123;</span><br><span class="line">        if (!__new_finish)</span><br><span class="line">    _Alloc_traits::destroy(this-&gt;_M_impl,</span><br><span class="line">                            __new_start + __elems_before);</span><br><span class="line">        else</span><br><span class="line">    std::_Destroy(__new_start, __new_finish, _M_get_Tp_allocator());</span><br><span class="line">        _M_deallocate(__new_start, __len);</span><br><span class="line">        __throw_exception_again;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //释放原vector，更新迭代器</span><br><span class="line">    std::_Destroy(this-&gt;_M_impl._M_start, this-&gt;_M_impl._M_finish,</span><br><span class="line">        _M_get_Tp_allocator());</span><br><span class="line">    _M_deallocate(this-&gt;_M_impl._M_start,</span><br><span class="line">        this-&gt;_M_impl._M_end_of_storage</span><br><span class="line">        - this-&gt;_M_impl._M_start);</span><br><span class="line">    this-&gt;_M_impl._M_start = __new_start;</span><br><span class="line">    this-&gt;_M_impl._M_finish = __new_finish;</span><br><span class="line">    this-&gt;_M_impl._M_end_of_storage = __new_start + __len;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-03-15T06:45:12.482Z" itemprop="dateUpdated">2020-03-15 14:45:12</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/03/13/c-stl-源码分析/" target="_blank" rel="external">http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stl/">STL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c++</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/&title=《c++ STL 源码分析》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/&title=《c++ STL 源码分析》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2020/02/05/buuctf-re/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">BUUCTF-Re</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Prepare"><span class="post-toc-number">1.</span> <span class="post-toc-text">Prepare</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Base"><span class="post-toc-number">2.</span> <span class="post-toc-text">Base</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#vector"><span class="post-toc-number">3.</span> <span class="post-toc-text">vector</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Constructors"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">Constructors</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#push-back-amp-amp-pop-back"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">push_back &amp;&amp; pop_back</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#insert"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">insert</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/&title=《c++ STL 源码分析》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/&title=《c++ STL 源码分析》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJElEQVR42u3awa7DIAxE0fz/T6fSW70NMDMmrWIuq6ptgJOFZWyuSx7339C/uf8NdxX3qQsGDBgHMO7pmG969B9lntGm5/MMqTBgwDiAMQ+yypLzZ7OAq8wPAwYMGPq2RpvIvoEBAwaMSsDN0sF5cqmnpDBgwDiZoUynj0r4fvwsDgMGjBcy3MbANz8/2N+AAQPGSxhZGHVTwOx1GLuCAQNGa4Z+kcJtW9aLdG6rAAYMGL0Zeq6V/ZolnVnrFAYMGOcw9i7sXgtzAzQMGDB6M9wj664GpxtSF/PAgAGjNcMNrJXj666N2o1MGDBgvJzhJnYK2L0koYT4xYuAAQNGa0YlKuvJoj5/FnZhwIDRm6GUuhRYJRvNfoUBA8ZpDLdBqAdT+9yctQdgwIDRmqE/UOmI7rqKYeS2MGDAaMTQ25aVNufjjUwYMGC0ZugP7Cq3ZYmgMScMGDCaMiqNTLdglyWj0j9hwIDRmuEmYVl6pxfj3KuxMGDA6M3Itjh/K3pxzW0kSDdEYMCA0ZQRdhLMGfYW9YZ3RmDAgNGO4RbX3CVdtlKMWySIMGDAaMe4zZEtU7l2JjU1YcCA0ZqRNRf1MlnWsHQLfzBgwDiBsatYn4XLSmnv0qt3MGDAaMHILkz8ds7FnREYMGAcyXCL/lkqGbYzYcCAASMqt0mBUi7ALdaCAQPGAQz3ooPbEnBDqnt4hgEDRm9G/VCqw9yjrD4/DBgwmjI+syhLqTTb+LcAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>
