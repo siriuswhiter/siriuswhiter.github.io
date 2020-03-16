@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     
     
-    <title>c++ STL 源码分析 | Room of Requirement | pwn what you want</title>
+    <title>c++ STL 源码分析(一) | Room of Requirement | pwn what you want</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="keywords" content="c++,STL">
@@ -173,7 +173,7 @@
           <i class="icon icon-lg icon-navicon"></i>
         </a>
         <div class="flex-col header-title ellipsis">
-            <span>c++ STL 源码分析</span>
+            <span>c++ STL 源码分析(一)</span>
             
         </div>
         
@@ -186,10 +186,10 @@
 <header class="content-header post-header">
     <img src="/img/banner.jpg" class="header-bg">
     <div class="container fade-scale">
-        <h1 class="title">c++ STL 源码分析</h1>
+        <h1 class="title">c++ STL 源码分析(一)</h1>
         <h5 class="subtitle">
             
-                <time datetime="2020-03-13T05:49:30.000Z" itemprop="datePublished" class="page-time">
+                <time datetime="2020-03-13T07:49:30.000Z" itemprop="datePublished" class="page-time">
   2020-03-13
 </time>
 
@@ -221,12 +221,12 @@
 
 
 <div class="container body-wrap">
-    <article id="post-c-stl-源码分析"
+    <article id="post-c-stl-源码分析-一"
   class="post-article article-type-post" itemprop="blogPost">
     <div class="post-card">
-        <h1 class="post-card-title">c++ STL 源码分析</h1>
+        <h1 class="post-card-title">c++ STL 源码分析(一)</h1>
         <div class="post-meta">
-            <time class="post-time" title="2020-03-13 13:49:30" datetime="2020-03-13T05:49:30.000Z"  itemprop="datePublished">2020-03-13</time>
+            <time class="post-time" title="2020-03-13 15:49:30" datetime="2020-03-13T07:49:30.000Z"  itemprop="datePublished">2020-03-13</time>
 
             
 	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/stl/">STL</a></li></ul>
@@ -242,16 +242,7 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             
-            <h1 id="Prepare"><a href="#Prepare" class="headerlink" title="Prepare"></a>Prepare</h1><ul>
-<li>后面发现好像按最初的vscode中的设置引用devc++中的include就有源码可以直接进行调试。且使用c++11的标准。</li>
-</ul>
-<p>首先下载源码：<a href="https://sourceforge.net/projects/stlport/" target="_blank" rel="noopener">https://sourceforge.net/projects/stlport/</a><br>为了简便起见，就不进行编译了</p>
-<p>需要修改的地方</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">文件：.\stlport\stl\config\user_config.h</span><br><span class="line">内容：#define _STLP_NO_IOSTREAMS 1</span><br><span class="line">方式：取消注释</span><br></pre></td></tr></table></figure>
-<p>之后在编译器的头文件包含中将./stlport放在首位即可。<br>vscode中即修改c_cpp_properties.json中”configuration”下的”includePath”</p>
-<h1 id="Base"><a href="#Base" class="headerlink" title="Base"></a>Base</h1><p>基本上所有的stl容器都有个allocator，用来为容器分配空间，因为较为复杂，所以决定最后再看。</p>
-<p>关于c++ 11中的move 与forward，参考：<br><a href="https://www.cnblogs.com/Philip-Tell-Truth/p/6370019.html" target="_blank" rel="noopener">https://www.cnblogs.com/Philip-Tell-Truth/p/6370019.html</a><br><a href="https://www.cnblogs.com/catch/p/3507883.html" target="_blank" rel="noopener">https://www.cnblogs.com/catch/p/3507883.html</a></p>
-<h1 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h1><p>主要代码位于 stl_vector.h<br>较为简单，本身就是个动态数组。结构较为简单<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">struct _Vector_base</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    struct _Vector_impl : public _Tp_alloc_type</span><br><span class="line">    &#123;</span><br><span class="line">	pointer _M_start;</span><br><span class="line">	pointer _M_finish;</span><br><span class="line">	pointer _M_end_of_storage;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+            <h1 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h1><p>主要代码位于 stl_vector.h<br>较为简单，本身就是个动态数组。结构较为简单<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">struct _Vector_base</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    struct _Vector_impl : public _Tp_alloc_type</span><br><span class="line">    &#123;</span><br><span class="line">	pointer _M_start;</span><br><span class="line">	pointer _M_finish;</span><br><span class="line">	pointer _M_end_of_storage;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>因为是连续地址空间，所以迭代器直接就是正常的指针，分别表示目前使用的头，尾与可用的尾指针。为了降低空间配置的成本，vector配置的空间一般会大于所需的空间，实际上就是在分配大于当前容量时，会分配当前容量二倍的空间，这个可以通过代码来试一下，后面也会调试源码来看到。</p>
 <h2 id="Constructors"><a href="#Constructors" class="headerlink" title="Constructors"></a>Constructors</h2><ol>
 <li>指定空间大小及初值。such as: vector<int> v(3,0); <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vector(size_type __n, const value_type&amp; __value,</span><br><span class="line">    const allocator_type&amp; __a = allocator_type())</span><br><span class="line">: _Base(__n, __a)</span><br><span class="line">&#123; _M_fill_initialize(__n, __value); &#125;</span><br></pre></td></tr></table></figure>
@@ -287,12 +278,12 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2020-03-15T13:22:10.581Z" itemprop="dateUpdated">2020-03-15 21:22:10</time>
+    最后更新时间：<time datetime="2020-03-16T06:58:51.021Z" itemprop="dateUpdated">2020-03-16 14:58:51</time>
 </span><br>
 
 
         
-        转载注明出处，原文地址：<a href="/2020/03/13/c-stl-源码分析/" target="_blank" rel="external">http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/</a>
+        转载注明出处，原文地址：<a href="/2020/03/13/c-stl-源码分析-一/" target="_blank" rel="external">http://siriuswhiter.tk/2020/03/13/c-stl-源码分析-一/</a>
         
     </div>
     <footer>
@@ -321,7 +312,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/&title=《c++ STL 源码分析》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析-一/&title=《c++ STL 源码分析(一)》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -333,7 +324,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/&title=《c++ STL 源码分析》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析-一/&title=《c++ STL 源码分析(一)》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -356,14 +347,21 @@
         
     </div>
     
-<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2020/03/16/c-stl-源码分析-二/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">c++ STL 源码分析(二)</h4>
+      </a>
+    </div>
   
 
   
     <div class="next">
-      <a href="/2020/02/05/buuctf-re/" id="post-next" class="post-nav-link">
+      <a href="/2020/03/13/c-stl-源码分析-零/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">BUUCTF-Re</h4>
+        <h4 class="title">c++ STL 源码分析(零)</h4>
       </a>
     </div>
   
@@ -375,7 +373,7 @@
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Prepare"><span class="post-toc-number">1.</span> <span class="post-toc-text">Prepare</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Base"><span class="post-toc-number">2.</span> <span class="post-toc-text">Base</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#vector"><span class="post-toc-number">3.</span> <span class="post-toc-text">vector</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Constructors"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">Constructors</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#push-back-amp-amp-pop-back"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">push_back &amp;&amp; pop_back</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#insert"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">insert</span></a></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#vector"><span class="post-toc-number">1.</span> <span class="post-toc-text">vector</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Constructors"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Constructors</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#push-back-amp-amp-pop-back"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">push_back &amp;&amp; pop_back</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#insert"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">insert</span></a></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
@@ -461,7 +459,7 @@
     <ul class="reset share-icons">
       
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/&title=《c++ STL 源码分析》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析-一/&title=《c++ STL 源码分析(一)》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -473,7 +471,7 @@
       </li>
       
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析/&title=《c++ STL 源码分析》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/13/c-stl-源码分析-一/&title=《c++ STL 源码分析(一)》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -485,7 +483,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJElEQVR42u3awa7DIAxE0fz/T6fSW70NMDMmrWIuq6ptgJOFZWyuSx7339C/uf8NdxX3qQsGDBgHMO7pmG969B9lntGm5/MMqTBgwDiAMQ+yypLzZ7OAq8wPAwYMGPq2RpvIvoEBAwaMSsDN0sF5cqmnpDBgwDiZoUynj0r4fvwsDgMGjBcy3MbANz8/2N+AAQPGSxhZGHVTwOx1GLuCAQNGa4Z+kcJtW9aLdG6rAAYMGL0Zeq6V/ZolnVnrFAYMGOcw9i7sXgtzAzQMGDB6M9wj664GpxtSF/PAgAGjNcMNrJXj666N2o1MGDBgvJzhJnYK2L0koYT4xYuAAQNGa0YlKuvJoj5/FnZhwIDRm6GUuhRYJRvNfoUBA8ZpDLdBqAdT+9yctQdgwIDRmqE/UOmI7rqKYeS2MGDAaMTQ25aVNufjjUwYMGC0ZugP7Cq3ZYmgMScMGDCaMiqNTLdglyWj0j9hwIDRmuEmYVl6pxfj3KuxMGDA6M3Itjh/K3pxzW0kSDdEYMCA0ZQRdhLMGfYW9YZ3RmDAgNGO4RbX3CVdtlKMWySIMGDAaMe4zZEtU7l2JjU1YcCA0ZqRNRf1MlnWsHQLfzBgwDiBsatYn4XLSmnv0qt3MGDAaMHILkz8ds7FnREYMGAcyXCL/lkqGbYzYcCAASMqt0mBUi7ALdaCAQPGAQz3ooPbEnBDqnt4hgEDRm9G/VCqw9yjrD4/DBgwmjI+syhLqTTb+LcAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACH0lEQVR42u3aQW7DIBAF0Nz/0qnUVaU05M9MXDXwWFmxjf28+IGB2y1u9+/28/jxl/Xx473rs7crGgYGxscy7svWe8C6t95z171hYGCcwKiG7Pr6dT/r/teR/fR3DAwMjFZcVj8HBgYGxhWM5FWqJAwMDIzJJHYdizk1mfpeOBfHwMD4QEZvYeBvji9f38DAwPj3jHuxVYd0ySJlNWR/eSsMDIytGfOifC8oJ9ssCiNcDAyMLRi9QltegMvDdPRBMTAwDmBUy2TVRYJesOYfAgMDY29GEnOFaWRrE0a1h6efAAMDY2vGOtqqk9Xk7DyyMTAwMJISf/L4dxXvoqEhBgbG1ozqoK0a09V+qndhYGCcw0iiM4/XXss3cLwot2FgYGzKyB8wYVfvSjaQYWBgnMlobiGNJ5/VYWU0eMXAwNiUkVurL92L1Ev2jGBgYHw4o3ppj9HrP4l4DAyMkxm9TRK9gV1hlXUd0BgYGAcwqguKeTHuXR9otBKLgYHxsYz5i+YDuGSIWY1gDAyMMxnzVo3dahnul2swMDC2ZjQviiec+fav/C4MDIzTGNdtqsiL+3mp7mmgY2BgbM2YRGSvoF8d8OXTXQwMjL0Z1UnppNDfi+nySiwGBsamjHkITsD5P8CLwMXAwDiekU81q2fz5QEMDAyMyf6y6uBvvhSBgYFxGmMyie1F56Sch4GBcRrjXQsDV2ykSMp2GBgYWzO+AGeEhJrOzEljAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 
