@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>c++ STL 源码分析(四) | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="c++,STL">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>c++ STL 源码分析(四)</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">c++ STL 源码分析(四)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-21T07:50:53.000Z" itemprop="datePublished" class="page-time">
+  2020-03-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/stl/">STL</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-c-stl-源码分析-四"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">c++ STL 源码分析(四)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-21 15:50:53" datetime="2020-03-21T07:50:53.000Z"  itemprop="datePublished">2020-03-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/stl/">STL</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="deque"><a href="#deque" class="headerlink" title="deque"></a>deque</h1><p>双向开口的连续线性空间，因为要在头部也要插入，所以不是简单的像vector一样分配。</p>
+<p>deque没有容量的概念，实际上底层是以分段连续空间组合而成。 </p>
+<h2 id="Constructor"><a href="#Constructor" class="headerlink" title="Constructor"></a>Constructor</h2><p>指定初值。such as:deque<int> l = {2,3,1};</int></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    deque(initializer_list&lt;value_type&gt; __l,</span><br><span class="line">    const allocator_type&amp; __a = allocator_type())</span><br><span class="line">    : _Base(__a)</span><br><span class="line">    &#123;</span><br><span class="line">_M_range_initialize(__l.begin(), __l.end(),</span><br><span class="line">            random_access_iterator_tag());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这样的调用的是_M_range_initialize<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">  template &lt;typename _ForwardIterator&gt;</span><br><span class="line">    void</span><br><span class="line">    deque&lt;_Tp, _Alloc&gt;::</span><br><span class="line">    _M_range_initialize(_ForwardIterator __first, _ForwardIterator __last,</span><br><span class="line">                        std::forward_iterator_tag)</span><br><span class="line">    &#123;</span><br><span class="line">      const size_type __n = std::distance(__first, __last);</span><br><span class="line">      this-&gt;_M_initialize_map(__n);</span><br><span class="line"></span><br><span class="line">      _Map_pointer __cur_node;</span><br><span class="line">      __try</span><br><span class="line">        &#123;</span><br><span class="line">            //尝试遍历map中的节点并调用__uniintialized_copy_a将初值拷贝进去，最后将剩下的一点拷贝进最后一个缓冲区</span><br><span class="line">          for (__cur_node = this-&gt;_M_impl._M_start._M_node;</span><br><span class="line">               __cur_node &lt; this-&gt;_M_impl._M_finish._M_node;</span><br><span class="line">               ++__cur_node)</span><br><span class="line">     &#123;</span><br><span class="line">_ForwardIterator __mid = __first;</span><br><span class="line">std::advance(__mid, _S_buffer_size());</span><br><span class="line">std::__uninitialized_copy_a(__first, __mid, *__cur_node,</span><br><span class="line">			    _M_get_Tp_allocator());</span><br><span class="line">__first = __mid;</span><br><span class="line">     &#125;</span><br><span class="line">          std::__uninitialized_copy_a(__first, __last,</span><br><span class="line">			this-&gt;_M_impl._M_finish._M_first,</span><br><span class="line">			_M_get_Tp_allocator());</span><br><span class="line">        &#125;</span><br><span class="line">      __catch(...)</span><br><span class="line">        &#123;</span><br><span class="line">          std::_Destroy(this-&gt;_M_impl._M_start,</span><br><span class="line">	  iterator(*__cur_node, __cur_node),</span><br><span class="line">	  _M_get_Tp_allocator());</span><br><span class="line">          __throw_exception_again;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先得到长度，再初始化map<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"> template&lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">   void</span><br><span class="line">   _Deque_base&lt;_Tp, _Alloc&gt;::</span><br><span class="line">   _M_initialize_map(size_t __num_elements)</span><br><span class="line">   &#123;</span><br><span class="line">       //单个连续缓冲区大小为512字节</span><br><span class="line">       &lt;!-- #ifndef _GLIBCXX_DEQUE_BUF_SIZE</span><br><span class="line">       #define _GLIBCXX_DEQUE_BUF_SIZE 512</span><br><span class="line">       #endif</span><br><span class="line"></span><br><span class="line">       inline size_t</span><br><span class="line">       __deque_buf_size(size_t __size)</span><br><span class="line">       &#123; return (__size &lt; _GLIBCXX_DEQUE_BUF_SIZE</span><br><span class="line">    ? size_t(_GLIBCXX_DEQUE_BUF_SIZE / __size) : size_t(1)); &#125; --&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">     const size_t __num_nodes = (__num_elements/ __deque_buf_size(sizeof(_Tp))</span><br><span class="line">			  + 1);</span><br><span class="line"></span><br><span class="line">       //_M_map_size最小为8</span><br><span class="line">     this-&gt;_M_impl._M_map_size = std::max((size_t) _S_initial_map_size,</span><br><span class="line">				   size_t(__num_nodes + 2));</span><br><span class="line">     this-&gt;_M_impl._M_map = _M_allocate_map(this-&gt;_M_impl._M_map_size);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       //这里注意到，map中的节点地址，并不是从头开始存放的，而是尽量往中间存放。</span><br><span class="line">       //因为需要应对两头存放时可能需要分配新的缓冲区，若直接在头部存放，则push_front容易变得低效，因为可能得经常变动map。</span><br><span class="line">     _Tp** __nstart = (this-&gt;_M_impl._M_map</span><br><span class="line">		+ (this-&gt;_M_impl._M_map_size - __num_nodes) / 2);</span><br><span class="line">     _Tp** __nfinish = __nstart + __num_nodes;</span><br><span class="line"></span><br><span class="line">     __try</span><br><span class="line">&#123; _M_create_nodes(__nstart, __nfinish); &#125;</span><br><span class="line">     __catch(...)</span><br><span class="line">&#123;</span><br><span class="line">  _M_deallocate_map(this-&gt;_M_impl._M_map, this-&gt;_M_impl._M_map_size);</span><br><span class="line">  this-&gt;_M_impl._M_map = 0;</span><br><span class="line">  this-&gt;_M_impl._M_map_size = 0;</span><br><span class="line">  __throw_exception_again;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">     this-&gt;_M_impl._M_start._M_set_node(__nstart);</span><br><span class="line">     this-&gt;_M_impl._M_finish._M_set_node(__nfinish - 1);</span><br><span class="line">     this-&gt;_M_impl._M_start._M_cur = _M_impl._M_start._M_first;//第一个元素的位置</span><br><span class="line">     this-&gt;_M_impl._M_finish._M_cur = (this-&gt;_M_impl._M_finish._M_first</span><br><span class="line">				+ __num_elements</span><br><span class="line">				% __deque_buf_size(sizeof(_Tp)));           //最后一个元素后的位置</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里可以看到该结构体主要有四个部分，</p>
+<ol>
+<li>_M_map，指向map地址，map中存储各个缓冲区的地址。</li>
+<li>_M_map_size，指定map大小。</li>
+<li>_M_start，指向map中第一个节点的缓冲区。<br>struct _Deque_iterator<br>{<br> _TP<em> _M_cur;   使用中的缓冲区指针<br> _Tp</em> _M_first; 第一个缓冲区的头指针<br> _Tp* _M_last;  第一个缓冲区的尾指针<br> _Tp** _M_node;  在map中的node的位置<br>}</li>
+<li>_M_finish，指向map中最后一个节点的缓冲区，结构与_M_start相同。</li>
+</ol>
+<p>初始化就是进行空间的分配及对这些值进行相应的设置。</p>
+<p>同时注意到后两个就是deque的迭代器，其重构了许多符号来应对空间的不连续操作，因为比较简单就不分析了。</p>
+<h2 id="push-back-amp-amp-pop-back-amp-amp-push-front-amp-amp-pop-front"><a href="#push-back-amp-amp-pop-back-amp-amp-push-front-amp-amp-pop-front" class="headerlink" title="push_back &amp;&amp; pop_back &amp;&amp; push_front &amp;&amp; pop_front"></a>push_back &amp;&amp; pop_back &amp;&amp; push_front &amp;&amp; pop_front</h2><ol>
+<li>push_back</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">push_back(value_type&amp;&amp; __x)</span><br><span class="line">&#123; emplace_back(std::move(__x)); &#125;</span><br></pre></td></tr></table></figure>
+<p>跟进<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">template&lt;typename... _Args&gt;</span><br><span class="line">    void</span><br><span class="line">    deque&lt;_Tp, _Alloc&gt;::</span><br><span class="line">    emplace_back(_Args&amp;&amp;... __args)</span><br><span class="line">    &#123;</span><br><span class="line">if (this-&gt;_M_impl._M_finish._M_cur</span><br><span class="line">    != this-&gt;_M_impl._M_finish._M_last - 1)  //最后一个缓冲区还有位置</span><br><span class="line">    &#123;</span><br><span class="line">    this-&gt;_M_impl.construct(this-&gt;_M_impl._M_finish._M_cur,</span><br><span class="line">                std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">    ++this-&gt;_M_impl._M_finish._M_cur;</span><br><span class="line">    &#125;</span><br><span class="line">else</span><br><span class="line">    _M_push_back_aux(std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>分析下没有位置的代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">template&lt;typename... _Args&gt;</span><br><span class="line">    void</span><br><span class="line">    deque&lt;_Tp, _Alloc&gt;::</span><br><span class="line">    _M_push_back_aux(_Args&amp;&amp;... __args)</span><br><span class="line">    &#123;</span><br><span class="line">        //若map中节点位置已满，则需要一块更大的缓冲区存放map，这里调用的是_M_reallocate_map</span><br><span class="line">_M_reserve_map_at_back();</span><br><span class="line">          &lt;!-- void</span><br><span class="line">            _M_reserve_map_at_back(size_type __nodes_to_add = 1)</span><br><span class="line">            &#123;</span><br><span class="line">                if (__nodes_to_add + 1 &gt; this-&gt;_M_impl._M_map_size</span><br><span class="line">                    - (this-&gt;_M_impl._M_finish._M_node - this-&gt;_M_impl._M_map))</span><br><span class="line">                _M_reallocate_map(__nodes_to_add, false);  </span><br><span class="line">            &#125; --&gt;</span><br><span class="line">*(this-&gt;_M_impl._M_finish._M_node + 1) = this-&gt;_M_allocate_node(); 分配新节点</span><br><span class="line">__try</span><br><span class="line">    &#123;</span><br><span class="line">    this-&gt;_M_impl.construct(this-&gt;_M_impl._M_finish._M_cur,</span><br><span class="line">                std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">    this-&gt;_M_impl._M_finish._M_set_node(this-&gt;_M_impl._M_finish._M_node  //_M_finish的_M_node指向新节点</span><br><span class="line">                    + 1);</span><br><span class="line">    this-&gt;_M_impl._M_finish._M_cur = this-&gt;_M_impl._M_finish._M_first;    </span><br><span class="line">    &#125;</span><br><span class="line">__catch(...)</span><br><span class="line">    &#123;</span><br><span class="line">    _M_deallocate_node(*(this-&gt;_M_impl._M_finish._M_node + 1));</span><br><span class="line">    __throw_exception_again;</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>对map的操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"> template &lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">   void</span><br><span class="line">   deque&lt;_Tp, _Alloc&gt;::</span><br><span class="line">   _M_reallocate_map(size_type __nodes_to_add, bool __add_at_front)</span><br><span class="line">   &#123;</span><br><span class="line">     const size_type __old_num_nodes</span><br><span class="line">= this-&gt;_M_impl._M_finish._M_node - this-&gt;_M_impl._M_start._M_node + 1;</span><br><span class="line">     const size_type __new_num_nodes = __old_num_nodes + __nodes_to_add;</span><br><span class="line"></span><br><span class="line">     _Map_pointer __new_nstart;</span><br><span class="line"></span><br><span class="line">     //如果原先map足够大，则根据需要移动下map中的指针即可</span><br><span class="line">     if (this-&gt;_M_impl._M_map_size &gt; 2 * __new_num_nodes)</span><br><span class="line">&#123;</span><br><span class="line">  __new_nstart = this-&gt;_M_impl._M_map + (this-&gt;_M_impl._M_map_size</span><br><span class="line">				 - __new_num_nodes) / 2</span><br><span class="line">                 + (__add_at_front ? __nodes_to_add : 0);</span><br><span class="line">  if (__new_nstart &lt; this-&gt;_M_impl._M_start._M_node)</span><br><span class="line">    std::copy(this-&gt;_M_impl._M_start._M_node,</span><br><span class="line">	      this-&gt;_M_impl._M_finish._M_node + 1,</span><br><span class="line">	      __new_nstart);</span><br><span class="line">  else</span><br><span class="line">    std::copy_backward(this-&gt;_M_impl._M_start._M_node,</span><br><span class="line">		       this-&gt;_M_impl._M_finish._M_node + 1,</span><br><span class="line">		       __new_nstart + __old_num_nodes);</span><br><span class="line">&#125;</span><br><span class="line">       //若map大小不够，则需要重新分配map，并把原先的map拷贝到新map中特定的位置</span><br><span class="line">     else</span><br><span class="line">&#123;</span><br><span class="line">  size_type __new_map_size = this-&gt;_M_impl._M_map_size</span><br><span class="line">                             + std::max(this-&gt;_M_impl._M_map_size,</span><br><span class="line">					__nodes_to_add) + 2;</span><br><span class="line"></span><br><span class="line">  _Map_pointer __new_map = this-&gt;_M_allocate_map(__new_map_size);</span><br><span class="line">  __new_nstart = __new_map + (__new_map_size - __new_num_nodes) / 2</span><br><span class="line">                 + (__add_at_front ? __nodes_to_add : 0);</span><br><span class="line">  std::copy(this-&gt;_M_impl._M_start._M_node,</span><br><span class="line">	    this-&gt;_M_impl._M_finish._M_node + 1,</span><br><span class="line">	    __new_nstart);</span><br><span class="line">  _M_deallocate_map(this-&gt;_M_impl._M_map, this-&gt;_M_impl._M_map_size);</span><br><span class="line"></span><br><span class="line">  this-&gt;_M_impl._M_map = __new_map;</span><br><span class="line">  this-&gt;_M_impl._M_map_size = __new_map_size;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">     this-&gt;_M_impl._M_start._M_set_node(__new_nstart);</span><br><span class="line">     this-&gt;_M_impl._M_finish._M_set_node(__new_nstart + __old_num_nodes - 1);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li>pop_back</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">    void</span><br><span class="line">    pop_back() _GLIBCXX_NOEXCEPT  </span><br><span class="line">    &#123;</span><br><span class="line">        //若最后一个缓冲区不为空，则直接弹出</span><br><span class="line">if (this-&gt;_M_impl._M_finish._M_cur</span><br><span class="line">    != this-&gt;_M_impl._M_finish._M_first)</span><br><span class="line">    &#123;</span><br><span class="line">    --this-&gt;_M_impl._M_finish._M_cur;</span><br><span class="line">    this-&gt;_M_impl.destroy(this-&gt;_M_impl._M_finish._M_cur);</span><br><span class="line">    &#125;</span><br><span class="line">else</span><br><span class="line">    _M_pop_back_aux();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>否则回收最后一个节点，调整_M_finish结构为前一个node节点的缓冲区并将最后一个元素弹出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">void deque&lt;_Tp, _Alloc&gt;::</span><br><span class="line">_M_pop_back_aux()</span><br><span class="line">&#123;</span><br><span class="line">    _M_deallocate_node(this-&gt;_M_impl._M_finish._M_first);</span><br><span class="line">    this-&gt;_M_impl._M_finish._M_set_node(this-&gt;_M_impl._M_finish._M_node - 1);</span><br><span class="line">    this-&gt;_M_impl._M_finish._M_cur = this-&gt;_M_impl._M_finish._M_last - 1;</span><br><span class="line">    this-&gt;_M_impl.destroy(this-&gt;_M_impl._M_finish._M_cur);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里发现即使deque中为空也不会报错</p>
+<ol start="3">
+<li>push_front &amp;&amp; pop_front</li>
+</ol>
+<p>流程与push_back，pop_back基本一致，不再做过多分析。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-22T02:34:57.051Z" itemprop="dateUpdated">2020-03-22 10:34:57</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/03/21/c-stl-源码分析-四/" target="_blank" rel="external">http://siriuswhiter.tk/2020/03/21/c-stl-源码分析-四/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stl/">STL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c++</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/21/c-stl-源码分析-四/&title=《c++ STL 源码分析(四)》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/21/c-stl-源码分析-四/&title=《c++ STL 源码分析(四)》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2020/03/17/c-stl-源码分析-三/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">c++ STL 源码分析(三)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#deque"><span class="post-toc-number">1.</span> <span class="post-toc-text">deque</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Constructor"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Constructor</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#push-back-amp-amp-pop-back-amp-amp-push-front-amp-amp-pop-front"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">push_back &amp;&amp; pop_back &amp;&amp; push_front &amp;&amp; pop_front</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/21/c-stl-源码分析-四/&title=《c++ STL 源码分析(四)》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/21/c-stl-源码分析-四/&title=《c++ STL 源码分析(四)》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIUlEQVR42u3aMZaEIBAFQO9/aTc1WJ3fDQZCEe0bZ9Ui+NM0HEc8zsu4fvJ89fpJ7ymTBwYGxmcZ5+PIH/D8X8mde3fAwMDYh3H3Wsl37m7dC+X8uRgYGBh5IVgtHxMeBgYGxixG8shqlGNgYGCMLGJHkNWrL67FMTAwPsgYici3/35lfwMDA+NTjLM4emViHpdna2BgYKzNyAMuL8iSF60WlNFTMDAwNmDky85eaI603p6X0BgYGPswkq2CqEFfhFWPaxR+NzAwMBZiVJvySWgmUzO+AYCBgbEDo2rN4696YCIK07uAxsDAWJqRx9/IUYnqkY58go48+zEwMD7LyK35Aa9evFan45/SEAMDYwNGLxx71OqW5w8qBgbG0oy80d8r2t64W3QgAwMDY1FG3ppPIrhc3lWPVlT3SzEwMJZg5EVer/XfK/V6mwcYGBgrMeYepKiGbLXpdjtBGBgYSzPm1lrjC91ZLTwMDIwdGGcwek386pZDdaMUAwNjVcbcJWuv3JxwFQMDYwNG3gibxc7L0GjDAAMDYwNGb8k6N2qrBWvhnAgGBsZnGWdxPMfrrEZbef2NgYGxNKMXdr0X7X0ydGYEAwNjIUa1Wd8rE5OJGApcDAyMDRj5gjMJzWpjLv8F+FHnYmBgYMRRm79iNV4xMDAwRg49RBuNxcjOgxsDA2MHRr7gHDmQOlKAYmBg7MyoLh1HXj2fpiobAwNjUcYfbDdBz3Vu+UoAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>

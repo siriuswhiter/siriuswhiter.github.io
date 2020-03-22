@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>c++ STL 源码分析(三) | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="c++,STL">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>c++ STL 源码分析(三)</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">c++ STL 源码分析(三)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-17T05:23:39.000Z" itemprop="datePublished" class="page-time">
+  2020-03-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/stl/">STL</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-c-stl-源码分析-三"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">c++ STL 源码分析(三)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-17 13:23:39" datetime="2020-03-17T05:23:39.000Z"  itemprop="datePublished">2020-03-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/stl/">STL</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="list"><a href="#list" class="headerlink" title="list"></a>list</h1><ul>
+<li>list调试的时候比较奇怪，许多关于链表操作的函数无法跟进到源代码，原因暂时未知。</li>
+</ul>
+<p>底层为双向链表，节点的数据结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">namespace __detail</span><br><span class="line">&#123;</span><br><span class="line">    struct _List_node_base</span><br><span class="line">    &#123;</span><br><span class="line">        _List_node_base* _M_next;</span><br><span class="line">        _List_node_base* _M_prev;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template&lt;typename _Tp&gt;</span><br><span class="line">struct _List_node : public __detail::_List_node_base</span><br><span class="line">&#123;</span><br><span class="line">    _Tp _M_data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>list的迭代器不再是普通的指针，其为结构体_List_iterator/_List_const_iterator，其中重载了许多符号，如++不再是写一个地址块而是根据_M_next指针得到下一块内存的地址，其他的同理。</p>
+<h2 id="Constructors"><a href="#Constructors" class="headerlink" title="Constructors"></a>Constructors</h2><p>指定初值。such as:list<int> l = {2,3,1};</int></p>
+<p>初值先被放入底层的array中，之后再将其置入list<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _InputIterator&gt;</span><br><span class="line">void</span><br><span class="line">_M_initialize_dispatch(_InputIterator __first, _InputIterator __last,</span><br><span class="line">            __false_type)</span><br><span class="line">&#123;</span><br><span class="line">    for (; __first != __last; ++__first)</span><br><span class="line">        emplace_back(*__first);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>跟进，调用list的_M_insert函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename... _Args&gt;</span><br><span class="line">void</span><br><span class="line">emplace_back(_Args&amp;&amp;... __args)</span><br><span class="line">&#123; this-&gt;_M_insert(end(), std::forward&lt;_Args&gt;(__args)...); &#125;</span><br></pre></td></tr></table></figure></p>
+<p>_M_insert实现，创建节点之后调用_M_hook将其链入链表的__position位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename... _Args&gt;</span><br><span class="line">void</span><br><span class="line">_M_insert(iterator __position, _Args&amp;&amp;... __args)</span><br><span class="line">&#123;</span><br><span class="line">_Node* __tmp = _M_create_node(std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">__tmp-&gt;_M_hook(__position._M_node);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>_M_create_node，先调用_M_get_node分配一块内存，之后尝试将值写入，成功后返回指针__p<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename... _Args&gt;</span><br><span class="line">_Node*</span><br><span class="line">_M_create_node(_Args&amp;&amp;... __args)</span><br><span class="line">&#123;</span><br><span class="line">_Node* __p = this-&gt;_M_get_node();</span><br><span class="line">__try</span><br><span class="line">&#123;</span><br><span class="line">    _M_get_Node_allocator().construct(__p,</span><br><span class="line">                std::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">&#125;</span><br><span class="line">__catch(...)</span><br><span class="line">&#123;</span><br><span class="line">    _M_put_node(__p);</span><br><span class="line">    __throw_exception_again;</span><br><span class="line">&#125;</span><br><span class="line">return __p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>_M_hook尝试单步跟进但直接跳过<br>查看定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">_M_hook(_List_node_base* const __position) _GLIBCXX_USE_NOEXCEPT;</span><br></pre></td></tr></table></figure></p>
+<h2 id="push-back-amp-amp-pop-back-amp-amp-push-front-amp-amp-pop-front"><a href="#push-back-amp-amp-pop-back-amp-amp-push-front-amp-amp-pop-front" class="headerlink" title="push_back &amp;&amp; pop_back &amp;&amp; push_front &amp;&amp; pop_front"></a>push_back &amp;&amp; pop_back &amp;&amp; push_front &amp;&amp; pop_front</h2><p>push_back 与 push_front 均是调用_M_insert函数将元素插入，区别在于第一个参数分别为end()，begin()</p>
+<p>pop_back 与 pop_front 则均调用_M_earse函数将迭代器指向的位置的元素移除<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">pop_back() _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123; this-&gt;_M_erase(iterator(this-&gt;_M_impl._M_node._M_prev)); &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">void</span><br><span class="line">pop_front() _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123; this-&gt;_M_erase(begin()); &#125;</span><br></pre></td></tr></table></figure></p>
+<p>跟入_M_erase函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">_M_erase(iterator __position) _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">    __position._M_node-&gt;_M_unhook();</span><br><span class="line">    _Node* __n = static_cast&lt;_Node*&gt;(__position._M_node);</span><br><span class="line">    _M_get_Node_allocator().destroy(__n);</span><br><span class="line">    _M_put_node(__n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>基本操作就是将其解链，然后获得其指针，destory实际上就是调用了其析构函数，之后调用_M_put_node将指针delete</p>
+<p>这里重点的_M_unhook函数也同_M_hook一样无法找到实现。</p>
+<h2 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h2><p>没有太懂…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename _Tp, typename _Alloc&gt;</span><br><span class="line">void</span><br><span class="line">list&lt;_Tp, _Alloc&gt;::</span><br><span class="line">sort()</span><br><span class="line">&#123;</span><br><span class="line">    // Do nothing if the list has length 0 or 1.</span><br><span class="line">    if (this-&gt;_M_impl._M_node._M_next != &amp;this-&gt;_M_impl._M_node</span><br><span class="line">    &amp;&amp; this-&gt;_M_impl._M_node._M_next-&gt;_M_next != &amp;this-&gt;_M_impl._M_node)</span><br><span class="line">    &#123;</span><br><span class="line">    list __carry;</span><br><span class="line">    list __tmp[64];</span><br><span class="line">    list * __fill = &amp;__tmp[0];</span><br><span class="line">    list * __counter;</span><br><span class="line"></span><br><span class="line">    do</span><br><span class="line">    &#123;</span><br><span class="line">        //splice中主要调用的是transfer函数</span><br><span class="line">        __carry.splice(__carry.begin(), *this, begin());</span><br><span class="line"></span><br><span class="line">        for(__counter = &amp;__tmp[0];</span><br><span class="line">        __counter != __fill &amp;&amp; !__counter-&gt;empty();</span><br><span class="line">        ++__counter)</span><br><span class="line">            &#123;</span><br><span class="line">        __counter-&gt;merge(__carry);</span><br><span class="line">        __carry.swap(*__counter);</span><br><span class="line">            &#125;</span><br><span class="line">        __carry.swap(*__counter);</span><br><span class="line">        if (__counter == __fill)</span><br><span class="line">            ++__fill;</span><br><span class="line">    &#125;</span><br><span class="line">    while ( !empty() );</span><br><span class="line"></span><br><span class="line">    for (__counter = &amp;__tmp[1]; __counter != __fill; ++__counter)</span><br><span class="line">        __counter-&gt;merge(*(__counter - 1));</span><br><span class="line">    swap( *(__fill - 1) );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-22T03:02:26.497Z" itemprop="dateUpdated">2020-03-22 11:02:26</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/03/17/c-stl-源码分析-三/" target="_blank" rel="external">http://siriuswhiter.tk/2020/03/17/c-stl-源码分析-三/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stl/">STL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c++</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/17/c-stl-源码分析-三/&title=《c++ STL 源码分析(三)》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/17/c-stl-源码分析-三/&title=《c++ STL 源码分析(三)》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2020/03/21/c-stl-源码分析-四/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">c++ STL 源码分析(四)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2020/03/16/c-stl-源码分析-二/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">c++ STL 源码分析(二)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#list"><span class="post-toc-number">1.</span> <span class="post-toc-text">list</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Constructors"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Constructors</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#push-back-amp-amp-pop-back-amp-amp-push-front-amp-amp-pop-front"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">push_back &amp;&amp; pop_back &amp;&amp; push_front &amp;&amp; pop_front</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#sort"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">sort</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2020/03/17/c-stl-源码分析-三/&title=《c++ STL 源码分析(三)》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2020/03/17/c-stl-源码分析-三/&title=《c++ STL 源码分析(三)》 — Room of Requirement&source=pwn菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIElEQVR42u3aQXLDIAwF0N7/0um2i5h8SU5nDI9VJnGA54VGQvz8xOP1Z6y/v/omef5qldsGBgbGYxmv5bjaSnWe6sj3hoGBcQ7jalvroLmeOg+1ybof9oyBgYGxXCx/PgniGBgYGBNGL2WcvCAMDAyMahE7L3fXB2r/VItjYGA8kDEJkd/+/JX+BgYGxqMYvcP6vMHZO54r7woDA2NrRq+FmRy6TZoNvdkwMDB2ZcyDaTWtnDcv38yAgYGxNaNXNFYLzupBXjNAY2BgHMDIL4HNYVVqeQoMDIztGPPicxJe5yEbAwPjHMb8UkUvBcwP3QoBHQMDYyNG3gDIU8Z7Q3b0XwwMjMMY6+A7D7V5hMxfKAYGxt6M6s/VhZMXVIUVilgMDIztGL1mQA7L08qkrC30VzEwMDZl5OHy3ktjSaKJgYFxGqN3cH9XsO69xDfPYGBgbM3Im4iTQrSXPpZLWQwMjGMYeQo4v1qRhOzCMxgYGIcx5pe68tRwEoIxMDBOZvT6n3nJ2lv3Q+KIgYGxNSM/VqumcfmveWvhwz4xMDC2Y7yKo8qev5poBgwMjK0Z1SsR1dZjtTGwxo+ui2FgYDyckQTZXgrYSwTzgIuBgXEao1qsVj/nFzLyIrZ8qoeBgXEkI2lhzi9zYGBgYNx1VSuZOf+muhYGBsYJjGr467UQkjQxSRlvO27DwMB4CKN3xaHaAEiO0qqXzzAwMA5g/AKvPW+FZw91MwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>
