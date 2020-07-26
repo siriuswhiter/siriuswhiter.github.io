@@ -3,6 +3,71 @@
   
     
     <entry>
+      <title>手写操作系统(二)</title>
+      <link href="/2020/07/26/%E6%89%8B%E5%86%99%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E4%BA%8C/"/>
+      <url>/2020/07/26/%E6%89%8B%E5%86%99%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E4%BA%8C/</url>
+      <content type="html"><![CDATA[<p>第一篇里面主要还是入门，对基础知识的补充与尝试，这一次要逐渐深入，主要环节是对实模式与保护模式的学习。</p><h1 id="专注到内核实现"><a href="#专注到内核实现" class="headerlink" title="专注到内核实现"></a>专注到内核实现</h1><p>第一篇里面可以看到在步入到真正的内核处理前有许多操作，尤其是从主引导记录到bootloader会有不少的操作，实现一个bootloader是比较困难且容易偏离主题的，因此会直接使用grub引导的镜像，直接使用的james的添加了grub的<a href="https://github.com/siriuswhiter/SiriusOS/blob/master/floppy.img" target="_blank" rel="noopener">镜像</a>。</p><p>使用grub引导的话就要遵循其规范，内核入口点位于./boot/boot.s</p><p>核心代码</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">start:</span><br><span class="line">    cli                      ; 关闭中断</span><br><span class="line">    mov esp, STACK_TOP       ; 设置内核栈地址</span><br><span class="line">    mov ebp, 0               ; 帧指针修改为 0</span><br><span class="line">    and esp, 0FFFFFFF0H      ; 栈地址按照16字节对齐</span><br><span class="line">    mov [glb_mboot_ptr], ebx ; 将 ebx 中存储的指针存入全局变量</span><br><span class="line">    call kern_entry          ; 调用内核入口函数</span><br><span class="line">stop:</span><br><span class="line">    hlt</span><br><span class="line">    jmp stop</span><br></pre></td></tr></table></figure><p>主要还是调用了kern_entry函数。从该函数开始，就可以使用C语言开始内核的相关实现了。</p><h1 id="实模式下的屏幕显示"><a href="#实模式下的屏幕显示" class="headerlink" title="实模式下的屏幕显示"></a>实模式下的屏幕显示</h1><p>方便起见，屏幕显示全部采用的是25*80分辨率模式。为了之后的功能实现，先对相关函数进行了实现。</p><p>为此逐步实现了：</p><ol><li>屏幕字符串显示</li><li>字符串处理相关函数</li><li>格式化字符串处理显示</li><li>内核出错时的处理</li></ol><h2 id="屏幕字符串显示"><a href="#屏幕字符串显示" class="headerlink" title="屏幕字符串显示"></a>屏幕字符串显示</h2><p>相关API，主要定义了图像显示的实际地址，相关的屏幕输出函数，清屏函数。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span></span><br><span class="line"><span class="keyword">enum</span> real_color &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125; <span class="keyword">real_color_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">uint16_t</span> *video_memory = (<span class="keyword">uint16_t</span> *)<span class="number">0xB8000</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">console_clear</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">console_write</span><span class="params">(<span class="keyword">char</span> *cstr)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">console_write_color</span><span class="params">(<span class="keyword">char</span> *cstr, <span class="keyword">real_color_t</span> back, <span class="keyword">real_color_t</span> fore)</span></span>;</span><br></pre></td></tr></table></figure><p>函数的<a href="https://github.com/siriuswhiter/SiriusOS/blob/master/drivers/console.c" target="_blank" rel="noopener">具体实现</a></p><p>需要关注的点：</p><ol><li>关于video_memory地址的问题</li></ol><p>按原始的8086处理器，只有1M的寻址空间，然后又要做到屏幕显示之类的，因此对1M的内存空间进行了分段，具体分段信息如<a href="https://www.huaijiujia.com/2019/07/29/%e5%86%85%e5%ad%98%e4%b8%8e%e8%b0%83%e8%af%95-%e5%86%85%e5%ad%98%e7%ae%a1%e7%90%862%e5%ae%9e%e6%a8%a1%e5%bc%8f%e4%b8%8b%e7%9a%841mb%e5%86%85%e5%ad%98%e5%88%86%e5%b8%83/" target="_blank" rel="noopener">下表</a>。</p><table><thead><tr><th style="text-align:left">起始</th><th style="text-align:left">结束</th><th style="text-align:left">大小</th><th style="text-align:left">用途</th></tr></thead><tbody><tr><td style="text-align:left">FFFF0</td><td style="text-align:left">FFFFF</td><td style="text-align:left">16B</td><td style="text-align:left">BIOS入口地址，此地址也属于BIOS代码同样属于顶部的640KB字节。只是为了强调其入口地址才单独贴出来。此处16字节的内容是跳转指令jmp f000：e05b</td></tr><tr><td style="text-align:left">F0000</td><td style="text-align:left">FFFEF</td><td style="text-align:left">64KB-16B</td><td style="text-align:left">系统BIOS范围是F0000～FFFFF共640KB，为说明入口地址，将最上面的16字节从此处去掉了，所以此处终止地址是0XFFFEF</td></tr><tr><td style="text-align:left">C8000</td><td style="text-align:left">EFFFF</td><td style="text-align:left">160KB</td><td style="text-align:left">映射硬件适配器的ROM或内存映射式I/O</td></tr><tr><td style="text-align:left">C0000</td><td style="text-align:left">C7FFF</td><td style="text-align:left">32KB</td><td style="text-align:left">显示适配器BIOS</td></tr><tr><td style="text-align:left">B8000</td><td style="text-align:left">BFFFF</td><td style="text-align:left">32KB</td><td style="text-align:left">用于文本模式显示适配器</td></tr><tr><td style="text-align:left">B0000</td><td style="text-align:left">B7FFF</td><td style="text-align:left">32KB</td><td style="text-align:left">用于黑白显示适配器</td></tr><tr><td style="text-align:left">A0000</td><td style="text-align:left">AFFFF</td><td style="text-align:left">64KB</td><td style="text-align:left">用于彩色显示适配器</td></tr><tr><td style="text-align:left">9FC00</td><td style="text-align:left">9FFFF</td><td style="text-align:left">1KB</td><td style="text-align:left">EBDA（Extended BIOS Data Area）扩展BIOS数据区</td></tr><tr><td style="text-align:left">7E00</td><td style="text-align:left">9FBFF</td><td style="text-align:left">622080B</td><td style="text-align:left">约608KB可用区域</td></tr><tr><td style="text-align:left">7C00</td><td style="text-align:left">7DFF</td><td style="text-align:left">512B</td><td style="text-align:left">MBR被BIOS加载到此处，共512字节</td></tr><tr><td style="text-align:left">500</td><td style="text-align:left">7BFF</td><td style="text-align:left">30464B</td><td style="text-align:left">约30KB可用区域</td></tr><tr><td style="text-align:left">400</td><td style="text-align:left">4FF</td><td style="text-align:left">256B</td><td style="text-align:left">BIOS Data Area（BIOS数据区）</td></tr><tr><td style="text-align:left">000</td><td style="text-align:left">3FF</td><td style="text-align:left">1KB</td><td style="text-align:left">Interrupt Vector Table（中断向量表）</td></tr></tbody></table><p>可以看到B800h处用于文本模式显示适配器，也有之前的7C00h处为我们之前尝试写过的的MBR。</p><h2 id="字符串处理相关函数"><a href="#字符串处理相关函数" class="headerlink" title="字符串处理相关函数"></a>字符串处理相关函数</h2><p>在之后的过程中会用到许多相关信息打印，所以实现了相关的字符串处理函数，相关API如下。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">memcpy</span><span class="params">(<span class="keyword">uint8_t</span> *dest, <span class="keyword">const</span> <span class="keyword">uint8_t</span> *src, <span class="keyword">uint32_t</span> len)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">memset</span><span class="params">(<span class="keyword">void</span> *dest, <span class="keyword">uint8_t</span> val, <span class="keyword">uint32_t</span> len)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bzero</span><span class="params">(<span class="keyword">void</span> *dest, <span class="keyword">uint32_t</span> len)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">strcmp</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *str1, <span class="keyword">const</span> <span class="keyword">char</span> *str2)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">char</span> *<span class="title">strcpy</span><span class="params">(<span class="keyword">char</span> *dest, <span class="keyword">const</span> <span class="keyword">char</span> *src)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">char</span> *<span class="title">strcat</span><span class="params">(<span class="keyword">char</span> *dest, <span class="keyword">const</span> <span class="keyword">char</span> *src)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">strlen</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *src)</span></span>;</span><br></pre></td></tr></table></figure><p>函数的<a href="https://github.com/siriuswhiter/SiriusOS/blob/master/libs/string.c" target="_blank" rel="noopener">具体实现</a></p><h2 id="格式化字符串处理显示"><a href="#格式化字符串处理显示" class="headerlink" title="格式化字符串处理显示"></a>格式化字符串处理显示</h2><p>内核态的打印函数是printk，这里仿照printf进行简单实现，API如下。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int printk(const char *format, ...);</span><br></pre></td></tr></table></figure><p>这里主要是对任意个参数的处理，使用的GCC内置的对多个参数的处理方式。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef __builtin_va_list va_list;</span><br><span class="line"></span><br><span class="line">#define va_start(ap, last)         (__builtin_va_start(ap, last))</span><br><span class="line">#define va_arg(ap, type)           (__builtin_va_arg(ap, type))</span><br><span class="line">#define va_end(ap)</span><br></pre></td></tr></table></figure><p>函数的<a href="https://github.com/siriuswhiter/SiriusOS/blob/master/kernel/debug/printk.c" target="_blank" rel="noopener">具体实现</a></p><p>（偷懒目前只实现了%d,%x,%s的格式化输出，还有点bug）</p><h2 id="内核出错时的处理"><a href="#内核出错时的处理" class="headerlink" title="内核出错时的处理"></a>内核出错时的处理</h2><h1 id="实模式与保护模式"><a href="#实模式与保护模式" class="headerlink" title="实模式与保护模式"></a>实模式与保护模式</h1>]]></content>
+      
+      <categories>
+          
+          <category> Operating System </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Operating System </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>手写操作系统(一)</title>
+      <link href="/2020/07/03/%E6%89%8B%E5%86%99%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E4%B8%80/"/>
+      <url>/2020/07/03/%E6%89%8B%E5%86%99%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E4%B8%80/</url>
+      <content type="html"><![CDATA[<p>一直想做的事来着，主要参考</p><ul><li>于渊的《自己动手写操作系统》</li><li>james的<a href="http://www.jamesmolloy.co.uk/tutorial_html/" target="_blank" rel="noopener">教程</a></li><li>hurlex的<a href="http://wiki.0xffffff.org" target="_blank" rel="noopener">教程</a></li></ul><h1 id="计算机启动过程"><a href="#计算机启动过程" class="headerlink" title="计算机启动过程"></a>计算机启动过程</h1><h2 id="读取BIOS"><a href="#读取BIOS" class="headerlink" title="读取BIOS"></a>读取BIOS</h2><p>按下电源按钮后，计算机首先读取一块ROM芯片，这块芯片里的程序是”基本输入输出系統”（Basic Input/Output System），即BIOS.</p><h2 id="硬件自检"><a href="#硬件自检" class="headerlink" title="硬件自检"></a>硬件自检</h2><p>BIOS会检查计算机硬件是否满足运行条件，如果硬件出现问题，主板会发出不同含义的蜂鸣，启动中止。</p><h2 id="启动顺序"><a href="#启动顺序" class="headerlink" title="启动顺序"></a>启动顺序</h2><p>硬件检查完成后，BIOS会将控制权交给下一阶段的启动程序，注意，“下一阶段的启动程序”可能存放在硬盘中，也可能存放在CD/DVD中，或者软盘中等等，可以设置BIOS选择从哪个设备启动。</p><h2 id="主引导记录"><a href="#主引导记录" class="headerlink" title="主引导记录"></a>主引导记录</h2><p>BIOS找到了“下一阶段的启动程序”所在设备，会读取该设备的第一个扇区，即读取最前面的512字节，称为主引导记录。主引导记录会告诉计算机下一步到哪里去找操作系统。</p><h2 id="bootloader"><a href="#bootloader" class="headerlink" title="bootloader"></a>bootloader</h2><p>计算机读取”主引导记录”前面446字节的机器码之后，运行事先安装的“启动管理器”bootloader，由用户选择启动哪个操作系统。如果你安装了多个操作系统，那么就要从这步做出选择了。</p><h2 id="加载内核"><a href="#加载内核" class="headerlink" title="加载内核"></a>加载内核</h2><p>选择操作系统（内核）后，会加载内核，下面就交给内核去处理了。</p><h1 id="初体验"><a href="#初体验" class="headerlink" title="初体验"></a>初体验</h1><h2 id="启动顺序-1"><a href="#启动顺序-1" class="headerlink" title="启动顺序"></a>启动顺序</h2><p>前两步交予虚拟机，第三步选择在虚拟机启动时选择软盘启动（此处使用镜像）即可。</p><h2 id="主引导记录-1"><a href="#主引导记录-1" class="headerlink" title="主引导记录"></a>主引导记录</h2><p>写一个简单的主引导记录代码，作用为启动后在屏幕上显示Welcome to siriusOS。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">; 0x0000h--0x7c00h这一段存的是BIOS中断向量和一些BIOS数据等</span><br><span class="line">; BIOS读入MBR后，从0x7c00h处开始执行</span><br><span class="line">org 7c00h</span><br><span class="line"></span><br><span class="line">; es:bp表示显示字符串的地址</span><br><span class="line">mov ax, cs</span><br><span class="line">mov es, ax</span><br><span class="line"></span><br><span class="line">mov ax, msg</span><br><span class="line">mov bp, ax</span><br><span class="line"></span><br><span class="line">; cx 存放字符串长度</span><br><span class="line">mov cx, msgLen</span><br><span class="line"></span><br><span class="line">; ah=13h表示向TTY显示字符</span><br><span class="line">; al=01h表示显示方式（字符串是否包含显示属性，01h表示不包含）</span><br><span class="line">mov ax, 1301h</span><br><span class="line"></span><br><span class="line">; bh=00h表示页号</span><br><span class="line">; bl=0fh表示颜色</span><br><span class="line">mov bx, 000fh</span><br><span class="line"></span><br><span class="line">; dh行</span><br><span class="line">; dl列</span><br><span class="line">mov dh, 5</span><br><span class="line">mov dl, 20</span><br><span class="line"></span><br><span class="line">; 中断</span><br><span class="line">int 10h</span><br><span class="line"></span><br><span class="line">msg: db &quot;Welcome to siriusOS&quot;</span><br><span class="line"></span><br><span class="line">; $ 当前地址， $$ 段开始地址</span><br><span class="line">; equ -&gt; equal</span><br><span class="line">msgLen: equ $ - msg</span><br><span class="line"></span><br><span class="line">; 填充剩余部分，这样一共就是512字节即一个扇区</span><br><span class="line">times 510 - ($ - $$) db 0</span><br><span class="line"></span><br><span class="line">; 魔数，必须有这两个字节BIOS才确认是MBR</span><br><span class="line">dw 0aa55h</span><br></pre></td></tr></table></figure><h3 id="制作软盘并尝试启动"><a href="#制作软盘并尝试启动" class="headerlink" title="制作软盘并尝试启动"></a>制作软盘并尝试启动</h3><p>编译主引导记录</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nasm boot.asm -o boot.bin</span><br></pre></td></tr></table></figure><p>制作一个空的软盘镜像empty.img：　　</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/zero of=empty.img bs=512 count=2880</span><br></pre></td></tr></table></figure><p>制作一个包含主引导记录boot.bin的镜像文件siriusOS.img:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=boot.bin of=lucasOS.img bs=512 count=1</span><br></pre></td></tr></table></figure><p>然后，将empty.img中1个扇区后的数据拷贝到lucasOS.img的后:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=empty.img of=lucasOS.img skip=1 seek=1 bs=512 count=2879</span><br></pre></td></tr></table></figure><p>最后vmware新建虚拟机中添加软盘启动，网络选择host-only即可</p><p>效果如图所示：</p><figure class="image-box">                <img src="/2020/07/03/手写操作系统-一/第一次启动截图.png" alt="启动''" title="" class="">                <p>启动''</p>            </figure><h2 id="bootloader-1"><a href="#bootloader-1" class="headerlink" title="bootloader"></a>bootloader</h2><p>计算机读取”主引导记录”前面446字节的机器码之后，会运行事先安装的“启动管理器”bootloader，由用户选择启动哪个内核，之后就会载入内核，将控制权交给内核。GNU GRUB（GRand Unified Bootloader）就是一种bootloader，满足多重引导规范（The Multiboot Specification），GRUB可选择操作系统分区上的不同内核。</p><p>jamesmolloy网站上的下载floppy.img不能下载了，自己做一个带grub的img：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt install xorriso</span><br><span class="line">grub-mkrescue -o floppy.img</span><br></pre></td></tr></table></figure><p>经过一天的尝试~，这样搞的img不能挂载完将kernel放进去，最后还是找了下james的floppy.img，具体原因暂时不清楚，后续看能不能搞懂了。</p><h1 id="bochs"><a href="#bochs" class="headerlink" title="bochs"></a>bochs</h1><p>每次尝试都要用vmware的话太过于麻烦，bochs或者qemu都是个不错的选择，这里了解下bochs</p><p>编译有点麻烦，方便起见使用apt直接安装(注意下还有个bochs-x)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install bochs</span><br><span class="line">apt-get install bochs-x</span><br></pre></td></tr></table></figure><p>然后需要写个.bochsrc 配置文件</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">###############################################################</span><br><span class="line"># Configuration file for Bochs</span><br><span class="line">###############################################################</span><br><span class="line"></span><br><span class="line"># how much memory the emulated machine will have</span><br><span class="line">megs: 32</span><br><span class="line"></span><br><span class="line"># filename of ROM images</span><br><span class="line">romimage: file=/usr/share/bochs/BIOS-bochs-latest</span><br><span class="line">vgaromimage: file=/usr/share/vgabios/vgabios.bin</span><br><span class="line"></span><br><span class="line"># what disk images will be used</span><br><span class="line">floppya: 1_44=siriusOS.img, status=inserted</span><br><span class="line"></span><br><span class="line"># choose the boot disk.</span><br><span class="line">boot: floppy</span><br><span class="line"></span><br><span class="line"># where do we send log messages?</span><br><span class="line"># log: bochsout.txt</span><br><span class="line"></span><br><span class="line"># disable the mouse</span><br><span class="line">mouse: enabled=0</span><br></pre></td></tr></table></figure><p>尝试启动下前面的img，效果如图：</p><figure class="image-box">                <img src="/2020/07/03/手写操作系统-一/bochs_siriusOS.png" alt="启动''" title="" class="">                <p>启动''</p>            </figure>]]></content>
+      
+      <categories>
+          
+          <category> Operating System </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Operating System </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>c++ STL 源码分析(五)</title>
+      <link href="/2020/03/24/c-stl-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%BA%94/"/>
+      <url>/2020/03/24/c-stl-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%BA%94/</url>
+      <content type="html"><![CDATA[<h1 id="stack-amp-amp-queue"><a href="#stack-amp-amp-queue" class="headerlink" title="stack &amp;&amp; queue"></a>stack &amp;&amp; queue</h1><p>两者均为配接器（container adapter），底层默认为deque，即在deque的基础上做出某些限制即可。<br>比如说：stack只允许后进先出，即push，pop，其就是调用deque的push_back与pop_back，queue同理。</p><p>然后其底层也可以将其指定为别的容器，如list,vector。调用方法举例：stack&lt;int,list<int>&gt; s;</int></p><h1 id="slist"><a href="#slist" class="headerlink" title="slist"></a>slist</h1><p>底层为单链表，为非标准的容器。因为某些原因，本机无法使用，故暂时不做调试。</p>]]></content>
+      
+      <categories>
+          
+          <category> STL </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> c++ </tag>
+            
+            <tag> STL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>c++ STL 源码分析(四)</title>
       <link href="/2020/03/21/c-stl-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E5%9B%9B/"/>
       <url>/2020/03/21/c-stl-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E5%9B%9B/</url>
@@ -438,9 +503,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -463,9 +528,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -532,9 +597,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -580,9 +645,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -785,9 +850,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -856,9 +921,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -904,9 +969,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -950,9 +1015,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -1044,9 +1109,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -1102,7 +1167,7 @@
       <title>Learning Docker</title>
       <link href="/2018/11/10/learning-docker/"/>
       <url>/2018/11/10/learning-docker/</url>
-      <content type="html"><![CDATA[<p><em>之前是为了学习搭pwn题的环境稍微碰了下docker，但是因为kali上的gdb被我搞得问题很大，再加上不能完全卸载重装，索性想着搞一个pwn工具的集成环境，一劳永逸，docker无疑是个好东西，顺便也记录下搭建pwn题的过程吧</em></p><h1 id="pwn环境部署"><a href="#pwn环境部署" class="headerlink" title="pwn环境部署"></a>pwn环境部署</h1><p>  最基础的方法是socat， <code>socat tcp-l:9999,fork exec:./pwn1</code><br>  没有timeout，连得人多多半就爆炸了</p><p>所以选择：<br><code>xinted + docker</code></p><h2 id="xinted"><a href="#xinted" class="headerlink" title="xinted"></a>xinted</h2><p><a href="https://github.com/Eadom/ctf_xinetd" target="_blank" rel="noopener">xinted</a>从权限到服务配置都做好了一个dockerfile,build即可</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/Eadom/ctf_xinetd.git</span><br></pre></td></tr></table></figure><h2 id="docker-安装"><a href="#docker-安装" class="headerlink" title="docker 安装"></a>docker 安装</h2><p> 因为没有用ubuntu，kali等其他的debian系等等没法直接 <code>sudo apt-get install docker-ce</code></p><p>kali最后成功安装docker的方法：</p><p>在/etc/apt/sources.list 中添加</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http://http.debian.net/debian jessie-backports main</span><br></pre></td></tr></table></figure><p>更新源并安装即可</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get update   </span><br><span class="line">apt-get install docker.io</span><br></pre></td></tr></table></figure><p>ubuntu：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span><br><span class="line">sudo echo -e &quot;&#123;\n </span><br><span class="line">  \&quot;registry-mirrors\&quot;: [\&quot;https://docker.mirrors.ustc.edu.cn/\&quot;]</span><br><span class="line">&#125;&quot; &gt;/etc/docker/daemon.json </span><br><span class="line"></span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure></p><h2 id="配置docker环境"><a href="#配置docker环境" class="headerlink" title="配置docker环境"></a>配置docker环境</h2><ul><li>将bin文件放置到bin目录下</li><li>修改flag内容</li><li>修改ctf.xinted的服务：<br>port = 指定端口<br>server_args = –userspec=1000:1000 /home/ctf ./binname</li></ul><h2 id="build-dockerfile"><a href="#build-dockerfile" class="headerlink" title="build dockerfile"></a>build dockerfile</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t &quot;binname&quot; . </span><br><span class="line">docker run -d -p &quot;0.0.0.0:9999:9999&quot; -h &quot;biname&quot; --name=&quot;binname&quot; binname</span><br></pre></td></tr></table></figure><p>将镜像跑起来就ok了</p><h1 id="pwn-docker"><a href="#pwn-docker" class="headerlink" title="pwn docker"></a>pwn docker</h1><p>一个集成pwn常用工具的docker，暂时用的是<a href="https://github.com/skysider/pwndocker" target="_blank" rel="noopener">pwndocker</a>,不过比较臃肿，之后再自己搭建一个</p><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><em>一般刚开机docker未打开，使用<code>service docker start</code>打开服务</em></p><ol><li><code>pull</code></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull skysider/pwndocker</span><br></pre></td></tr></table></figure><ol start="2"><li><code>docker images</code> 可以看到已经在仓库里了</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/pwn/docker# docker images</span><br><span class="line">REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">skysider/pwndocker   latest              a24dde07a423        6 days ago          2.02GB</span><br></pre></td></tr></table></figure><p>各项含义：</p><pre><code>REPOSITORY：表示镜像的仓库源TAG：镜像的标签IMAGE ID：镜像IDCREATED：镜像创建时间SIZE：镜像大小</code></pre><ol start="3"><li><code>docker run -t -i skysider/pwndocker</code>直接进入bash</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/pwn/docker# docker run -t -i skysider/pwndocker</span><br><span class="line">root@b11ff1440061:/ctf/work#</span><br></pre></td></tr></table></figure><pre><code>*b11ff1440061 是container的id*</code></pre><ol start="4"><li>外部文件要往container里复制，使用</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp /path/file b11ff1440061: /path</span><br></pre></td></tr></table></figure><p>当然b11ff1440061 换成container的id</p><ol start="5"><li>因为别人的docker工具不一定适合自己，需要自己再安装什么的，但是一般安装完退出后就又没有了，当然不能每次都重装</li></ol><p>有两种办法：</p><ul><li>在container中安装完以后，exit</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit  b11ff1440061 pwndocker</span><br></pre></td></tr></table></figure><p>同时可以使用</p><p>-m 来指定提交的说明信息，跟我们使用的版本控制一样<br>-a 可以指定更新的用户信息<br>之后是用来创建镜像容器的id 最后指定目标镜像仓库名和tag信息</p><p>这样可以将修改完的另存为新的image</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~# docker images</span><br><span class="line">REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">pwndocker            latest              7c0fa09ee004        12 seconds ago      2.05GB</span><br><span class="line">skysider/pwndocker   latest              a24dde07a423        6 days ago          2.02GB</span><br></pre></td></tr></table></figure><ul><li>使用dockerfile重新build</li></ul><p>像这里可以举例，编辑dockerfile：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM skysider/pwndocker</span><br><span class="line"></span><br><span class="line">RUN apt-get install vim</span><br></pre></td></tr></table></figure><p>From 指定镜像源<br>RUN 指令告诉docker 在镜像内执行命令，安装了什么。。<br>EXPOSE 可以指定开放端口</p><p>编辑完后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t pwndocker .</span><br></pre></td></tr></table></figure></p><p>按理说这样子就可以了。。但是我这里会有个报错<code>The command &#39;/bin/sh -c apt-get install vim&#39; returned a non-zero code: 1</code>仍未解决</p>]]></content>
+      <content type="html"><![CDATA[<p><em>之前是为了学习搭pwn题的环境稍微碰了下docker，但是因为kali上的gdb被我搞得问题很大，再加上不能完全卸载重装，索性想着搞一个pwn工具的集成环境，一劳永逸，docker无疑是个好东西，顺便也记录下搭建pwn题的过程吧</em></p><h1 id="pwn环境部署"><a href="#pwn环境部署" class="headerlink" title="pwn环境部署"></a>pwn环境部署</h1><p>  最基础的方法是socat， <code>socat tcp-l:9999,fork exec:./pwn1</code><br>  没有timeout，连得人多多半就爆炸了</p><p>所以选择：<br><code>xinted + docker</code></p><h2 id="xinted"><a href="#xinted" class="headerlink" title="xinted"></a>xinted</h2><p><a href="https://github.com/Eadom/ctf_xinetd" target="_blank" rel="noopener">xinted</a>从权限到服务配置都做好了一个dockerfile,build即可</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/Eadom/ctf_xinetd.git</span><br></pre></td></tr></table></figure><h2 id="docker-安装"><a href="#docker-安装" class="headerlink" title="docker 安装"></a>docker 安装</h2><p> 因为没有用ubuntu，kali等其他的debian系等等没法直接 <code>sudo apt-get install docker-ce</code></p><p>kali最后成功安装docker的方法：</p><p>在/etc/apt/sources.list 中添加</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http://http.debian.net/debian jessie-backports main</span><br></pre></td></tr></table></figure><p>更新源并安装即可</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get update   </span><br><span class="line">apt-get install docker.io</span><br></pre></td></tr></table></figure><p>ubuntu：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span><br><span class="line">sudo echo -e &quot;&#123;\n </span><br><span class="line">  \&quot;registry-mirrors\&quot;: [\&quot;https://docker.mirrors.ustc.edu.cn/\&quot;]</span><br><span class="line">&#125;&quot; &gt;/etc/docker/daemon.json </span><br><span class="line"></span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure></p><h2 id="配置docker环境"><a href="#配置docker环境" class="headerlink" title="配置docker环境"></a>配置docker环境</h2><ul><li>将bin文件放置到bin目录下</li><li>修改flag内容</li><li>修改ctf.xinted的服务：<br>port = 指定端口<br>server_args = –userspec=1000:1000 /home/ctf ./binname</li></ul><h2 id="build-dockerfile"><a href="#build-dockerfile" class="headerlink" title="build dockerfile"></a>build dockerfile</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t &quot;binname&quot; . </span><br><span class="line">docker run -d -p &quot;0.0.0.0:9999:9999&quot; -h &quot;biname&quot; --name=&quot;binname&quot; binname</span><br></pre></td></tr></table></figure><p>将镜像跑起来就ok了</p><h1 id="pwn-docker"><a href="#pwn-docker" class="headerlink" title="pwn docker"></a>pwn docker</h1><p>一个集成pwn常用工具的docker，暂时用的是<a href="https://github.com/skysider/pwndocker" target="_blank" rel="noopener">pwndocker</a>,不过比较臃肿，之后再自己搭建一个</p><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><em>一般刚开机docker未打开，使用<code>service docker start</code>打开服务</em></p><ol><li><code>pull</code></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull skysider/pwndocker</span><br></pre></td></tr></table></figure><ol start="2"><li><code>docker images</code> 可以看到已经在仓库里了</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/pwn/docker# docker images</span><br><span class="line">REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">skysider/pwndocker   latest              a24dde07a423        6 days ago          2.02GB</span><br></pre></td></tr></table></figure><p>各项含义：</p><pre><code>REPOSITORY：表示镜像的仓库源TAG：镜像的标签IMAGE ID：镜像IDCREATED：镜像创建时间SIZE：镜像大小</code></pre><ol start="3"><li><code>docker run -t -i skysider/pwndocker</code>直接进入bash</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/pwn/docker# docker run -t -i skysider/pwndocker</span><br><span class="line">root@b11ff1440061:/ctf/work#</span><br></pre></td></tr></table></figure><pre><code>*b11ff1440061 是container的id*</code></pre><ol start="4"><li>外部文件要往container里复制，使用</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp /path/file b11ff1440061: /path</span><br></pre></td></tr></table></figure><p>当然b11ff1440061 换成container的id</p><ol start="5"><li>因为别人的docker工具不一定适合自己，需要自己再安装什么的，但是一般安装完退出后就又没有了，当然不能每次都重装</li></ol><p>有两种办法：</p><ul><li>在container中安装完以后，exit</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit  b11ff1440061 pwndocker</span><br></pre></td></tr></table></figure><p>同时可以使用</p><p>-m 来指定提交的说明信息，跟我们使用的版本控制一样<br>-a 可以指定更新的用户信息<br>之后是用来创建镜像容器的id 最后指定目标镜像仓库名和tag信息</p><p>这样可以将修改完的另存为新的image</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~# docker images</span><br><span class="line">REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">pwndocker            latest              7c0fa09ee004        12 seconds ago      2.05GB</span><br><span class="line">skysider/pwndocker   latest              a24dde07a423        6 days ago          2.02GB</span><br></pre></td></tr></table></figure><ul><li>使用dockerfile重新build</li></ul><p>像这里可以举例，编辑dockerfile：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM skysider/pwndocker</span><br><span class="line"></span><br><span class="line">RUN apt-get install vim</span><br></pre></td></tr></table></figure><p>From 指定镜像源<br>RUN 指令告诉docker 在镜像内执行命令，安装了什么。。<br>EXPOSE 可以指定开放端口</p><p>编辑完后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t pwndocker .</span><br></pre></td></tr></table></figure></p><p>按理说这样子就可以了。。但是我这里会有个报错<code>The command &#39;/bin/sh -c apt-get install vim&#39; returned a non-zero code: 1</code>仍未解决</p><h1 id="小事"><a href="#小事" class="headerlink" title="小事"></a>小事</h1><p>为了新生赛出了道简单的python 沙箱逃逸，但是为了把部署进docker就遇到了各种问题，貌似是对python文件的支持不太好，都是在bash里面可以运行，但是在外部nc就有各种各样的问题，编译为pyc也有问题，尝试pyinstaller编译为elf，又说是不允许创建临时文件…尝试使用nuitka编译为elf，同时得到了一堆so文件，前面是即使把so放进去并设置好索引，在docker外都会提示找不到库，后面发现整个得到的elf文件就有问题。</p><p>回头尝试查找问题，发现直接使用socat都无法运行起来，但是尝试简单的python文件运行就没有问题，排除后发现代码中调用exec后台执行的时候就会有问题。</p>]]></content>
       
       <categories>
           
@@ -1138,9 +1203,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       
@@ -1295,9 +1360,9 @@
             
             <tag> pwn </tag>
             
-            <tag> stack </tag>
-            
             <tag> heap </tag>
+            
+            <tag> stack </tag>
             
         </tags>
       

@@ -311,6 +311,8 @@ SIZE：镜像大小
 <p>From 指定镜像源<br>RUN 指令告诉docker 在镜像内执行命令，安装了什么。。<br>EXPOSE 可以指定开放端口</p>
 <p>编辑完后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t pwndocker .</span><br></pre></td></tr></table></figure></p>
 <p>按理说这样子就可以了。。但是我这里会有个报错<code>The command &#39;/bin/sh -c apt-get install vim&#39; returned a non-zero code: 1</code>仍未解决</p>
+<h1 id="小事"><a href="#小事" class="headerlink" title="小事"></a>小事</h1><p>为了新生赛出了道简单的python 沙箱逃逸，但是为了把部署进docker就遇到了各种问题，貌似是对python文件的支持不太好，都是在bash里面可以运行，但是在外部nc就有各种各样的问题，编译为pyc也有问题，尝试pyinstaller编译为elf，又说是不允许创建临时文件…尝试使用nuitka编译为elf，同时得到了一堆so文件，前面是即使把so放进去并设置好索引，在docker外都会提示找不到库，后面发现整个得到的elf文件就有问题。</p>
+<p>回头尝试查找问题，发现直接使用socat都无法运行起来，但是尝试简单的python文件运行就没有问题，排除后发现代码中调用exec后台执行的时候就会有问题。</p>
 
         </div>
         
@@ -318,7 +320,7 @@ SIZE：镜像大小
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-09-20T12:51:47.563Z" itemprop="dateUpdated">2019-09-20 20:51:47</time>
+    Last updated: <time datetime="2020-04-03T08:57:00.818Z" itemprop="dateUpdated">2020-04-03 16:57:00</time>
 </span><br>
 
 
@@ -413,7 +415,7 @@ SIZE：镜像大小
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#pwn环境部署"><span class="post-toc-number">1.</span> <span class="post-toc-text">pwn环境部署</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#xinted"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">xinted</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#docker-安装"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">docker 安装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#配置docker环境"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">配置docker环境</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#build-dockerfile"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">build dockerfile</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#pwn-docker"><span class="post-toc-number">2.</span> <span class="post-toc-text">pwn docker</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">使用</span></a></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#pwn环境部署"><span class="post-toc-number">1.</span> <span class="post-toc-text">pwn环境部署</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#xinted"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">xinted</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#docker-安装"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">docker 安装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#配置docker环境"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">配置docker环境</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#build-dockerfile"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">build dockerfile</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#pwn-docker"><span class="post-toc-number">2.</span> <span class="post-toc-text">pwn docker</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">使用</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#小事"><span class="post-toc-number">3.</span> <span class="post-toc-text">小事</span></a></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
