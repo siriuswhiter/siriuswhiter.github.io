@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://siriuswhiter.tk/"/>
-  <updated>2020-09-21T15:09:04.600Z</updated>
+  <updated>2020-07-26T14:49:25.333Z</updated>
   <id>http://siriuswhiter.tk/</id>
   
   <author>
@@ -15,20 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>download-file</title>
-    <link href="http://siriuswhiter.tk/2020/09/21/download-file/"/>
-    <id>http://siriuswhiter.tk/2020/09/21/download-file/</id>
-    <published>2020-09-21T15:09:04.000Z</published>
-    <updated>2020-09-21T15:09:04.600Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>手写操作系统(二)</title>
@@ -541,6 +527,31 @@
       <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
     
       <category term="io_file" scheme="http://siriuswhiter.tk/tags/io-file/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Problem Solve Tricks</title>
+    <link href="http://siriuswhiter.tk/2019/07/06/problem-solve-tricks/"/>
+    <id>http://siriuswhiter.tk/2019/07/06/problem-solve-tricks/</id>
+    <published>2019-07-06T03:42:41.000Z</published>
+    <updated>2019-09-11T04:52:04.678Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="malloc-hook-amp-amp-one-gadget"><a href="#malloc-hook-amp-amp-one-gadget" class="headerlink" title="malloc_hook &amp;&amp; one_gadget"></a>malloc_hook &amp;&amp; one_gadget</h1><p>之前经常遇到one_gadget条件不满足使得最后覆盖malloc_hook之后无法getshell，前两天从ex师傅那里学到了一个好办法。</p><p>将one_gadget 填入realloc_hook处，然后malloc_hook处填上__libc_realloc处的地址，因为调用realloc时会先检测realloc_hook，所以仍然能够调用one_gadget，为了能够满足one_gadget的条件（一般是对栈内存有要求），可以通过realloc代码开始处的寄存器push操作来进行栈帧调整，使得条件满足来getshell</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;malloc-hook-amp-amp-one-gadget&quot;&gt;&lt;a href=&quot;#malloc-hook-amp-amp-one-gadget&quot; class=&quot;headerlink&quot; title=&quot;malloc_hook &amp;amp;&amp;amp; one_gadge
+      
+    
+    </summary>
+    
+      <category term="pwn" scheme="http://siriuswhiter.tk/categories/pwn/"/>
+    
+    
+      <category term="pwn" scheme="http://siriuswhiter.tk/tags/pwn/"/>
     
   </entry>
   
