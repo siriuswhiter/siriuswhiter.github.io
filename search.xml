@@ -654,6 +654,29 @@
     </entry>
     
     <entry>
+      <title>Upload Bypass</title>
+      <link href="/2019/04/02/upload-bypass/"/>
+      <url>/2019/04/02/upload-bypass/</url>
+      <content type="html"><![CDATA[<ol><li>bp</li><li>content-type: image/jpeg;</li><li><p>blacklist:  </p><p> 大小写绕过 +strtolower<br> 双写绕过 +<br> 空格绕过 +trim<br> 最后加.绕过 +deldot （从右往左寻找. ，第一个删除后还会继续直到遍历的不是. ） -&gt; windows自动去除末尾的.<br> 加::$DATA绕过 +str_ireplace(‘::$DATA’, ‘’, $file_ext);//去除字符串::$DATA<br> 后缀别名 +<br> (“php”,”php5”,”php4”,”php3”,”php2”,”html”,”htm”,”phtml”,”pht”,<br> “jsp”,”jspa”,”jspx”,”jsw”,”jsv”,”jspf”,”jtml”,<br> “asp”,”aspx”,”asa”,”asax”,”ascx”,”ashx”,”asmx”,<br> “cer”,”swf”,”htaccess”)</p></li><li><p>.htaccess &lt;&lt; “SetHandler application/x-httpd-php”  令apache将任意文件都解析为php文件 上传jpg即可<br>.user.ini &lt;&lt; 除了主 php.ini 之外，PHP 还会在每个目录下扫描 INI 文件，从被执行的 PHP 文件所在目录开始一直上升到 web 根目录（$_SERVER[‘DOCUMENT_ROOT’] 所指定的）。如果被执行的 PHP 文件在 web 根目录之外，则只扫描该目录。 nginx/apache/IIS，只要是以fastcgi运行的php都可以用这个方法</p></li><li><p>whitelist：</p><p> %00截断 使得上传文件自动重命名  要求 php版本低于或等于5.3.4。 （post不会像get对%00进行自动解码，所以通过post传参时需要十六进制编辑）</p></li><li><p>图片马</p><p> 图片+木马 配合 命令执行漏洞</p></li></ol>]]></content>
+      
+      <categories>
+          
+          <category> web </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> web </tag>
+            
+            <tag> upload </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>Sql Injection</title>
       <link href="/2019/04/01/sql-injection/"/>
       <url>/2019/04/01/sql-injection/</url>
@@ -1692,6 +1715,27 @@
         <tags>
             
             <tag> skills </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>To 困困</title>
+      <link href="/1920/12/10/to-%E5%9B%B0%E5%9B%B0/"/>
+      <url>/1920/12/10/to-%E5%9B%B0%E5%9B%B0/</url>
+      <content type="html"><![CDATA[<p>半夜两点睡不着，和困困随便港港啦。转眼间我们已经一年多啦，要说的话也是去年的生日我向你进行了不那么正式的告白，所以今天也是我的告白纪念日（误。</p><p>今年的礼物可能比较朴素了，因为原先还有的那个已经回去了它该去的地方，唯独留下这本书，不过怎么说也可以算是我擅长的领域内了hhhh。</p><p>这是一本英文原版书，你也可以看到，叫《oh,the place you will go》。你可能会觉得很奇怪：为什么我会准备这样一本书？其实这本书在十一月份我就在准备了，因为当时你因为各种“内忧外患”变得焦虑，心态爆炸这种日常出现，所以我觉得，你可能需要想清楚一些自己的方向，当然这也都与你说过了。而在书籍的选择上，我又是不屑于那些鸡汤书的，这本书在某种程度上来说，可以帮助你去思考，你所要去的地方，你所要追寻的方向，究竟应该是怎样的。</p><p>当然选它的理由不会这么简单hhhh，甚至不是我最初的出发点。比较巧妙的是，在老友记第一季的结局中，刚好有送Rachel的生日礼物环节（如果没记错的话），而Joey为Rachel准备的礼物便是《oh,the place you will go》。如果你觉得一季的老友记对应一季的我们合适的话，那么这本书可能过于合适了hhh。</p><p>至于为什么是多抓鱼，因为别的地方真滴没找到，这里蹲了几天才蹲到hhh。至于为什么这么薄，其实我买回来才发现。至于为什么和老友记里的版本不一样（如果你能发现的话），因为第一版实在蹲不到hhh，而且这个厚度和价格对应上你可能就要骂我了hhh。</p><p>上面就是这个礼物简单的说法啦，困困如果喜欢的话，可以在下次见面的时候给个香吻表示好评哈哈哈哈哈。</p><p>不出意外的话，你应该是从你的大头照上扫出来这些文字的，当然要是和预期的不一样也不影响，我可能就忘了改文字了哈哈哈哈。</p><p>发现转眼就要三点了，去尝试睡觉了，宝贝再次晚安了～</p><p><img src="/1920/12/10/to-困困/./to-困困/we.jpg" alt="我们" title="我两的合照啦"></p>]]></content>
+      
+      <categories>
+          
+          <category> Priceless </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Priceless </tag>
             
         </tags>
       
