@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    
+    <title>工控系统漏洞挖掘与防护 | Room of Requirement | pwn what you want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/third-party/swipebox.min.css?v=1.3.2">
+    <link rel="stylesheet" href="/css/style.css?v=1.3.2">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	true,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"siriuswhiter","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sirius Whiter</h5>
+          <a href="mailto:xuewenjie2017@outlook.com" title="xuewenjie2017@outlook.com" class="mail">
+            
+              <span>x</span>
+            
+              <span>u</span>
+            
+              <span>e</span>
+            
+              <span>w</span>
+            
+              <span>e</span>
+            
+              <span>n</span>
+            
+              <span>j</span>
+            
+              <span>i</span>
+            
+              <span>e</span>
+            
+              <span>2</span>
+            
+              <span>0</span>
+            
+              <span>1</span>
+            
+              <span>7</span>
+            
+              <span>@</span>
+            
+              <span>o</span>
+            
+              <span>u</span>
+            
+              <span>t</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>o</span>
+            
+              <span>k</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/siriuswhiter" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                ABOUT
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="https://github.com/siriuswhiter" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        
+	
+<header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>工控系统漏洞挖掘与防护</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">工控系统漏洞挖掘与防护</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-12-28T13:04:06.000Z" itemprop="datePublished" class="page-time">
+  2021-12-28
+</time>
+
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+
+
+<div class="container body-wrap">
+    <article id="post-工控系统漏洞挖掘与防护"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">工控系统漏洞挖掘与防护</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-12-28 21:04:06" datetime="2021-12-28T13:04:06.000Z"  itemprop="datePublished">2021-12-28</time>
+
+            
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <h1 id="工控系统漏洞挖掘与防护"><a href="#工控系统漏洞挖掘与防护" class="headerlink" title="工控系统漏洞挖掘与防护"></a>工控系统漏洞挖掘与防护</h1><h2 id="一、-背景介绍"><a href="#一、-背景介绍" class="headerlink" title="一、 背景介绍"></a>一、 背景介绍</h2><p>工业控制系统是工业生产中采用的控制系统的总称。工业控制系统广泛应用在电力、水利、石油、天然气、制造等行业。根据从远程控制站返回的数据，工业控制系统可以自动化的或由操作员将高级的控制指令发送到远程工作站的控制设备上。这些控制设备又被称为现场设备，现场设备操控本地操作，例如打开或关闭阀门和继电器，收集传感器数据，监控现场环境等。</p>
+<p>为了满足传统网络和工控系统之间数据共享和协同工作的要求，工控系统逐渐采用传统网络中常用的通信协议和软硬件系统，甚至以特定的方式直接连接到传统网络中。这使得工控系统彻底改变了封闭的工作模式，同时，也让工控系统面临传统网络中的信息安全威胁，例如，木马、病毒、拒绝服务以及黑客入侵等。由于工控系统大多用于交通、电力、核工业以及石油化工等国家级的重要领域，近年来比较出名的工业控制系统安全事件如2017年的“震网”病毒事件，伊朗的核电站铀浓缩设备遭到了病毒的定向攻击，其中使用了多个0day漏洞，造成伊朗核电站推迟发电，造成经济损失乃至人员伤亡。可见，工控系统的安全事故不仅会造成严重的经济损失，同时也会导致严重的社会影响。因此，解决工业控制系统安全问题在很大程度上取决于对其漏洞的挖掘与修复，使得在危险发生之前就可以发现其中的问题并采取防护措施，减少漏洞的危害。</p>
+<h2 id="二、-漏洞分类"><a href="#二、-漏洞分类" class="headerlink" title="二、 漏洞分类"></a>二、 漏洞分类</h2><p>常见工控漏洞主要分为：</p>
+<p>1）在程序层面：工控应用与杀毒软件漏洞，平台软件漏洞，平台恶意软件防护漏洞；具体到漏洞细节有缓冲区溢出漏洞，命令执行漏洞，格式化字符串漏洞，IO漏洞，条件竞争漏洞（并发程序漏洞），敏感消息硬编码漏洞等。</p>
+<p>2）在网络层面：TCP/IP漏洞，网络通信协议漏洞（工控协议如Modbus TCP，S7等）,链路连接漏洞，网络硬件漏洞，网络监测和记录漏洞，无线连接漏洞，拒绝服务漏洞等。</p>
+<p>3）在配置层面：网络配置漏洞，平台配置漏洞，安全策略和指南配置漏洞，管理流程漏洞等。</p>
+<p>4）在系统层面：操作系统安全漏洞。</p>
+<h2 id="三、-传统漏洞挖掘技术"><a href="#三、-传统漏洞挖掘技术" class="headerlink" title="三、 传统漏洞挖掘技术"></a>三、 传统漏洞挖掘技术</h2><p>传统漏洞挖掘技术主要可以分为静态与动态的漏洞挖掘。</p>
+<p>1）静态漏洞挖掘</p>
+<p>顾名思义，就是不运行程序，通过对程序源码或者程序本身进行分析来进行漏洞的挖掘。根据目标程序的不同可以分为面向源代码的漏洞挖掘技术与面向二进制（无程序源码）的漏洞挖掘技术。</p>
+<p>a.  面向源代码的漏洞挖掘</p>
+<p>有数据流分析，控制流分析，模型检查等。其实质可以说是代码扫描工具，因此在某些功能上与编译器极其相似，需要进行词法分析，语法分析，语义分析等，但同时也需要自定义各式各样的复杂的规则对代码进行分析。静态检查工具ASPWC可以用来分析检查网站平台的XSS（Cross-Site Scripting）与SQL注入攻击的挖掘分析；由Berkeley大学提出的一种基于形式化方法的模型检查工具MOPS则可以检查C程序，通过将目标程序建模为状态机，用得到的安全属性对该状态机进行模型检查来进行静态的漏洞的挖掘，而针对Java的静态分析软件Fluid则可以有效地检查出使用Java进行高并发时容易出现的条件竞争问题。</p>
+<p>b.  面向二进制的漏洞挖掘</p>
+<p>挖掘则无法基于已有的结构进行分析挖掘，因此出现了基于逆向分析，模式匹配，补丁比对的漏洞挖掘技术。逆向分析技术是在没有目标程序源码的情况下，通过反汇编调试手段来分析程序的二进制可执行代码，来寻找程序潜在的漏洞。最基本的漏洞挖掘技术便是基于逆向分析的挖掘。将程序从固件中提取出来以后，在面向一些较小型的程序时，逆向分析其代码便是一种很实用的选择。常用的反汇编软件如IDA（Interactive Disassembler ，交互式反汇编器），dnSpy（针对.NET程序），AndroidKiller（针对安卓apk程序）等。但是在实际环境中，由于封闭的运行环境，经常无法导出系统组件，也就难以拿到工控系统中的程序，使得逆向分析技术只有在很少情况下才会被使用。一种基于模式匹配的静态分析工具GUBE通过对UAF（Use after free,通常是存在于指针free后未置为空产生漏洞）的漏洞模式的匹配，通过VSA技术追踪内存分配的操作变量，通过对其监视来建立UAF模式，也成功利用其发现了proftpd（基于unix及类unix平台的ftp服务器程序）中的漏洞。而面向大型程序时，经常使用的还有补丁对比的方式。基于补丁对比的框架binhunt通过与带补丁的二进制程序进行对比来提取漏洞相关的语义信息，确定补丁位置，分析补丁前后来进行漏洞的挖掘。</p>
+<p>2）动态漏洞挖掘</p>
+<p>所谓动态漏洞挖掘，便是将程序运行起来，在程序运行过程中对程序进行分析挖掘。常用的有模糊测试技术与符号执行技术。</p>
+<p>a. 模糊测试技术</p>
+<p>主要是反复向目标系统输入随机数据，通过大量非预期的畸形数据来试图覆盖程序的所有已知或未知的分支，从而在程序的异常行为如崩溃中寻找漏洞点。在面向一些大型工业控制系统时，所面对的常常是有着复杂体系架构的一个系统，其中的程序使用人力逆向分析将会极其低效，因此模糊测试往往是一个很好的选择。根据测试用例的生成方式，模糊测试可以分为基于变异的模糊测试与基于生成的模糊测试。基于变异的模糊测试是直接在已有的测试输入上面进行变异后作为测试输入，如google的AFL-fuzz，在已知的正常输入的基础上通过进化算法做变异得到测试用例同时将该测试用例输入到程序检查程序是否会产生异常，其本身的变异是盲目的，不接受之前测试用例效果的反馈的，缺少多样的变异策略支撑。为了弥补AFL-fuzz在这方面的缺陷，出现了一个基于神经网络的预测模型seq2seq，其可以用来预测测试数据的合理变异方向从而减少了变异的盲目性，优化了测试效果。而基于生成的模糊测试则是根据输入数据的格式生成测试输入，主要通过模型或者语法来生成满足目标系统要求的基本语法语义的测试输入，如Peach，它可以通过固定的数据结构模型和一些变异策略生成相应的测试用例，不过其缺点也很明显，即需要知道程序的数据输入模型，若未知则仍需要利用逆向分析来得到数据模型。</p>
+<p>b. 符号执行技术</p>
+<p>符号执行是通过系统检查程序执行路径的程序漏洞挖掘技术。其关键思想便是将输入变为符号值，对程序执行过程中的分支条件与相关变量的收集翻译来得到路径约束条件，这种方法能很快达到较高的代码覆盖率，符号执行的相关软件有如Angr，Sage等。虽然符号执行也取得了许多非常有效的成果，但其中还有很多问题如路径爆炸问题，因为符号执行志在覆盖程序执行的全部路径，则当在程序中的分支变多时路径数会成几何倍数增长，使得执行所耗费时间大幅度提升，因此在漏洞挖掘中符号执行仍然难以占据主导地位。</p>
+<h2 id="四、-工控系统的防护"><a href="#四、-工控系统的防护" class="headerlink" title="四、 工控系统的防护"></a>四、 工控系统的防护</h2><p>1）遵循软件安全开发模型</p>
+<p>解决安全问题的一个非常重要的方面就在于进行安全开发，即在开发时，不仅要遵守软件开发模型，更要从开始时便注重漏洞的防范，谨遵安全需求，安全设计，安全编码，安全监测的流程，从源头上解决漏洞的问题。</p>
+<p>2）修复已知漏洞</p>
+<p>在一般情况下，仍然会因为流程的不规范或技术问题等等使得系统中可能存在漏洞，因此就需要提前进行漏洞的挖掘与修复。根据前面的漏洞挖掘的各种姿势，从各个方面来尝试对整个工控系统进行漏洞挖掘，在挖掘到相关的漏洞之后，需要做的就是尽可能的进行漏洞的修补，在程序上线前尽可能修复漏洞。</p>
+<p>3）建立工业控制系统防火墙</p>
+<p>漏洞挖掘系统仍然可能使得有些漏洞未被探寻到，如果我们对非授权用户的操作放任不管，便给予了他们更多的可能去探寻系统漏洞并对可能会去对其进行破坏，因此需要建立一个专业的工业控制防火墙，在非正常用户试图进行对系统的漏洞探测时及时处理，减少非正常用户测试的机会。</p>
+<p>4）建立态势感知系统</p>
+<p>所谓态势感知，是一种基于环境的、动态、整体地洞悉安全风险的能力，是以安全大数据为基础，从全局视角提升对安全威胁的发现识别、理解分析、响应处置能力的一种方式。建立态势感知系统，就是为了脱离个体角度，从全局出发，能够从整体的流量等角度进行分析预测，及时获取攻击信息并采取防护措施。</p>
+<h2 id="五、-参考文献"><a href="#五、-参考文献" class="headerlink" title="五、 参考文献"></a>五、 参考文献</h2><p>[1] 肖智飞.基于工业互联网环境的漏洞挖掘技术应用分析[J].长江信息通信,2021,34(10):127-129.</p>
+<p>[2] 史建琦，李志辉，基于对抗学习的工业控制协议漏洞挖掘技术研究[B]. 华东师范大学，2019，1-4</p>
+<p>[3] 王世伟，潘峰，刘超，工业防火墙软件框架设计及规则自学习方法研究[D]. 太原科技大学，2018.</p>
+<p>[4] 赖英旭，杨凯翔，刘静，刘增辉，基于模糊测试的工控网络协议漏洞挖掘方法[J]. 计算机集成系统，2018，1-2.</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-12-29T01:04:47.688Z" itemprop="dateUpdated">2021-12-29 09:04:47</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2021/12/28/工控系统漏洞挖掘与防护/" target="_blank" rel="external">http://siriuswhiter.tk/2021/12/28/工控系统漏洞挖掘与防护/</a>
+        
+    </div>
+    <footer>
+        <a href="http://siriuswhiter.tk">
+            <img src="/img/avatar.jpg" alt="Sirius Whiter">
+            Sirius Whiter
+        </a>
+    </footer>
+</blockquote>
+
+        
+            <div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+            
+        
+        <div class="post-footer">
+            
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2021/12/28/工控系统漏洞挖掘与防护/&title=《工控系统漏洞挖掘与防护》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2021/12/28/工控系统漏洞挖掘与防护/&title=《工控系统漏洞挖掘与防护》 — Room of Requirement&source=菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2020/07/26/手写操作系统-二/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">手写操作系统(二)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#工控系统漏洞挖掘与防护"><span class="post-toc-number">1.</span> <span class="post-toc-text">工控系统漏洞挖掘与防护</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、-背景介绍"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、 背景介绍</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、-漏洞分类"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">二、 漏洞分类</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、-传统漏洞挖掘技术"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">三、 传统漏洞挖掘技术</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、-工控系统的防护"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">四、 工控系统的防护</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#五、-参考文献"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">五、 参考文献</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+    <div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我喝奶茶呀
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/reward-wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/reward-wechat.jpg" data-alipay="/img/reward-alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+    
+</div>
+
+        <footer class="footer">
+    
+    <div class="top">
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                Sirius Whiter &copy; 2018 - 2021
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://siriuswhiter.tk/2021/12/28/工控系统漏洞挖掘与防护/&title=《工控系统漏洞挖掘与防护》 — Room of Requirement&pic=http://siriuswhiter.tk/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://siriuswhiter.tk/2021/12/28/工控系统漏洞挖掘与防护/&title=《工控系统漏洞挖掘与防护》 — Room of Requirement&source=菜鸡一枚" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACuElEQVR42u3awW4CMQwEUP7/p6nUU6XCMuMkBalvTwho8MshcW3fbvFz/37y189W+Plc/1X+zQ0PHh4e3ij0Z88zxnVY1yFe/8rvlfN1HkSFh4eHd4yXB3odRL5yfj3klxAeHh7ep/ESRkLKj/VZIo6Hh4f3Oby9oScrzDYRDw8P7294eZlgqTQQJOv55bS51oKHh4c3OZ+3NcBOv35zfw8PD+8f8+7lk7SpZkMDeTGiiBYPDw/vAG+lcbWr5T8bKcgLu3h4eHh7eXn7v21Z5UHseufBp3h4eHgHeAkpxyetsrZisD7OhYeHh3eCt5KFzoYM2uGtvPWFh4eHd5q3K1GeNajyC2AWDx4eHt4JXp6krg8TtNQ8kmEyjYeHhzfi5f/St+WJE0MD7ebi4eHhneC1AwH5SEHe+M/Z7VgYHh4e3jnergmldtxqNozVlpjx8PDw9vJmpFlTqk3Z82tp82WAh4eHF/NmhdR2O86VM25JpRkPDw9vK69denZkt2NVt9ETpdR4eHh4I97sIK7rHGXjf5ZqR1UWPDw8vGVe20xKkCtXRZv0v0Di4eHhHeC1x3o+OpBfPPkvtk01PDw8vHO8ltQGtCv3r8u4eHh4eMd47RGfjwjk7DaqYQkYDw8Pb5mX/Ey+N0kQ7aE/a6cVi+Lh4eFt4q0UFPJP21Jsm6zj4eHhneCtYPJkui0ZRFXnvLCCh4eHt5WXDFflbbC657YwmhBFiIeHh3eYlx/9bSlhtlqyzotNx8PDwzvAW8rE4wJB/n77ndnVhYeHh7fOm10G7UasbNxsy/Dw8PBO8/KhgaL5NEqR2xvsRfkDDw8P7628PJleKUbkWxOl2nh4eHgfxktGB9pBhOtrKR9uwMPDwzvNS35s5ZjOkfmFgYeHh/cu3qzYmpcSZsd9WyDePDqAh4eH9/jTL2B4ac797L/pAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/plugins/jquery.swipebox.min.js?v=1.3.2"></script>
+<script type="text/javascript" color="255,0,0"opacity="0.3"count="70" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.3.2"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.3.2"></script>
+
+<!-- third-party -->
+<script type="text/javascript">
+;( function( $ ) {
+
+	$( '.swipebox' ).swipebox({
+		hideCloseButtonOnMobile: true
+	});
+
+} )( jQuery );
+</script>
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.3.2"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+    
+</body>
+</html>
